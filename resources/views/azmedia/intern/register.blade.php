@@ -57,6 +57,15 @@
                            class="w-full px-4 py-3 rounded-2xl border border-slate-300 text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none">
                 </div>
 
+                <!-- Ngày tháng năm sinh -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Ngày tháng năm sinh <span class="text-rose-500">*</span></label>
+                    <input type="date" name="birth_date" required
+                           value="{{ old('birth_date') }}"
+                           max="{{ date('Y-m-d') }}"
+                           class="w-full px-4 py-3 rounded-2xl border border-slate-300 text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none text-slate-700 font-medium">
+                </div>
+
                 <!-- Email đã ứng tuyển -->
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1 flex items-center justify-between">
@@ -69,7 +78,7 @@
                            class="w-full px-4 py-3 rounded-2xl border border-slate-300 text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none">
                 </div>
 
-                <!-- Số điện thoại & Mã hồ sơ -->
+                <!-- Số điện thoại & Mã số sinh viên (MSSV) -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">Số điện thoại <span class="text-rose-500">*</span></label>
@@ -80,13 +89,17 @@
                     </div>
 
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Mã hồ sơ (nếu có)</label>
-                        <input type="text" name="application_code"
-                               value="{{ old('application_code', $suggestedCode) }}"
-                               placeholder="vd: AZ-2026-0732"
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Mã số sinh viên (MSSV)</label>
+                        <input type="text" name="student_code"
+                               value="{{ old('student_code', old('application_code', $suggestedCode)) }}"
+                               placeholder="vd: 24C0682"
                                class="w-full px-4 py-3 rounded-2xl border border-slate-300 text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none font-mono">
                     </div>
                 </div>
+
+                @if(!empty($suggestedCode))
+                    <input type="hidden" name="application_code" value="{{ $suggestedCode }}">
+                @endif
 
                 <!-- Mật khẩu & Nhập lại mật khẩu -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">

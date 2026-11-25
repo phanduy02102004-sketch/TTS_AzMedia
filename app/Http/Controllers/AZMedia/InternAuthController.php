@@ -55,7 +55,7 @@ class InternAuthController extends Controller
             'login_id' => 'required|string',
             'password' => 'required|string',
         ], [
-            'login_id.required' => 'Vui lòng nhập Email hoặc Mã hồ sơ ứng tuyển (vd: AZ-2026-0732).',
+            'login_id.required' => 'Vui lòng nhập Email, Mã số sinh viên (MSSV) hoặc Mã hồ sơ ứng tuyển (vd: 24C0682 hoặc AZ-2026-0732).',
             'password.required' => 'Vui lòng nhập Mật khẩu.',
         ]);
 
@@ -71,10 +71,19 @@ class InternAuthController extends Controller
         if ($application && $application->candidate) {
             $candidate = $application->candidate;
         } else {
-            // 2. Tìm qua Email hoặc Số điện thoại trong bảng candidates
+            // 2. Tìm qua Email, Số điện thoại hoặc Mã số sinh viên (student_code) trong bảng candidates
             $candidate = Candidate::where('email', $loginId)
                 ->orWhere('phone', $loginId)
+                ->orWhere('student_code', $loginId)
                 ->first();
+
+            if (!$candidate) {
+                // Kiểm tra qua InternGraduation student_code
+                $grad = InternGraduation::where('student_code', $loginId)->first();
+                if ($grad && $grad->candidate) {
+                    $candidate = $grad->candidate;
+                }
+            }
 
             if ($candidate) {
                 $application = $candidate->applications()->latest()->first();
@@ -136,10 +145,12 @@ class InternAuthController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:150',
+            'birth_date' => 'nullable|string|max:50',
             'email' => 'required|email|max:150',
             'phone' => 'required|string|max:20',
             'password' => 'required|string|min:6|confirmed',
             'application_code' => 'nullable|string|max:50',
+            'student_code' => 'nullable|string|max:50',
         ], [
             'name.required' => 'Vui lòng nhập Họ và tên.',
             'email.required' => 'Vui lòng nhập địa chỉ Email.',
@@ -151,15 +162,20 @@ class InternAuthController extends Controller
         ]);
 
         $email = trim($request->email);
+        $studentCode = trim($request->student_code ?? '');
         $appCode = trim($request->application_code ?? '');
+        $lookupCode = !empty($appCode) ? $appCode : $studentCode;
+        $birthDate = $request->birth_date ? trim($request->birth_date) : null;
 
         // 1. Kiểm tra xem đã có Candidate ứng tuyển trước đó chưa
         $candidate = Candidate::where('email', $email)->first();
 
-        if (!$candidate && !empty($appCode)) {
-            $app = Application::where('application_code', $appCode)->first();
+        if (!$candidate && !empty($lookupCode)) {
+            $app = Application::where('application_code', $lookupCode)->first();
             if ($app && $app->candidate) {
                 $candidate = $app->candidate;
+            } elseif (!empty($studentCode)) {
+                $candidate = Candidate::where('student_code', $studentCode)->first();
             }
         }
 
@@ -167,21 +183,48 @@ class InternAuthController extends Controller
             // Cập nhật thông tin & mật khẩu cho ứng viên đã có hồ sơ
             $candidate->name = trim($request->name);
             $candidate->phone = trim($request->phone);
+            if ($birthDate) {
+                $candidate->birth_date = $birthDate;
+            }
+            if ($studentCode) {
+                $candidate->student_code = $studentCode;
+            }
             $candidate->password = Hash::make($request->password);
             $candidate->status = 'active';
             $candidate->save();
         } else {
             // Tạo mới tài khoản Candidate
-            $candidate = Candidate::create([
+            $candidateData = [
                 'name' => trim($request->name),
                 'email' => $email,
                 'phone' => trim($request->phone),
-                'university' => trim($request->university ?? 'Đại học tại Đà Nẵng'),
-                'major' => trim($request->major ?? 'Công nghệ thông tin / Marketing'),
+                'university' => trim($request->university ?? 'Cao đẳng Đà Nẵng (DNC)'),
+                'major' => trim($request->major ?? 'Công nghệ thông tin'),
                 'working_shift' => 'flexible',
                 'password' => Hash::make($request->password),
                 'status' => 'active',
-            ]);
+            ];
+            if ($birthDate) {
+                $candidateData['birth_date'] = $birthDate;
+            }
+            if ($studentCode) {
+                $candidateData['student_code'] = $studentCode;
+            }
+            $candidate = Candidate::create($candidateData);
+        }
+
+        // Đồng bộ thông tin vào InternGraduation nếu đã có bản ghi
+        $grad = InternGraduation::where('candidate_id', $candidate->id)
+            ->orWhere('email', $candidate->email)
+            ->first();
+        if ($grad) {
+            if ($studentCode && empty($grad->student_code)) {
+                $grad->student_code = $studentCode;
+            }
+            if ($birthDate && empty($grad->birth_date)) {
+                $grad->birth_date = $birthDate;
+            }
+            $grad->save();
         }
 
         // Lấy application tương ứng
@@ -195,6 +238,8 @@ class InternAuthController extends Controller
             'name' => $candidate->name,
             'email' => $candidate->email,
             'phone' => $candidate->phone,
+            'birth_date' => $candidate->birth_date ?? $birthDate,
+            'student_code' => $candidate->student_code ?? $studentCode,
             'university' => $candidate->university,
             'major' => $candidate->major,
             'application_id' => $application ? $application->id : null,

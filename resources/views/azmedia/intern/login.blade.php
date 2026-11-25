@@ -76,11 +76,11 @@
                 @csrf
                 <input type="hidden" name="redirect" value="{{ $redirectUrl }}">
 
-                <!-- Email hoặc Mã hồ sơ -->
+                <!-- Email, MSSV hoặc Mã hồ sơ -->
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1.5 flex items-center justify-between">
-                        <span>Email hoặc Mã hồ sơ ứng tuyển <span class="text-rose-500">*</span></span>
-                        <span class="text-[10px] text-slate-400 font-normal">VD: AZ-2026-0732</span>
+                        <span>Email, MSSV hoặc Mã hồ sơ ứng tuyển <span class="text-rose-500">*</span></span>
+                        <span class="text-[10px] text-slate-400 font-normal">VD: 24C0682 hoặc AZ-2026-0732</span>
                     </label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
@@ -88,7 +88,7 @@
                         </div>
                         <input type="text" name="login_id" required
                                value="{{ old('login_id', $suggestedCode) }}"
-                               placeholder="Nhập email ứng tuyển hoặc mã hồ sơ (vd: linhan.nguyen@azmedia.com.vn)..."
+                               placeholder="Nhập email, mã số sinh viên (MSSV) hoặc mã hồ sơ..."
                                class="w-full pl-10 pr-4 py-3 rounded-2xl border border-slate-300 text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none font-medium">
                     </div>
                 </div>
