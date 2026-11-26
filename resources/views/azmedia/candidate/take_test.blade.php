@@ -48,7 +48,7 @@
     <div class="max-w-5xl mx-auto px-4 sm:px-6 pb-3 pt-1">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
             <button type="button" onclick="switchTab(1)" id="tab_btn_1" class="step-tab active py-2 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 bg-slate-800 text-slate-300">
-                <span>🔮</span> 1. Tính cách (NLB - DISC - MBTI)
+                <span>🔮</span> 1. Tính cách (NLP - DISC - MBTI)
             </button>
             <button type="button" onclick="switchTab(2)" id="tab_btn_2" class="step-tab py-2 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 bg-slate-800 text-slate-300">
                 <span>🎡</span> 2. Bánh xe cuộc đời
@@ -90,23 +90,23 @@
         <input type="hidden" name="time_spent" id="time_spent_input" value="0">
 
         <!-- ==========================================
-             PHẦN 1: BÀI TRẮC NGHIỆM TÍNH CÁCH (NLB – DISC – MBTI – NHÂN SỐ HỌC)
+             PHẦN 1: BÀI TRẮC NGHIỆM TÍNH CÁCH (NLP – DISC – MBTI – NHÂN SỐ HỌC)
              ========================================== -->
         <div id="section_1" class="space-y-6">
             <div class="bg-gradient-to-r from-orange-500 to-brand-600 rounded-3xl p-6 sm:p-8 text-white shadow-lg">
                 <div class="inline-block px-3 py-1 bg-white/20 rounded-full text-xs font-extrabold uppercase tracking-wider mb-2">
                     Báo Cáo Thu Hoạch & Đánh Giá Năng Lực Toàn Diện • AZ Media
                 </div>
-                <h2 class="text-xl sm:text-2xl font-black mb-2">1. ĐÁNH GIÁ NĂNG LỰC & TÍNH CÁCH (NLB – DISC – MBTI)</h2>
+                <h2 class="text-xl sm:text-2xl font-black mb-2">1. ĐÁNH GIÁ NĂNG LỰC & TÍNH CÁCH (NLP – DISC – MBTI)</h2>
                 <p class="text-xs sm:text-sm text-orange-100 leading-relaxed mb-4">
-                    Thấu hiểu bản thân qua ba khía cạnh cốt lõi: <strong>NLB</strong> (Năng lực & cách xử lý công việc), <strong>DISC</strong> (Cách làm việc & giao tiếp), <strong>MBTI</strong> (Kiểu tính cách) kết hợp <strong>Nhân số học đường đời</strong>.
+                    Thấu hiểu bản thân qua ba khía cạnh cốt lõi: <strong>NLP</strong> (Năng lực & cách xử lý công việc), <strong>DISC</strong> (Cách làm việc & giao tiếp), <strong>MBTI</strong> (Kiểu tính cách) kết hợp <strong>Nhân số học đường đời</strong>.
                 </p>
 
                 <!-- 4 Khái niệm tóm tắt chuẩn từ Báo cáo thu hoạch -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 pt-2">
                     <div class="p-3 rounded-2xl bg-white/10 border border-white/20">
                         <div class="font-extrabold text-xs flex items-center gap-1.5 text-white mb-1">
-                            <span>👁️</span> NLB (Năng Lực)
+                            <span>👁️</span> NLP (V-A-K-Ad)
                         </div>
                         <p class="text-[11px] text-orange-100">Kiểm tra khả năng tiếp nhận và cách bạn xử lý công việc (Visual, Auditory, Kinesthetic, Ad).</p>
                     </div>
@@ -131,12 +131,12 @@
                 </div>
             </div>
 
-            <!-- MỤC 1.1: NLB (NĂNG LỰC TIẾP NHẬN & XỬ LÝ CÔNG VIỆC) -->
+            <!-- MỤC 1.1: NLP (NĂNG LỰC TIẾP NHẬN & XỬ LÝ CÔNG VIỆC) -->
             <div class="pt-2">
                 <div class="flex items-center gap-2 mb-3">
                     <span class="w-8 h-8 rounded-xl bg-orange-100 text-brand-600 flex items-center justify-center text-sm font-black">1.1</span>
                     <div>
-                        <h3 class="font-black text-slate-900 text-sm sm:text-base">Mô hình NLB / NLP (V-A-K-Ad)</h3>
+                        <h3 class="font-black text-slate-900 text-sm sm:text-base">Mô hình NLP (V-A-K-Ad)</h3>
                         <p class="text-xs text-slate-500">Đánh giá 4 phong cách tiếp nhận: Visual (Hình ảnh), Auditory (Nghe), Kinesthetic (Cảm giác), Auditory Digital (Logic).</p>
                     </div>
                 </div>
@@ -222,7 +222,7 @@
                                 </div>
                                 <div class="flex items-center gap-2 flex-shrink-0 self-end sm:self-auto">
                                     <span class="text-[11px] text-slate-500">Mức độ:</span>
-                                    <select name="nlp[{{ $qNum }}][{{ $opt['code'] }}]" class="text-xs font-bold py-1.5 px-3 rounded-xl border border-slate-300 bg-white focus:ring-2 focus:ring-brand-500">
+                                    <select name="nlp[{{ $qNum }}][{{ $opt['code'] }}]" data-nlp-question="{{ $qNum }}" data-nlp-code="{{ $opt['code'] }}" class="text-xs font-bold py-1.5 px-3 rounded-xl border border-slate-300 bg-white focus:ring-2 focus:ring-brand-500">
                                         <option value="" disabled selected>-- Chọn điểm (1-4) --</option>
                                         <option value="4">4 - Đúng nhất</option>
                                         <option value="3">3 - Khá đúng</option>
@@ -235,6 +235,33 @@
                     </div>
                 </div>
             @endforeach
+
+            <div class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-7 shadow-sm">
+                <div class="flex items-center justify-between gap-3 mb-4">
+                    <div>
+                        <h3 class="font-black text-slate-900 text-sm sm:text-base">Kết quả NLP tạm tính</h3>
+                        <p class="text-xs text-slate-500">Điểm được cập nhật tự động theo câu trả lời</p>
+                    </div>
+                    <span id="nlp_answer_progress" class="text-xs font-bold text-slate-500">0 / 20 lựa chọn</span>
+                </div>
+                <div class="overflow-x-auto rounded-xl border border-slate-200">
+                    <table class="w-full text-left text-xs border-collapse">
+                        <thead class="bg-slate-50 text-slate-600">
+                            <tr>
+                                <th class="py-2.5 px-4 font-bold">Phong cách</th>
+                                <th class="py-2.5 px-4 font-bold text-right">Tổng điểm</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            <tr><td class="py-2.5 px-4 font-semibold text-slate-800">Visual (Nhìn)</td><td id="nlp_score_V" class="py-2.5 px-4 text-right font-bold text-orange-600">0</td></tr>
+                            <tr><td class="py-2.5 px-4 font-semibold text-slate-800">Auditory (Nghe)</td><td id="nlp_score_A" class="py-2.5 px-4 text-right font-bold text-blue-600">0</td></tr>
+                            <tr><td class="py-2.5 px-4 font-semibold text-slate-800">Kinesthetic (Cảm giác)</td><td id="nlp_score_K" class="py-2.5 px-4 text-right font-bold text-emerald-600">0</td></tr>
+                            <tr><td class="py-2.5 px-4 font-semibold text-slate-800">Auditory Digital (Logic)</td><td id="nlp_score_Ad" class="py-2.5 px-4 text-right font-bold text-violet-600">0</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p id="nlp_dominant_result" class="mt-3 text-xs font-bold text-slate-700" aria-live="polite">Chọn điểm để xem phong cách nổi trội tạm tính.</p>
+            </div>
 
             <!-- MỤC 1.2: ĐÁNH GIÁ PHONG CÁCH LÀM VIỆC (DISC) -->
             <div class="pt-6 border-t border-slate-200">
@@ -815,6 +842,11 @@
     let radarChart = null;
 
     document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('select[name^="nlp["]').forEach(function(select) {
+            select.addEventListener('change', updateNlpRatings);
+        });
+        updateNlpRatings();
+
         const ctx = document.getElementById('wheelChart');
         if (ctx) {
             radarChart = new Chart(ctx, {
@@ -856,6 +888,56 @@
             });
         }
     });
+
+    function updateNlpRatings() {
+        const selects = Array.from(document.querySelectorAll('select[name^="nlp["]'));
+        const questions = new Map();
+        const scores = { V: 0, A: 0, K: 0, Ad: 0 };
+        let answered = 0;
+
+        selects.forEach(function(select) {
+            const question = select.dataset.nlpQuestion;
+            if (!questions.has(question)) questions.set(question, []);
+            questions.get(question).push(select);
+
+            if (select.value) {
+                scores[select.dataset.nlpCode] += Number(select.value);
+                answered++;
+            }
+        });
+
+        questions.forEach(function(questionSelects) {
+            const usedValues = new Set(questionSelects
+                .filter(function(select) { return select.value; })
+                .map(function(select) { return select.value; }));
+
+            questionSelects.forEach(function(select) {
+                Array.from(select.options).forEach(function(option) {
+                    option.disabled = option.value !== '' && usedValues.has(option.value) && option.value !== select.value;
+                });
+            });
+        });
+
+        Object.keys(scores).forEach(function(code) {
+            const scoreCell = document.getElementById(`nlp_score_${code}`);
+            if (scoreCell) scoreCell.textContent = scores[code];
+        });
+
+        const progress = document.getElementById('nlp_answer_progress');
+        if (progress) progress.textContent = `${answered} / ${selects.length} lựa chọn`;
+
+        const dominant = document.getElementById('nlp_dominant_result');
+        if (dominant) {
+            const labels = { V: 'Visual (Nhìn)', A: 'Auditory (Nghe)', K: 'Kinesthetic (Cảm giác)', Ad: 'Auditory Digital (Logic)' };
+            const maxScore = Math.max(...Object.values(scores));
+            const leaders = Object.keys(scores).filter(function(code) { return scores[code] === maxScore; });
+            dominant.textContent = answered === 0
+                ? 'Chọn điểm để xem phong cách nổi trội tạm tính.'
+                : leaders.length > 1
+                    ? `Đang đồng hạng: ${leaders.map(function(code) { return labels[code]; }).join(', ')}`
+                    : `Đang thiên về: ${labels[leaders[0]]}`;
+        }
+    }
 
     function updateWheelValue(key, val) {
         const label = document.getElementById(`val_label_${key}`);
@@ -904,7 +986,7 @@
 
     // 4. Xử lý Nộp Toàn Bộ Bài Test Đánh Giá Toàn Diện (Hỗ trợ validate đa bước mượt mà)
     function submitAssessmentTest() {
-        // Kiểm tra Phần 1: Tính cách NLB
+        // Kiểm tra Phần 1: Tính cách NLP
         const nlpSelects = document.querySelectorAll('select[name^="nlp["]');
         let unselectedNlp = 0;
         nlpSelects.forEach(sel => {
@@ -912,7 +994,7 @@
         });
 
         if (unselectedNlp > 0) {
-            const confirmReturn1 = confirm(`Tại Phần 1 (Tính cách NLB): Bạn còn ${unselectedNlp} câu chưa chọn mức điểm (1-4).\n\n• Bấm OK: Để hệ thống chuyển đến Phần 1 giúp bạn chọn nốt điểm.\n• Bấm Cancel: Để nộp bài ngay (các câu chưa chọn sẽ tự nhận điểm mặc định).`);
+            const confirmReturn1 = confirm(`Tại Phần 1 (Tính cách NLP): Bạn còn ${unselectedNlp} câu chưa chọn mức điểm (1-4).\n\n• Bấm OK: Để hệ thống chuyển đến Phần 1 giúp bạn chọn nốt điểm.\n• Bấm Cancel: Để nộp bài ngay (các câu chưa chọn sẽ tự nhận điểm mặc định).`);
             if (confirmReturn1) {
                 switchTab(1);
                 return;
