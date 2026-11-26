@@ -3,78 +3,18 @@
 @section('title', 'Đăng Nhập Cổng Thực Tập Sinh – AZ Media Đà Nẵng')
 
 @section('content')
-<div class="min-h-screen bg-slate-50 py-12 flex items-center justify-center px-4 sm:px-6 lg:px-8">
+<div class="min-h-[calc(100vh-11rem)] bg-slate-50 bg-cover bg-center py-8 flex items-center justify-center px-4 sm:px-6 lg:px-8" style="background-image: url('{{ asset('uploads/intern-login-background.jpg') }}');">
     <div class="max-w-xl w-full space-y-8">
-
-        <!-- Header Brand -->
-        <div class="text-center space-y-3">
-            <div class="inline-flex items-center justify-center p-3 rounded-2xl bg-orange-100 mb-1">
-                <img src="{{ asset('uploads/az-media-full-logo.png') }}" alt="AZmedia Coaching & Marketing" class="h-16 w-48 object-contain">
-            </div>
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-brand-500/10 text-brand-700 border border-brand-500/20">
-                <i class="fa-solid fa-graduation-cap"></i> CỔNG DÀNH RIÊNG CHO THỰC TẬP SINH
-            </div>
-            <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-                Đăng Nhập Tài Khoản TTS
-            </h1>
-            <p class="text-xs text-slate-500 max-w-md mx-auto">
-                Hệ thống xác thực dành cho sinh viên đã được công ty <strong>tiếp nhận thực tập</strong> để hoàn thành Chuẩn đầu vào & Chuẩn đầu ra.
-            </p>
-        </div>
-
-        <!-- Hộp Thông Báo Quy Trình Vận Hành (Quan Trọng) -->
-        <div class="p-5 rounded-3xl bg-white border border-slate-200 shadow-sm space-y-3">
-            <div class="text-xs font-bold text-slate-800 flex items-center gap-2">
-                <i class="fa-solid fa-circle-info text-brand-600 text-sm"></i>
-                Quy định phân quyền vận hành hệ thống AZHR:
-            </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-[11px]">
-                <div class="p-3 rounded-2xl bg-blue-50/70 border border-blue-200 text-blue-900 space-y-1">
-                    <div class="font-extrabold flex items-center gap-1.5 text-blue-700">
-                        <i class="fa-solid fa-file-lines"></i> 1. Ứng tuyển & Phỏng vấn
-                    </div>
-                    <p class="text-blue-800/80 leading-relaxed">
-                        Hoàn toàn <strong>không cần đăng nhập</strong>. Ứng viên gửi CV, làm thủ tục phỏng vấn và tra cứu tiến độ tự do.
-                    </p>
-                </div>
-
-                <div class="p-3 rounded-2xl bg-orange-50 border border-orange-200 text-orange-950 space-y-1">
-                    <div class="font-extrabold flex items-center gap-1.5 text-orange-700">
-                        <i class="fa-solid fa-user-check"></i> 2. Chuẩn Đầu Vào / Ra
-                    </div>
-                    <p class="text-orange-900/80 leading-relaxed">
-                        <strong>Bắt buộc đăng nhập</strong> tài khoản TTS khi công ty xác nhận tiếp nhận để làm bài Test và nộp báo cáo.
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        @if(session('warning'))
-            <div class="p-4 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 text-xs font-semibold flex items-start gap-3 shadow-sm">
-                <i class="fa-solid fa-triangle-exclamation text-amber-600 text-base flex-shrink-0 mt-0.5"></i>
-                <div class="flex-1">{{ session('warning') }}</div>
-            </div>
-        @endif
-
-        @if(session('error'))
-            <div class="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-900 text-xs font-semibold flex items-start gap-3 shadow-sm">
-                <i class="fa-solid fa-circle-exclamation text-rose-600 text-base flex-shrink-0 mt-0.5"></i>
-                <div class="flex-1">{{ session('error') }}</div>
-            </div>
-        @endif
-
-        @if(session('success'))
-            <div class="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs font-semibold flex items-start gap-3 shadow-sm">
-                <i class="fa-solid fa-circle-check text-emerald-600 text-base flex-shrink-0 mt-0.5"></i>
-                <div class="flex-1">{{ session('success') }}</div>
-            </div>
-        @endif
 
         <!-- Card Form Đăng Nhập -->
         <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-200 space-y-6">
             <form action="{{ route('azmedia.intern.login.submit') }}" method="POST" class="space-y-4">
                 @csrf
                 <input type="hidden" name="redirect" value="{{ $redirectUrl }}">
+
+                <h1 class="mb-4 text-center text-2xl font-extrabold tracking-tight text-slate-900 sm:text-3xl">
+                    Đăng Nhập Tài Khoản TTS
+                </h1>
 
                 <!-- Email hoặc Mã hồ sơ -->
                 <div>
@@ -125,39 +65,7 @@
             </div>
         </div>
 
-        <!-- Hộp Đăng nhập Nhanh Cho Tài Khoản Mẫu (Test) -->
-        <div class="p-4 rounded-2xl bg-slate-100 border border-slate-200 text-xs space-y-2">
-            <div class="font-bold text-slate-700 flex items-center gap-1.5">
-                <i class="fa-solid fa-key text-brand-600"></i> Tài khoản mẫu thực tập sinh (Test nhanh):
-            </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px]">
-                <button type="button" onclick="fillLogin('linhan.nguyen@azmedia.com.vn', 'password123')"
-                        class="p-2.5 bg-white rounded-xl border border-slate-200 hover:border-brand-500 text-left transition flex items-center justify-between group">
-                    <div>
-                        <div class="font-bold text-slate-800">Linh Ân (Đã có Offer)</div>
-                        <div class="text-[10px] text-slate-400">linhan.nguyen@azmedia.com.vn</div>
-                    </div>
-                    <span class="text-brand-600 font-extrabold group-hover:translate-x-1 transition">Chọn &rarr;</span>
-                </button>
-
-                <button type="button" onclick="fillLogin('duypn.fpt@gmail.com', 'password123')"
-                        class="p-2.5 bg-white rounded-xl border border-slate-200 hover:border-brand-500 text-left transition flex items-center justify-between group">
-                    <div>
-                        <div class="font-bold text-slate-800">Phan Nhật Duy (FPT)</div>
-                        <div class="text-[10px] text-slate-400">duypn.fpt@gmail.com</div>
-                    </div>
-                    <span class="text-brand-600 font-extrabold group-hover:translate-x-1 transition">Chọn &rarr;</span>
-                </button>
-            </div>
-        </div>
-
     </div>
 </div>
 
-<script>
-    function fillLogin(email, pwd) {
-        document.querySelector('input[name="login_id"]').value = email;
-        document.querySelector('input[name="password"]').value = pwd;
-    }
-</script>
 @endsection

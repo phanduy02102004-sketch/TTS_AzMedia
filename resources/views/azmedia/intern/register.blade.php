@@ -1,52 +1,20 @@
 @extends('azmedia.layouts.app')
 
-@section('title', 'Kích Hoạt Tài Khoản Thực Tập Sinh – AZ Media Đà Nẵng')
+@section('title', 'Đăng Ký Tài Khoản Mới – AZ Media Đà Nẵng')
 
 @section('content')
-<div class="min-h-screen bg-slate-50 py-12 flex items-center justify-center px-4 sm:px-6 lg:px-8">
+<div class="min-h-[calc(100vh-11rem)] bg-slate-50 bg-cover bg-center py-8 flex items-center justify-center px-4 sm:px-6 lg:px-8" style="background-image: url('{{ asset('uploads/intern-login-background.jpg') }}');">
     <div class="max-w-xl w-full space-y-8">
-
-        <!-- Header Brand -->
-        <div class="text-center space-y-3">
-            <div class="inline-flex items-center justify-center p-3 rounded-2xl bg-orange-100 mb-1">
-                <img src="{{ asset('uploads/az-media-full-logo.png') }}" alt="AZmedia Coaching & Marketing" class="h-16 w-48 object-contain">
-            </div>
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-brand-500/10 text-brand-700 border border-brand-500/20">
-                <i class="fa-solid fa-user-plus"></i> KÍCH HOẠT TÀI KHOẢN THỰC TẬP SINH
-            </div>
-            <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-                Thiết Lập Mật Khẩu TTS
-            </h1>
-            <p class="text-xs text-slate-500 max-w-md mx-auto">
-                Nhập Email hoặc Mã hồ sơ đã nộp ứng tuyển để kích hoạt tài khoản làm <strong>Chuẩn đầu vào</strong> và <strong>Chuẩn đầu ra</strong>.
-            </p>
-        </div>
-
-        @if(session('warning'))
-            <div class="p-4 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 text-xs font-semibold flex items-start gap-3 shadow-sm">
-                <i class="fa-solid fa-triangle-exclamation text-amber-600 text-base flex-shrink-0 mt-0.5"></i>
-                <div class="flex-1">{{ session('warning') }}</div>
-            </div>
-        @endif
-
-        @if(isset($errors) && $errors->any())
-            <div class="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-900 text-xs font-semibold space-y-1 shadow-sm">
-                <div class="flex items-center gap-2 font-bold text-rose-700">
-                    <i class="fa-solid fa-circle-exclamation"></i> Vui lòng sửa các lỗi sau:
-                </div>
-                <ul class="list-disc list-inside space-y-0.5 text-rose-800">
-                    @foreach($errors->all() as $err)
-                        <li>{{ $err }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
 
         <!-- Card Form Đăng Ký -->
         <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-200 space-y-6">
             <form action="{{ route('azmedia.intern.register.submit') }}" method="POST" class="space-y-4">
                 @csrf
                 <input type="hidden" name="redirect" value="{{ $redirectUrl }}">
+
+                <h1 class="mb-4 text-center text-2xl font-extrabold tracking-tight text-slate-900 sm:text-3xl">
+                    Đăng Ký Tài Khoản Mới
+                </h1>
 
                 <!-- Họ và tên -->
                 <div>

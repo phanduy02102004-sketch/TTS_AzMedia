@@ -57,13 +57,6 @@
             </div>
         </div>
 
-        @if(session('success'))
-            <div class="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs font-semibold flex items-center gap-3 shadow-sm">
-                <i class="fa-solid fa-circle-check text-emerald-600 text-lg"></i>
-                <div class="flex-1">{{ session('success') }}</div>
-            </div>
-        @endif
-
         <!-- Lưới 2 Cột: Chuẩn Đầu Vào & Chuẩn Đầu Ra -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
 

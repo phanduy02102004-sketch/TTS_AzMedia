@@ -33,7 +33,7 @@
                 <div class="flex flex-wrap items-center gap-4 text-xs sm:text-sm text-slate-300 mt-4">
                     <span class="flex items-center gap-1.5"><i class="fa-solid fa-location-dot text-brand-500"></i> {{ $position->location }}</span>
                     <span>•</span>
-                    <span class="flex items-center gap-1.5"><i class="fa-solid fa-money-bill-wave text-emerald-400"></i> {{ $position->stipend }}</span>
+                    <span class="flex items-center gap-1.5"><i class="fa-solid fa-money-bill-wave text-emerald-400"></i> Thỏa thuận riêng</span>
                     <span>•</span>
                     <span class="flex items-center gap-1.5"><i class="fa-solid fa-clock text-amber-400"></i> {{ $position->type === 'part_time' ? 'Bán thời gian (Part-time)' : 'Toàn thời gian (Full-time)' }}</span>
                 </div>

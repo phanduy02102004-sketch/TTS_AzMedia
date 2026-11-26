@@ -109,6 +109,11 @@
                         <i class="fa-solid fa-user-check text-xs"></i> TTS: {{ Session::get('intern_user')['name'] }}
                     </a>
                     <span class="hidden sm:inline">|</span>
+                @else
+                    <a href="{{ route('azmedia.intern.login') }}" class="hover:text-orange-300 transition flex items-center gap-1 text-orange-400 font-semibold">
+                        <i class="fa-solid fa-right-to-bracket text-xs"></i> Đăng nhập
+                    </a>
+                    <span class="hidden sm:inline">|</span>
                 @endif
                 <a href="{{ route('azmedia.graduation.index') }}" class="hover:text-orange-300 transition flex items-center gap-1 text-orange-400 font-semibold">
                     <i class="fa-solid fa-graduation-cap text-xs"></i> Chuẩn đầu ra TTS
@@ -180,60 +185,68 @@
         </div>
     </header>
 
-    <!-- Global Alert Messages -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 w-full">
-        @if(session('success'))
-            <div class="flex items-center p-4 mb-4 text-emerald-800 bg-emerald-50 rounded-xl border border-emerald-200 shadow-sm" role="alert">
-                <i class="fa-solid fa-circle-check text-emerald-600 text-lg mr-3"></i>
-                <div class="text-sm font-medium flex-1">
-                    {{ session('success') }}
-                </div>
-                <button type="button" class="text-emerald-500 hover:text-emerald-800 text-sm" onclick="this.parentElement.remove()">
+    @if(session('success') || session('error') || session('warning') || (isset($errors) && $errors->any()))
+        @php
+            $notificationType = session('error') || (isset($errors) && $errors->any())
+                ? 'error'
+                : (session('warning') ? 'warning' : 'success');
+        @endphp
+        <div id="flash-notification" class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/50 p-4 backdrop-blur-sm" role="presentation">
+            <div class="absolute inset-0" data-notification-backdrop></div>
+            <section
+                class="relative w-full max-w-md rounded-3xl border bg-white p-6 shadow-2xl sm:p-8 {{ $notificationType === 'success' ? 'border-emerald-100' : ($notificationType === 'warning' ? 'border-amber-100' : 'border-rose-100') }}"
+                role="alertdialog"
+                aria-modal="true"
+                aria-labelledby="flash-notification-title"
+                aria-describedby="flash-notification-message"
+            >
+                <button type="button" class="absolute right-4 top-4 rounded-lg p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700" data-notification-close aria-label="Đóng thông báo">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
-            </div>
-        @endif
-
-        @if(session('error'))
-            <div class="flex items-center p-4 mb-4 text-rose-800 bg-rose-50 rounded-xl border border-rose-200 shadow-sm" role="alert">
-                <i class="fa-solid fa-triangle-exclamation text-rose-600 text-lg mr-3"></i>
-                <div class="text-sm font-medium flex-1">
-                    {{ session('error') }}
+                <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full {{ $notificationType === 'success' ? 'bg-emerald-100 text-emerald-600' : ($notificationType === 'warning' ? 'bg-amber-100 text-amber-600' : 'bg-rose-100 text-rose-600') }}">
+                    <i class="fa-solid {{ $notificationType === 'success' ? 'fa-circle-check' : ($notificationType === 'warning' ? 'fa-triangle-exclamation' : 'fa-circle-exclamation') }} text-2xl"></i>
                 </div>
-                <button type="button" class="text-rose-500 hover:text-rose-800 text-sm" onclick="this.parentElement.remove()">
-                    <i class="fa-solid fa-xmark"></i>
+                <h2 id="flash-notification-title" class="mb-3 text-center text-lg font-extrabold text-slate-900">
+                    {{ $notificationType === 'success' ? 'Thành công' : ($notificationType === 'warning' ? 'Lưu ý' : 'Có lỗi xảy ra') }}
+                </h2>
+                <div id="flash-notification-message" class="text-center text-sm leading-relaxed text-slate-600">
+                    @if(session('success'))
+                        <p>{{ session('success') }}</p>
+                    @elseif(session('warning'))
+                        <p>{{ session('warning') }}</p>
+                    @elseif(session('error'))
+                        <p>{{ session('error') }}</p>
+                    @endif
+
+                    @if(isset($errors) && $errors->any())
+                        <p class="mb-2 font-semibold text-rose-700">Vui lòng kiểm tra lại thông tin:</p>
+                        <ul class="space-y-1 text-left">
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    @endif
+                </div>
+                <button type="button" class="mt-6 w-full rounded-xl px-4 py-3 text-sm font-bold text-white transition {{ $notificationType === 'success' ? 'bg-emerald-600 hover:bg-emerald-700' : ($notificationType === 'warning' ? 'bg-amber-500 hover:bg-amber-600' : 'bg-rose-600 hover:bg-rose-700') }}" data-notification-close data-notification-dismiss>
+                    Đã hiểu
                 </button>
-            </div>
-        @endif
-
-        @if (isset($errors) && $errors->any())
-            <div class="p-4 mb-4 text-rose-800 bg-rose-50 rounded-xl border border-rose-200 shadow-sm">
-                <div class="flex items-center mb-1">
-                    <i class="fa-solid fa-circle-exclamation text-rose-600 mr-2"></i>
-                    <span class="font-bold text-sm">Vui lòng kiểm tra lại thông tin:</span>
-                </div>
-                <ul class="list-disc list-inside text-sm space-y-0.5 text-rose-700">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-    </div>
+            </section>
+        </div>
+    @endif
 
     <!-- Main Content Slot -->
-    <main class="flex-1">
+    <main class="{{ request()->routeIs('azmedia.intern.login', 'azmedia.intern.register') ? 'flex-none' : 'flex-1' }}">
         @yield('content')
     </main>
 
     <!-- Footer with Full AZ Media Profile & Student Info -->
-    <footer class="bg-[#ff8d00] text-stone-800 text-base leading-relaxed pt-16 pb-10 border-t border-brand-200 mt-20">
+    <footer class="bg-[#ff8d00] text-stone-800 text-base leading-relaxed pt-16 pb-10 border-t border-brand-200 {{ request()->routeIs('azmedia.intern.login', 'azmedia.intern.register') ? 'mt-0' : 'mt-20' }}">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mb-12">
                 <!-- Col 1: AZ Media Overview -->
                 <div>
                     <div class="flex items-center gap-3 mb-4">
-                        <img src="{{ asset('uploads/az-media-full-logo.png') }}" alt="AZmedia Coaching & Marketing" class="w-24 h-11 object-contain object-left">
+                        <img src="{{ asset('uploads/az-media-full-logo-transparent.png') }}" alt="AZmedia Coaching & Marketing" class="w-24 h-11 object-contain object-left">
                         <div>
                             <span class="text-2xl font-extrabold tracking-tight text-brand-900">AZ<span class="text-brand-700">HR</span></span>
                             <p class="text-sm text-stone-700">Coaching & Marketing Online</p>
@@ -314,6 +327,21 @@
             const menu = document.getElementById('mobile-menu');
             menu.classList.toggle('hidden');
         });
+
+        const flashNotification = document.getElementById('flash-notification');
+        if (flashNotification) {
+            const dismissNotification = () => flashNotification.remove();
+            flashNotification.querySelectorAll('[data-notification-close]').forEach((button) => {
+                button.addEventListener('click', dismissNotification);
+            });
+            flashNotification.querySelector('[data-notification-backdrop]')?.addEventListener('click', dismissNotification);
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape') {
+                    dismissNotification();
+                }
+            });
+            flashNotification.querySelector('[data-notification-dismiss]')?.focus();
+        }
 
         const desktopNavigation = document.getElementById('desktop-site-navigation');
         if (desktopNavigation) {

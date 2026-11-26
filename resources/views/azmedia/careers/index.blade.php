@@ -499,7 +499,7 @@
                             </div>
                             <div class="flex items-center gap-2 text-brand-600 font-semibold">
                                 <i class="fa-solid fa-money-bill-wave w-4"></i>
-                                <span>{{ $job->stipend }}</span>
+                                <span>Thỏa thuận riêng</span>
                             </div>
                             @if($job->mentor_name)
                                 <div class="flex items-center gap-2 text-slate-500">

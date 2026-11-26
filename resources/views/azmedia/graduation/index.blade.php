@@ -107,27 +107,6 @@
             </div>
         </div>
 
-        @if(session('success'))
-            <div class="p-5 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-sm font-semibold flex items-center gap-3 shadow-sm animate-fade-in">
-                <i class="fa-solid fa-circle-check text-emerald-600 text-xl flex-shrink-0"></i>
-                <div class="flex-1">{{ session('success') }}</div>
-                <button type="button" onclick="this.parentElement.remove()" class="text-emerald-500 hover:text-emerald-700"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-        @endif
-
-        @if(isset($errors) && $errors->any())
-            <div class="p-5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-900 text-sm font-semibold space-y-1 shadow-sm">
-                <div class="flex items-center gap-2 text-rose-700 font-bold">
-                    <i class="fa-solid fa-triangle-exclamation"></i> Vui lòng kiểm tra lại thông tin:
-                </div>
-                <ul class="list-disc list-inside text-xs space-y-0.5 text-rose-800">
-                    @foreach($errors->all() as $err)
-                        <li>{{ $err }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
         <!-- Card Thông Tin Tiến Độ Của TTS (Nếu tìm thấy hồ sơ) -->
         @if($graduation)
             <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-200 space-y-6">
@@ -193,7 +172,7 @@
         <div id="az-support-portal" class="bg-white rounded-3xl p-6 sm:p-10 shadow-sm border border-slate-200 space-y-8">
             <div class="text-center max-w-xl mx-auto space-y-3">
                 <div class="inline-flex items-center justify-center p-3 rounded-2xl bg-orange-50 mb-2">
-                    <img src="{{ asset('uploads/az-media-full-logo.png') }}" alt="AZmedia Coaching & Marketing" class="h-16 w-48 object-contain">
+                    <img src="{{ asset('uploads/az-media-full-logo-transparent.png') }}" alt="AZmedia Coaching & Marketing" class="h-16 w-48 object-contain">
                 </div>
                 <h2 class="text-2xl sm:text-3xl font-extrabold text-orange-600 tracking-tight">
                     AZ SUPPORT

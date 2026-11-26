@@ -21,7 +21,7 @@ class InternAuthController extends Controller
     {
         if (Session::has('intern_user')) {
             $redirect = $request->query('redirect', route('azmedia.intern.dashboard'));
-            return redirect($redirect);
+            return redirect($redirect)->with('success', "Chào mừng bạn {$candidate->name} đã đăng nhập thành công vào Cổng Thực Tập Sinh AZ Media!");
         }
 
         $redirectUrl = $request->query('redirect', route('azmedia.intern.dashboard'));
@@ -131,7 +131,7 @@ class InternAuthController extends Controller
             $redirect = route('azmedia.intern.dashboard');
         }
 
-        return redirect($redirect)->with('success', "Chào mừng bạn {$candidate->name} đã đăng nhập thành công vào Cổng Thực Tập Sinh AZ Media!");
+        return redirect($redirect);
     }
 
     /**
