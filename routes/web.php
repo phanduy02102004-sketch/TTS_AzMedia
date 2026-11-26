@@ -127,6 +127,7 @@ Route::prefix('portal')->group(function () {
     Route::get('/candidate/{id}', [AZMediaATSController::class, 'candidateDetail'])->name('azmedia.portal.candidate.detail');
     Route::get('/candidate/{id}/cv', [AZMediaATSController::class, 'viewCV'])->name('azmedia.portal.candidate.cv');
     Route::get('/candidate/{id}/test-pdf', [AZMediaATSController::class, 'viewTestPDF'])->name('azmedia.portal.candidate.test.pdf');
+    Route::post('/candidate/{id}/reset-test', [AZMediaATSController::class, 'resetCandidateTest'])->name('azmedia.portal.candidate.reset-test');
     Route::post('/candidate/{id}/status', [AZMediaATSController::class, 'updateStatus'])->name('azmedia.portal.candidate.status');
     Route::post('/candidate/{id}/resend-email', [AZMediaATSController::class, 'resendEmail'])->name('azmedia.portal.candidate.resend.email');
     Route::post('/candidate/{id}/interview', [AZMediaATSController::class, 'scheduleInterview'])->name('azmedia.portal.candidate.interview');

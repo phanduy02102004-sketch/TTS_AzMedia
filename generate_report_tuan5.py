@@ -176,7 +176,7 @@ def build_report():
         ),
         (
             "2",
-            "Bổ sung & Tối ưu Phần 1: Trắc nghiệm Tính cách (NLB - DISC - MBTI)",
+            "Bổ sung & Tối ưu Phần 1: Trắc nghiệm Tính cách (NLP - DISC - MBTI)",
             "• Trích xuất nội dung từ Báo cáo thu hoạch của Phan Duy để bổ sung đầy đủ hệ thống câu hỏi khám phá tính cách, phong cách tư duy và giao tiếp.\n"
             "• Xóa bỏ toàn bộ các câu trả lời đã tích chọn sẵn trong file mẫu, thiết lập trạng thái mở hoàn toàn để thực tập sinh tự do đánh giá đúng năng lực thực tế của bản thân.",
             "100%",

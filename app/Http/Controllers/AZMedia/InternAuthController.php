@@ -61,10 +61,15 @@ class InternAuthController extends Controller
 
         $loginId = trim($request->login_id);
         $password = $request->password;
+        $emailAliases = [
+            'linhannguyennhat00@gmail.com' => 'linhannguyennhat00@gmail.com',
+            'linhan.nguyen@azmedia.com.vn' => 'linhannguyennhat00@gmail.com',
+        ];
+        $lookupId = $emailAliases[strtolower($loginId)] ?? $loginId;
 
         // 1. Tìm ứng viên qua Application code trước (ví dụ: AZ-2026-0732)
         $application = Application::with(['candidate', 'position', 'testResult'])
-            ->where('application_code', $loginId)
+            ->where('application_code', $lookupId)
             ->first();
 
         $candidate = null;
@@ -72,8 +77,8 @@ class InternAuthController extends Controller
             $candidate = $application->candidate;
         } else {
             // 2. Tìm qua Email hoặc Số điện thoại trong bảng candidates
-            $candidate = Candidate::where('email', $loginId)
-                ->orWhere('phone', $loginId)
+            $candidate = Candidate::where('email', $lookupId)
+                ->orWhere('phone', $lookupId)
                 ->first();
 
             if ($candidate) {

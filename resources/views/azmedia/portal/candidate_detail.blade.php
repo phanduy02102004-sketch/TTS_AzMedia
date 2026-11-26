@@ -180,11 +180,11 @@
                         </div>
                     @endif
 
-                    <!-- Báo cáo thu hoạch NLB - DISC - MBTI -->
+                    <!-- Báo cáo thu hoạch NLP - DISC - MBTI -->
                     <div class="p-3.5 rounded-2xl bg-indigo-50/60 border border-indigo-200 text-xs">
                         <div class="flex items-center justify-between mb-2">
                             <span class="font-bold text-indigo-900 flex items-center gap-1.5">
-                                <i class="fa-solid fa-id-card-clip text-indigo-600"></i> NLB – DISC – MBTI:
+                                <i class="fa-solid fa-id-card-clip text-indigo-600"></i> NLP – DISC – MBTI:
                             </span>
                             <span class="px-2 py-0.5 rounded-lg font-black text-[10px] bg-indigo-600 text-white">
                                 Thu Hoạch
@@ -264,7 +264,7 @@
                         </span>
                         <div>
                             <h4 class="font-extrabold text-xs text-amber-950">Bài Test Đánh Giá Năng Lực (Chưa hoàn thành)</h4>
-                            <p class="text-[10px] text-amber-800">Ứng viên chưa nộp bài test đánh giá 4 phần (NLB - Bánh xe - Hoài bão - AZ Media).</p>
+                            <p class="text-[10px] text-amber-800">Ứng viên chưa nộp bài test đánh giá 4 phần (NLP - Bánh xe - Hoài bão - AZ Media).</p>
                         </div>
                     </div>
                     <div class="pt-2 border-t border-amber-200/50 flex items-center justify-between text-[11px]">

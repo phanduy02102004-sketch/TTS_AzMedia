@@ -48,7 +48,7 @@
     <div class="max-w-5xl mx-auto px-4 sm:px-6 pb-3 pt-1">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
             <button type="button" onclick="switchTab(1)" id="tab_btn_1" class="step-tab active py-2 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 bg-slate-800 text-slate-300">
-                <span>🔮</span> 1. Tính cách (NLB - DISC - MBTI)
+                <span>🔮</span> 1. Tính cách (NLP - DISC - MBTI)
             </button>
             <button type="button" onclick="switchTab(2)" id="tab_btn_2" class="step-tab py-2 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 bg-slate-800 text-slate-300">
                 <span>🎡</span> 2. Bánh xe cuộc đời
@@ -90,23 +90,23 @@
         <input type="hidden" name="time_spent" id="time_spent_input" value="0">
 
         <!-- ==========================================
-             PHẦN 1: BÀI TRẮC NGHIỆM TÍNH CÁCH (NLB – DISC – MBTI – NHÂN SỐ HỌC)
+             PHẦN 1: BÀI TRẮC NGHIỆM TÍNH CÁCH (NLP – DISC – MBTI – NHÂN SỐ HỌC)
              ========================================== -->
         <div id="section_1" class="space-y-6">
             <div class="bg-gradient-to-r from-orange-500 to-brand-600 rounded-3xl p-6 sm:p-8 text-white shadow-lg">
                 <div class="inline-block px-3 py-1 bg-white/20 rounded-full text-xs font-extrabold uppercase tracking-wider mb-2">
                     Báo Cáo Thu Hoạch & Đánh Giá Năng Lực Toàn Diện • AZ Media
                 </div>
-                <h2 class="text-xl sm:text-2xl font-black mb-2">1. ĐÁNH GIÁ NĂNG LỰC & TÍNH CÁCH (NLB – DISC – MBTI)</h2>
+                <h2 class="text-xl sm:text-2xl font-black mb-2">1. ĐÁNH GIÁ NĂNG LỰC & TÍNH CÁCH (NLP – DISC – MBTI)</h2>
                 <p class="text-xs sm:text-sm text-orange-100 leading-relaxed mb-4">
-                    Thấu hiểu bản thân qua ba khía cạnh cốt lõi: <strong>NLB</strong> (Năng lực & cách xử lý công việc), <strong>DISC</strong> (Cách làm việc & giao tiếp), <strong>MBTI</strong> (Kiểu tính cách) kết hợp <strong>Nhân số học đường đời</strong>.
+                    Thấu hiểu bản thân qua ba khía cạnh cốt lõi: <strong>NLP</strong> (Phong cách tiếp nhận và xử lý thông tin), <strong>DISC</strong> (Cách làm việc & giao tiếp), <strong>MBTI</strong> (Kiểu tính cách) kết hợp <strong>Nhân số học đường đời</strong>.
                 </p>
 
                 <!-- 4 Khái niệm tóm tắt chuẩn từ Báo cáo thu hoạch -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 pt-2">
                     <div class="p-3 rounded-2xl bg-white/10 border border-white/20">
                         <div class="font-extrabold text-xs flex items-center gap-1.5 text-white mb-1">
-                            <span>👁️</span> NLB (Năng Lực)
+                            <span>👁️</span> NLP (Tiếp nhận thông tin)
                         </div>
                         <p class="text-[11px] text-orange-100">Kiểm tra khả năng tiếp nhận và cách bạn xử lý công việc (Visual, Auditory, Kinesthetic, Ad).</p>
                     </div>
@@ -131,12 +131,12 @@
                 </div>
             </div>
 
-            <!-- MỤC 1.1: NLB (NĂNG LỰC TIẾP NHẬN & XỬ LÝ CÔNG VIỆC) -->
+            <!-- MỤC 1.1: NLP (PHONG CÁCH TIẾP NHẬN & XỬ LÝ THÔNG TIN) -->
             <div class="pt-2">
                 <div class="flex items-center gap-2 mb-3">
                     <span class="w-8 h-8 rounded-xl bg-orange-100 text-brand-600 flex items-center justify-center text-sm font-black">1.1</span>
                     <div>
-                        <h3 class="font-black text-slate-900 text-sm sm:text-base">Mô hình NLB / NLP (V-A-K-Ad)</h3>
+                        <h3 class="font-black text-slate-900 text-sm sm:text-base">Mô hình NLP (V-A-K-Ad)</h3>
                         <p class="text-xs text-slate-500">Đánh giá 4 phong cách tiếp nhận: Visual (Hình ảnh), Auditory (Nghe), Kinesthetic (Cảm giác), Auditory Digital (Logic).</p>
                     </div>
                 </div>
@@ -904,7 +904,7 @@
 
     // 4. Xử lý Nộp Toàn Bộ Bài Test Đánh Giá Toàn Diện (Hỗ trợ validate đa bước mượt mà)
     function submitAssessmentTest() {
-        // Kiểm tra Phần 1: Tính cách NLB
+        // Kiểm tra Phần 1: NLP
         const nlpSelects = document.querySelectorAll('select[name^="nlp["]');
         let unselectedNlp = 0;
         nlpSelects.forEach(sel => {
@@ -912,7 +912,7 @@
         });
 
         if (unselectedNlp > 0) {
-            const confirmReturn1 = confirm(`Tại Phần 1 (Tính cách NLB): Bạn còn ${unselectedNlp} câu chưa chọn mức điểm (1-4).\n\n• Bấm OK: Để hệ thống chuyển đến Phần 1 giúp bạn chọn nốt điểm.\n• Bấm Cancel: Để nộp bài ngay (các câu chưa chọn sẽ tự nhận điểm mặc định).`);
+            const confirmReturn1 = confirm(`Tại Phần 1 (NLP): Bạn còn ${unselectedNlp} câu chưa chọn mức điểm (1-4).\n\n• Bấm OK: Để hệ thống chuyển đến Phần 1 giúp bạn chọn nốt điểm.\n• Bấm Cancel: Để nộp bài ngay (các câu chưa chọn sẽ tự nhận điểm mặc định).`);
             if (confirmReturn1) {
                 switchTab(1);
                 return;
@@ -961,6 +961,21 @@
         if (unselectedQuiz > 0) {
             alert(`Tại Phần 4 (Tìm hiểu AZ Media): Bạn còn ${unselectedQuiz} câu hỏi trắc nghiệm chưa chọn đáp án. Vui lòng hoàn thành để hệ thống tính điểm trắc nghiệm!`);
             switchTab(4);
+            return;
+        }
+
+        const selectedChannels = document.querySelectorAll('input[name="az_channels[]"]:checked');
+        if (selectedChannels.length === 0) {
+            alert('Tại Phần 4: Vui lòng chọn ít nhất một kênh bạn biết đến AZ Media.');
+            switchTab(4);
+            return;
+        }
+
+        const impression = document.querySelector('textarea[name="az_impression"]');
+        if (impression && impression.value.trim().length < 10) {
+            alert('Tại Phần 4: Vui lòng nhập cảm nhận và mong muốn thực tập tại AZ Media (ít nhất 10 ký tự).');
+            switchTab(4);
+            impression.focus();
             return;
         }
 

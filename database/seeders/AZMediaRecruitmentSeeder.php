@@ -340,11 +340,11 @@ class AZMediaRecruitmentSeeder extends Seeder
                 'difficulty' => 'easy',
                 'points' => 10,
             ],
-            // 4 câu hỏi Báo cáo thu hoạch NLB - DISC - MBTI - Nhân số học
+            // 4 câu hỏi Báo cáo thu hoạch NLP - DISC - MBTI - Nhân số học
             [
                 'position_category' => 'general',
                 'position_id' => null,
-                'question' => 'Trong phương pháp đánh giá NLB, một người có phong cách tiếp nhận và xử lý công việc thiên về Visual (Hình ảnh / Thị giác) có đặc điểm nổi bật nào?',
+                'question' => 'Trong phương pháp đánh giá NLP, một người có phong cách tiếp nhận và xử lý công việc thiên về Visual (Hình ảnh / Thị giác) có đặc điểm nổi bật nào?',
                 'option_a' => 'Dễ tiếp thu và xử lý công việc thông qua hình ảnh, mẫu thiết kế trực quan, ví dụ minh họa và quan sát thực tế.',
                 'option_b' => 'Chỉ tiếp thu thông tin qua việc nghe giảng giải bằng lời nói và nhạy cảm với âm điệu.',
                 'option_c' => 'Phải vận động thể chất liên tục mới có thể nắm bắt được yêu cầu của công việc.',
@@ -581,7 +581,7 @@ class AZMediaRecruitmentSeeder extends Seeder
         $candidatesData = [
             [
                 'name' => 'Nguyễn Nhật Linh Ân',
-                'email' => 'linhan.nguyen@azmedia.com.vn',
+                'email' => 'linhannguyennhat00@gmail.com',
                 'phone' => '0968825068',
                 'university' => 'Cao đẳng Đà Nẵng (DNC)',
                 'major' => 'Công nghệ Thông tin (24CNTT1A)',

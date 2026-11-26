@@ -285,6 +285,29 @@ class AZMediaATSController extends Controller
     }
 
     /**
+     * Cho phép ứng viên làm lại bài đánh giá năng lực.
+     */
+    public function resetCandidateTest($id)
+    {
+        $application = Application::with('candidate', 'testResult')->findOrFail($id);
+
+        if ($application->testResult) {
+            $application->testResult->delete();
+        }
+
+        $pdfPath = public_path("uploads/test_results/Bai_Test_AZ_{$application->application_code}.pdf");
+        if (file_exists($pdfPath)) {
+            unlink($pdfPath);
+        }
+
+        $application->status = 'test_sent';
+        $application->stage_step = 2;
+        $application->save();
+
+        return back()->with('success', "Đã mở lại bài test cho ứng viên {$application->candidate->name}. Ứng viên có thể truy cập lại link làm bài.");
+    }
+
+    /**
      * Xem trực tiếp file PDF CV (Embedded PDF Viewer)
      */
     public function viewCV($id)
