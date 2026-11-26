@@ -222,7 +222,7 @@
                                 </div>
                                 <div class="flex items-center gap-2 flex-shrink-0 self-end sm:self-auto">
                                     <span class="text-[11px] text-slate-500">Mức độ:</span>
-                                    <select name="nlp[{{ $qNum }}][{{ $opt['code'] }}]" class="text-xs font-bold py-1.5 px-3 rounded-xl border border-slate-300 bg-white focus:ring-2 focus:ring-brand-500">
+                                    <select name="nlp[{{ $qNum }}][{{ $opt['code'] }}]" data-nlp-question="{{ $qNum }}" data-nlp-code="{{ $opt['code'] }}" class="text-xs font-bold py-1.5 px-3 rounded-xl border border-slate-300 bg-white focus:ring-2 focus:ring-brand-500">
                                         <option value="" disabled selected>-- Chọn điểm (1-4) --</option>
                                         <option value="4">4 - Đúng nhất</option>
                                         <option value="3">3 - Khá đúng</option>
@@ -235,6 +235,33 @@
                     </div>
                 </div>
             @endforeach
+
+            <div class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-7 shadow-sm">
+                <div class="flex items-center justify-between gap-3 mb-4">
+                    <div>
+                        <h3 class="font-black text-slate-900 text-sm sm:text-base">Kết quả NLP tạm tính</h3>
+                        <p class="text-xs text-slate-500">Điểm được cập nhật tự động theo câu trả lời</p>
+                    </div>
+                    <span id="nlp_answer_progress" class="text-xs font-bold text-slate-500">0 / 20 lựa chọn</span>
+                </div>
+                <div class="overflow-x-auto rounded-xl border border-slate-200">
+                    <table class="w-full text-left text-xs border-collapse">
+                        <thead class="bg-slate-50 text-slate-600">
+                            <tr>
+                                <th class="py-2.5 px-4 font-bold">Phong cách</th>
+                                <th class="py-2.5 px-4 font-bold text-right">Tổng điểm</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            <tr><td class="py-2.5 px-4 font-semibold text-slate-800">Visual (Nhìn)</td><td id="nlp_score_V" class="py-2.5 px-4 text-right font-bold text-orange-600">0</td></tr>
+                            <tr><td class="py-2.5 px-4 font-semibold text-slate-800">Auditory (Nghe)</td><td id="nlp_score_A" class="py-2.5 px-4 text-right font-bold text-blue-600">0</td></tr>
+                            <tr><td class="py-2.5 px-4 font-semibold text-slate-800">Kinesthetic (Cảm giác)</td><td id="nlp_score_K" class="py-2.5 px-4 text-right font-bold text-emerald-600">0</td></tr>
+                            <tr><td class="py-2.5 px-4 font-semibold text-slate-800">Auditory Digital (Logic)</td><td id="nlp_score_Ad" class="py-2.5 px-4 text-right font-bold text-violet-600">0</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p id="nlp_dominant_result" class="mt-3 text-xs font-bold text-slate-700" aria-live="polite">Chọn điểm để xem phong cách nổi trội tạm tính.</p>
+            </div>
 
             <!-- MỤC 1.2: ĐÁNH GIÁ PHONG CÁCH LÀM VIỆC (DISC) -->
             <div class="pt-6 border-t border-slate-200">
@@ -815,6 +842,11 @@
     let radarChart = null;
 
     document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('select[name^="nlp["]').forEach(function(select) {
+            select.addEventListener('change', updateNlpRatings);
+        });
+        updateNlpRatings();
+
         const ctx = document.getElementById('wheelChart');
         if (ctx) {
             radarChart = new Chart(ctx, {
@@ -856,6 +888,56 @@
             });
         }
     });
+
+    function updateNlpRatings() {
+        const selects = Array.from(document.querySelectorAll('select[name^="nlp["]'));
+        const questions = new Map();
+        const scores = { V: 0, A: 0, K: 0, Ad: 0 };
+        let answered = 0;
+
+        selects.forEach(function(select) {
+            const question = select.dataset.nlpQuestion;
+            if (!questions.has(question)) questions.set(question, []);
+            questions.get(question).push(select);
+
+            if (select.value) {
+                scores[select.dataset.nlpCode] += Number(select.value);
+                answered++;
+            }
+        });
+
+        questions.forEach(function(questionSelects) {
+            const usedValues = new Set(questionSelects
+                .filter(function(select) { return select.value; })
+                .map(function(select) { return select.value; }));
+
+            questionSelects.forEach(function(select) {
+                Array.from(select.options).forEach(function(option) {
+                    option.disabled = option.value !== '' && usedValues.has(option.value) && option.value !== select.value;
+                });
+            });
+        });
+
+        Object.keys(scores).forEach(function(code) {
+            const scoreCell = document.getElementById(`nlp_score_${code}`);
+            if (scoreCell) scoreCell.textContent = scores[code];
+        });
+
+        const progress = document.getElementById('nlp_answer_progress');
+        if (progress) progress.textContent = `${answered} / ${selects.length} lựa chọn`;
+
+        const dominant = document.getElementById('nlp_dominant_result');
+        if (dominant) {
+            const labels = { V: 'Visual (Nhìn)', A: 'Auditory (Nghe)', K: 'Kinesthetic (Cảm giác)', Ad: 'Auditory Digital (Logic)' };
+            const maxScore = Math.max(...Object.values(scores));
+            const leaders = Object.keys(scores).filter(function(code) { return scores[code] === maxScore; });
+            dominant.textContent = answered === 0
+                ? 'Chọn điểm để xem phong cách nổi trội tạm tính.'
+                : leaders.length > 1
+                    ? `Đang đồng hạng: ${leaders.map(function(code) { return labels[code]; }).join(', ')}`
+                    : `Đang thiên về: ${labels[leaders[0]]}`;
+        }
+    }
 
     function updateWheelValue(key, val) {
         const label = document.getElementById(`val_label_${key}`);
