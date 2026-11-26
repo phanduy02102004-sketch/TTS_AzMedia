@@ -25,7 +25,7 @@ class AZMediaCareersController extends Controller
 
         // Bộ lọc chuyên ngành / phòng ban
         if ($request->filled('category') && $request->category !== 'all') {
-            $query->where('category', $request->category);
+            $query->forCategory($request->category);
         }
 
         // Bộ lọc hình thức (part_time, full_time)

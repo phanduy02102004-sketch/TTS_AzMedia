@@ -47,6 +47,30 @@
         .gradient-brand { background: linear-gradient(135deg, #ea580c 0%, #f97316 50%, #fb923c 100%); }
         .gradient-dark { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); }
         .text-gradient { background: linear-gradient(135deg, #ea580c 0%, #f97316 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .site-nav-link {
+            position: relative;
+            padding: 0.65rem 0.15rem;
+        }
+        .site-nav-link::after {
+            position: absolute;
+            right: 0.15rem;
+            bottom: 0.25rem;
+            left: 0.15rem;
+            height: 2px;
+            content: "";
+            background: #ea580c;
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 180ms ease;
+        }
+        .site-nav-link:hover,
+        .site-nav-link.is-active {
+            color: #ea580c;
+        }
+        .site-nav-link:hover::after,
+        .site-nav-link.is-active::after {
+            transform: scaleX(1);
+        }
 
         /* Hiệu ứng nhấp nháy nút Ứng tuyển */
         @keyframes pulse-glow {
@@ -67,10 +91,10 @@
 <body class="bg-slate-50 text-slate-800 flex flex-col min-h-screen">
 
     <!-- Top Announcement Bar -->
-    <div class="bg-slate-900 text-slate-300 text-xs py-2 px-4 border-b border-slate-800">
+    <div class="bg-slate-900 text-slate-300 text-sm py-2 px-4 border-b border-slate-800">
         <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
             <div class="flex items-center gap-2">
-                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-brand-600 text-white animate-pulse">
+                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-brand-600 text-white animate-pulse">
                     TUYỂN DỤNG ĐỢT 2026
                 </span>
                 <span>🔥 Đang mở đợt tuyển Thực tập sinh tại <strong>84 Nguyễn Hữu Dật, Đà Nẵng</strong></span>
@@ -80,20 +104,12 @@
                     <i class="fa-solid fa-phone text-xs"></i> 0968.825.068
                 </a>
                 <span class="hidden sm:inline">|</span>
-                <a href="{{ route('azmedia.candidate.track') }}" class="hover:text-brand-400 transition flex items-center gap-1">
-                    <i class="fa-solid fa-magnifying-glass text-xs"></i> Tra cứu hồ sơ ứng viên
-                </a>
-                <span class="hidden sm:inline">|</span>
                 @if(Session::has('intern_user'))
-                    <a href="{{ route('azmedia.intern.dashboard') }}" class="hover:text-orange-300 transition flex items-center gap-1 text-orange-400 font-bold">
-                        <i class="fa-solid fa-user-check text-xs"></i> Cổng TTS: {{ Session::get('intern_user')['name'] }}
+                    <a href="{{ route('azmedia.intern.dashboard') }}" class="hover:text-orange-300 transition flex items-center gap-1 text-orange-400 font-semibold">
+                        <i class="fa-solid fa-user-check text-xs"></i> TTS: {{ Session::get('intern_user')['name'] }}
                     </a>
-                @else
-                    <a href="{{ route('azmedia.intern.login') }}" class="hover:text-orange-300 transition flex items-center gap-1 text-orange-400 font-semibold">
-                        <i class="fa-solid fa-right-to-bracket text-xs"></i> Đăng nhập TTS (Chuẩn đầu vào/ra)
-                    </a>
+                    <span class="hidden sm:inline">|</span>
                 @endif
-                <span class="hidden sm:inline">|</span>
                 <a href="{{ route('azmedia.graduation.index') }}" class="hover:text-orange-300 transition flex items-center gap-1 text-orange-400 font-semibold">
                     <i class="fa-solid fa-graduation-cap text-xs"></i> Chuẩn đầu ra TTS
                 </a>
@@ -102,65 +118,43 @@
     </div>
 
     <!-- Main Navigation Bar -->
-    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur shadow-sm border-b border-slate-100">
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-slate-200 shadow-[0_8px_24px_rgba(15,23,42,0.06)]">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-20">
-                <!-- Brand Logo & Slogan -->
-                <a href="{{ route('azmedia.home') }}" class="flex items-center gap-3 group">
-                    <img src="{{ asset('uploads/az-homes-logo.png') }}" alt="AZ Homes Logo" class="w-12 h-12 object-contain group-hover:scale-105 transition">
-                    <div>
-                        <div class="flex items-center gap-1.5">
-                            <span class="text-xl font-extrabold tracking-tight text-slate-900">AZ<span class="text-brand-600">HR</span></span>
-                            <span class="text-[11px] px-1.5 py-0.5 rounded bg-orange-100 text-orange-700 font-semibold">Đà Nẵng</span>
-                        </div>
-                        <p class="text-[11px] text-slate-500 font-medium">Định hình tư duy – Chinh phục thị trường số</p>
-                    </div>
+            <div class="flex items-center justify-between h-28 lg:h-32">
+                <a href="{{ route('azmedia.home') }}" aria-label="AZmedia - Trang chủ" class="flex shrink-0 items-center group">
+                    <img src="{{ asset('uploads/az-media-full-logo-transparent.png') }}" alt="AZmedia Coaching & Marketing" class="w-52 h-20 lg:w-60 lg:h-24 object-contain object-left transition group-hover:scale-[1.03]">
                 </a>
 
                 <!-- Desktop Menu -->
-                <nav class="hidden md:flex items-center gap-7 text-sm font-medium text-slate-600">
-                    <a href="{{ route('azmedia.home') }}" class="hover:text-brand-600 transition {{ request()->routeIs('azmedia.home') ? 'text-brand-600 font-bold' : '' }}">
+                <nav id="desktop-site-navigation" class="hidden xl:flex items-center gap-5 2xl:gap-6 text-base font-bold text-slate-700">
+                    <a href="{{ route('azmedia.home') }}" class="site-nav-link whitespace-nowrap transition">
                         Trang chủ
                     </a>
-                    <a href="{{ route('azmedia.home') }}#positions" class="hover:text-brand-600 transition">
+                    <a href="{{ route('azmedia.home') }}#positions" class="site-nav-link whitespace-nowrap transition">
                         Vị trí Tuyển dụng
                     </a>
-                    <a href="{{ route('azmedia.home') }}#internship-program" class="hover:text-brand-600 transition">
+                    <a href="{{ route('azmedia.home') }}#internship-program" class="site-nav-link whitespace-nowrap transition">
                         Lộ trình TTS
                     </a>
-                    <a href="{{ route('azmedia.home') }}#core-values" class="hover:text-brand-600 transition">
+                    <a href="{{ route('azmedia.home') }}#core-values" class="site-nav-link whitespace-nowrap transition">
                         7 Giá trị cốt lõi
                     </a>
-                    <a href="{{ route('azmedia.home') }}#about" class="hover:text-brand-600 transition">
+                    <a href="{{ route('azmedia.home') }}#about" class="site-nav-link whitespace-nowrap transition">
                         Về AZ Media
                     </a>
-                    <a href="{{ route('azmedia.candidate.track') }}" class="hover:text-brand-600 transition flex items-center gap-1 {{ request()->routeIs('azmedia.candidate.track*') ? 'text-brand-600 font-bold' : '' }}">
-                        <i class="fa-solid fa-search text-xs"></i> Tra cứu tiến độ
-                    </a>
-                    <a href="{{ route('azmedia.graduation.index') }}" class="hover:text-brand-600 transition flex items-center gap-1.5 {{ request()->routeIs('azmedia.graduation*') ? 'text-brand-600 font-bold' : '' }}">
+                    <a href="{{ route('azmedia.graduation.index') }}" class="site-nav-link whitespace-nowrap transition flex items-center gap-1.5">
                         <i class="fa-solid fa-user-graduate text-xs"></i> Chuẩn đầu ra TTS
-                        <span class="px-1.5 py-0.2 rounded-full text-[9px] font-extrabold bg-orange-100 text-orange-700 uppercase">Mới</span>
                     </a>
                 </nav>
 
-                <!-- Desktop Right Actions -->
-                <div class="hidden md:flex items-center gap-3">
-                    @if(Session::has('intern_user'))
-                        <a href="{{ route('azmedia.intern.dashboard') }}" class="px-3 py-2 text-xs font-bold text-brand-700 bg-orange-50 hover:bg-orange-100 rounded-xl transition flex items-center gap-1.5 border border-orange-200">
-                            <i class="fa-solid fa-user-graduate"></i> Cổng TTS: {{ Str::limit(Session::get('intern_user')['name'], 15) }}
-                        </a>
-                    @else
-                        <a href="{{ route('azmedia.intern.login') }}" class="px-3.5 py-2 text-xs font-bold text-slate-700 hover:text-brand-600 hover:bg-slate-100 rounded-xl transition flex items-center gap-1.5">
-                            <i class="fa-solid fa-graduation-cap text-brand-600"></i> Đăng Nhập TTS
-                        </a>
-                    @endif
-                    <a href="{{ route('azmedia.home') }}#positions" class="px-5 py-2.5 text-sm font-bold text-white gradient-brand rounded-xl transition btn-pulse-glow">
+                <div class="hidden xl:flex items-center">
+                    <a href="{{ route('azmedia.home') }}#positions" class="whitespace-nowrap px-4 py-2.5 text-sm font-bold text-white gradient-brand rounded-xl transition btn-pulse-glow">
                         Ứng tuyển ngay <i class="fa-solid fa-arrow-right ml-1"></i>
                     </a>
                 </div>
 
                 <!-- Mobile Hamburger Toggle -->
-                <div class="flex md:hidden">
+                <div class="flex xl:hidden">
                     <button id="mobile-menu-btn" type="button" class="text-slate-600 hover:text-slate-900 p-2 rounded-lg focus:outline-none">
                         <i class="fa-solid fa-bars text-xl"></i>
                     </button>
@@ -169,29 +163,15 @@
         </div>
 
         <!-- Mobile Drawer Menu -->
-        <div id="mobile-menu" class="hidden md:hidden border-t border-slate-100 bg-white px-4 pt-3 pb-6 space-y-2 shadow-lg">
+        <div id="mobile-menu" class="hidden xl:hidden border-t border-slate-100 bg-white px-4 pt-3 pb-6 space-y-2 shadow-lg">
             <a href="{{ route('azmedia.home') }}" class="block px-3 py-2 rounded-lg text-base font-medium text-slate-700 hover:bg-orange-50 hover:text-brand-600">Trang chủ</a>
             <a href="{{ route('azmedia.home') }}#positions" class="block px-3 py-2 rounded-lg text-base font-medium text-slate-700 hover:bg-orange-50 hover:text-brand-600">Vị trí tuyển dụng</a>
             <a href="{{ route('azmedia.home') }}#internship-program" class="block px-3 py-2 rounded-lg text-base font-medium text-slate-700 hover:bg-orange-50 hover:text-brand-600">Lộ trình thực tập</a>
             <a href="{{ route('azmedia.home') }}#core-values" class="block px-3 py-2 rounded-lg text-base font-medium text-slate-700 hover:bg-orange-50 hover:text-brand-600">7 Giá trị cốt lõi</a>
             <a href="{{ route('azmedia.home') }}#about" class="block px-3 py-2 rounded-lg text-base font-medium text-slate-700 hover:bg-orange-50 hover:text-brand-600">Giới thiệu AZ Media</a>
-            <a href="{{ route('azmedia.candidate.track') }}" class="block px-3 py-2 rounded-lg text-base font-medium text-slate-700 hover:bg-orange-50 hover:text-brand-600">Tra cứu tiến độ hồ sơ</a>
             <a href="{{ route('azmedia.graduation.index') }}" class="block px-3 py-2 rounded-lg text-base font-medium text-slate-700 hover:bg-orange-50 hover:text-brand-600 flex items-center justify-between">
                 <span><i class="fa-solid fa-user-graduate text-brand-600 mr-2"></i> Chuẩn đầu ra TTS</span>
-                <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-orange-100 text-orange-700">Mới</span>
             </a>
-            @if(Session::has('intern_user'))
-                <a href="{{ route('azmedia.intern.dashboard') }}" class="block px-3 py-2 rounded-lg text-base font-medium text-brand-600 hover:bg-orange-50 flex items-center justify-between">
-                    <span><i class="fa-solid fa-id-badge text-brand-600 mr-2"></i> Bảng điều khiển TTS ({{ Session::get('intern_user')['name'] }})</span>
-                </a>
-                <a href="{{ route('azmedia.intern.logout') }}" class="block px-3 py-2 rounded-lg text-base font-medium text-rose-600 hover:bg-rose-50">
-                    <i class="fa-solid fa-arrow-right-from-bracket mr-2"></i> Đăng xuất TTS
-                </a>
-            @else
-                <a href="{{ route('azmedia.intern.login') }}" class="block px-3 py-2 rounded-lg text-base font-medium text-slate-700 hover:bg-orange-50 hover:text-brand-600">
-                    <i class="fa-solid fa-graduation-cap text-brand-600 mr-2"></i> Đăng nhập Cổng Thực tập sinh
-                </a>
-            @endif
             <div class="pt-2">
                 <a href="{{ route('azmedia.home') }}#positions" class="block w-full text-center px-4 py-2.5 rounded-xl font-bold text-white gradient-brand btn-pulse-glow">
                     Ứng tuyển ngay
@@ -247,81 +227,81 @@
     </main>
 
     <!-- Footer with Full AZ Media Profile & Student Info -->
-    <footer class="bg-slate-900 text-slate-300 pt-16 pb-10 border-t border-slate-800 mt-20">
+    <footer class="bg-[#ff8d00] text-stone-800 text-base leading-relaxed pt-16 pb-10 border-t border-brand-200 mt-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mb-12">
                 <!-- Col 1: AZ Media Overview -->
                 <div>
                     <div class="flex items-center gap-3 mb-4">
-                        <img src="{{ asset('uploads/az-homes-logo.png') }}" alt="AZ Homes Logo" class="w-10 h-10 object-contain">
+                        <img src="{{ asset('uploads/az-media-full-logo.png') }}" alt="AZmedia Coaching & Marketing" class="w-24 h-11 object-contain object-left">
                         <div>
-                            <span class="text-lg font-extrabold tracking-tight text-white">AZ<span class="text-brand-500">HR</span></span>
-                            <p class="text-[10px] text-slate-400">Coaching & Marketing Online</p>
+                            <span class="text-2xl font-extrabold tracking-tight text-brand-900">AZ<span class="text-brand-700">HR</span></span>
+                            <p class="text-sm text-stone-700">Coaching & Marketing Online</p>
                         </div>
                     </div>
-                    <p class="text-xs text-slate-400 leading-relaxed mb-4">
+                    <p class="mb-4">
                         <strong>CÔNG TY TNHH ĐẦU TƯ PHÁT TRIỂN DOANH NGHIỆP AZ HOMES – CHI NHÁNH AZ MEDIA</strong><br>
                         Slogan: <em>“Định hình tư duy – Chinh phục thị trường số”</em>. Tiên phong đào tạo kỹ năng thực chiến và giải pháp chuyển đổi số cho cá nhân và doanh nghiệp.
                     </p>
-                    <div class="flex items-center gap-3 text-slate-400">
-                        <a href="https://www.facebook.com/share/1A5N2tisXh/?mibextid=wwXIfr" target="_blank" class="w-8 h-8 rounded-lg bg-brand-600 text-white hover:bg-brand-700 flex items-center justify-center transition shadow-sm" title="Facebook Fanpage AZ Media">
-                            <i class="fa-brands fa-facebook-f text-sm"></i>
+                    <div class="flex items-center gap-3 text-brand-800">
+                        <a href="https://www.facebook.com/share/1A5N2tisXh/?mibextid=wwXIfr" target="_blank" class="w-9 h-9 rounded-lg bg-brand-50 hover:bg-brand-200 flex items-center justify-center transition shadow-sm" title="Facebook Fanpage AZ Media">
+                            <i class="fa-brands fa-facebook-f text-base"></i>
                         </a>
-                        <a href="https://www.tiktok.com/@ctyazmedia" target="_blank" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-brand-600 hover:text-white flex items-center justify-center transition" title="TikTok @ctyazmedia">
-                            <i class="fa-brands fa-tiktok text-sm"></i>
+                        <a href="https://www.tiktok.com/@ctyazmedia" target="_blank" class="w-9 h-9 rounded-lg bg-brand-50 hover:bg-brand-200 flex items-center justify-center transition" title="TikTok @ctyazmedia">
+                            <i class="fa-brands fa-tiktok text-base"></i>
                         </a>
-                        <a href="https://www.instagram.com/azmediaacademy/" target="_blank" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-brand-600 hover:text-white flex items-center justify-center transition" title="Instagram">
-                            <i class="fa-brands fa-instagram text-sm"></i>
+                        <a href="https://www.instagram.com/azmediaacademy/" target="_blank" class="w-9 h-9 rounded-lg bg-brand-50 hover:bg-brand-200 flex items-center justify-center transition" title="Instagram">
+                            <i class="fa-brands fa-instagram text-base"></i>
                         </a>
-                        <a href="https://www.threads.com/@congtyazmedia" target="_blank" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-brand-600 hover:text-white flex items-center justify-center transition" title="Threads">
-                            <i class="fa-brands fa-threads text-sm"></i>
+                        <a href="https://www.threads.com/@congtyazmedia" target="_blank" class="w-9 h-9 rounded-lg bg-brand-50 hover:bg-brand-200 flex items-center justify-center transition" title="Threads">
+                            <i class="fa-brands fa-threads text-base"></i>
                         </a>
-                        <a href="https://azmedia.com.vn/" target="_blank" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-brand-600 hover:text-white flex items-center justify-center transition" title="Website chính thức">
-                            <i class="fa-solid fa-globe text-sm"></i>
+                        <a href="https://azmedia.com.vn/" target="_blank" class="w-9 h-9 rounded-lg bg-brand-50 hover:bg-brand-200 flex items-center justify-center transition" title="Website chính thức">
+                            <i class="fa-solid fa-globe text-base"></i>
                         </a>
                     </div>
                 </div>
 
                 <!-- Col 2: Văn phòng & Pháp lý -->
                 <div>
-                    <h4 class="text-sm font-bold text-white uppercase tracking-wider mb-4 border-l-2 border-brand-500 pl-2">Văn phòng & Pháp lý</h4>
-                    <ul class="text-xs space-y-3 text-slate-400">
+                    <h4 class="text-lg font-bold text-brand-900 uppercase tracking-wider mb-4 border-l-2 border-brand-300 pl-2">Văn phòng & Pháp lý</h4>
+                    <ul class="space-y-3">
                         <li>
-                            <strong class="text-slate-200">📍 Chi nhánh Đà Nẵng:</strong><br>
+                            <strong>📍 Chi nhánh Đà Nẵng:</strong><br>
                             84 Nguyễn Hữu Dật, Phường Hòa Cường, Quận Hải Châu, TP. Đà Nẵng
                         </li>
                         <li>
-                            <strong class="text-slate-200">🏢 Trụ sở chính TP.HCM:</strong><br>
+                            <strong>🏢 Trụ sở chính TP.HCM:</strong><br>
                             Tầng 3, Tòa nhà WMC, 102A-B-C Cống Quỳnh, P. Bến Thành, TP. Hồ Chí Minh
                         </li>
                         <li>
-                            <strong class="text-slate-200">📋 Mã số thuế:</strong> 0314247738-002
+                            <strong>📋 Mã số thuế:</strong> 0314247738-002
                         </li>
                         <li>
-                            <strong class="text-slate-200">👤 Đại diện pháp luật:</strong> Tổng Giám Đốc Lê Đình Quang
+                            <strong>👤 Đại diện pháp luật:</strong> Tổng Giám Đốc Lê Đình Quang
                         </li>
                         <li>
-                            <strong class="text-slate-200">📞 Hotline:</strong> <a href="tel:0968825068" class="text-brand-400 hover:underline">0968.825.068</a>
+                            <strong>📞 Hotline:</strong> <a href="tel:0968825068" class="font-semibold underline underline-offset-4">0968.825.068</a>
                         </li>
                     </ul>
                 </div>
 
                 <!-- Col 3: Triết lý & Giá trị cốt lõi -->
                 <div>
-                    <h4 class="text-sm font-bold text-white uppercase tracking-wider mb-4 border-l-2 border-brand-500 pl-2">Triết lý AZ Media</h4>
-                    <ul class="text-xs space-y-2 text-slate-400">
-                        <li><strong class="text-brand-400">A (Action):</strong> "Học lý thuyết để nắm rõ bản chất, hành động để thành công"</li>
-                        <li><strong class="text-brand-400">Z (Zoom):</strong> Tầm nhìn xa trông rộng, sự phát triển vượt bậc</li>
-                        <li><strong class="text-brand-400">M (Media):</strong> Truyền thông số & Giải pháp công nghệ</li>
-                        <li><strong class="text-slate-200">🌱 Môi trường:</strong> "Thầy giỏi - Bạn tốt - Sách hay"</li>
-                        <li><strong class="text-slate-200">🎯 Tận tâm:</strong> "Có tâm ắt sẽ có tầm"</li>
-                        <li><strong class="text-slate-200">⭐ Đích đến:</strong> Từ "bình thường" sang "phi thường", từ "bé nhỏ" thành "khổng lồ"</li>
+                    <h4 class="text-lg font-bold text-brand-900 uppercase tracking-wider mb-4 border-l-2 border-brand-300 pl-2">Triết lý AZ Media</h4>
+                    <ul class="space-y-2">
+                        <li><strong>A (Action):</strong> "Học lý thuyết để nắm rõ bản chất, hành động để thành công"</li>
+                        <li><strong>Z (Zoom):</strong> Tầm nhìn xa trông rộng, sự phát triển vượt bậc</li>
+                        <li><strong>M (Media):</strong> Truyền thông số & Giải pháp công nghệ</li>
+                        <li><strong>🌱 Môi trường:</strong> "Thầy giỏi - Bạn tốt - Sách hay"</li>
+                        <li><strong>🎯 Tận tâm:</strong> "Có tâm ắt sẽ có tầm"</li>
+                        <li><strong>⭐ Đích đến:</strong> Từ "bình thường" sang "phi thường", từ "bé nhỏ" thành "khổng lồ"</li>
                     </ul>
                 </div>
             </div>
 
             <!-- Bottom Copyright -->
-            <div class="pt-8 border-t border-slate-800 text-center text-xs text-slate-500 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="pt-8 border-t border-brand-200 text-center text-sm flex flex-col sm:flex-row justify-between items-center gap-4">
                 <p>© 2026 AZ Media - Bản quyền thuộc Công ty TNHH Đầu tư Phát triển Doanh nghiệp AZ Homes.</p>
                 <p>Hệ thống Tuyển dụng Thực tập sinh trực tuyến thiết kế theo chuẩn Client-Server & RESTful API.</p>
             </div>
@@ -334,6 +314,38 @@
             const menu = document.getElementById('mobile-menu');
             menu.classList.toggle('hidden');
         });
+
+        const desktopNavigation = document.getElementById('desktop-site-navigation');
+        if (desktopNavigation) {
+            const navigationLinks = Array.from(desktopNavigation.querySelectorAll('.site-nav-link'));
+            const setActiveLink = (activeLink) => {
+                navigationLinks.forEach((link) => {
+                    const isActive = link === activeLink;
+                    link.classList.toggle('is-active', isActive);
+                    if (isActive) {
+                        link.setAttribute('aria-current', 'page');
+                    } else {
+                        link.removeAttribute('aria-current');
+                    }
+                });
+            };
+            const currentLink = navigationLinks.find((link) => {
+                const linkUrl = new URL(link.href, window.location.origin);
+                return linkUrl.pathname === window.location.pathname
+                    && linkUrl.hash === window.location.hash;
+            });
+
+            if (currentLink) {
+                setActiveLink(currentLink);
+            }
+
+            desktopNavigation.addEventListener('click', (event) => {
+                const selectedLink = event.target.closest('.site-nav-link');
+                if (selectedLink) {
+                    setActiveLink(selectedLink);
+                }
+            });
+        }
     </script>
     @stack('scripts')
 </body>

@@ -101,6 +101,8 @@ Route::get('/intern/register', [InternAuthController::class, 'registerPage'])->n
 Route::post('/intern/register', [InternAuthController::class, 'processRegister'])->name('azmedia.intern.register.submit');
 Route::get('/intern/logout', [InternAuthController::class, 'logout'])->name('azmedia.intern.logout');
 Route::get('/intern/dashboard', [InternAuthController::class, 'dashboard'])->name('azmedia.intern.dashboard')->middleware('intern.auth');
+Route::get('/intern/profile', [InternAuthController::class, 'profile'])->name('azmedia.intern.profile')->middleware('intern.auth');
+Route::put('/intern/profile', [InternAuthController::class, 'updateProfile'])->name('azmedia.intern.profile.update')->middleware('intern.auth');
 
 // Phân hệ 2.5: Chuẩn Đầu Ra TTS AZ Media (Graduation / Exit Criteria & AZ SUPPORT)
 Route::get('/chuan-dau-ra', [InternGraduationController::class, 'index'])->name('azmedia.graduation.index');

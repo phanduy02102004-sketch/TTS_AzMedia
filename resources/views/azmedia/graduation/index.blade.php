@@ -193,7 +193,7 @@
         <div id="az-support-portal" class="bg-white rounded-3xl p-6 sm:p-10 shadow-sm border border-slate-200 space-y-8">
             <div class="text-center max-w-xl mx-auto space-y-3">
                 <div class="inline-flex items-center justify-center p-3 rounded-2xl bg-orange-50 mb-2">
-                    <img src="{{ asset('uploads/az-homes-logo.png') }}" alt="AZ Media Logo" class="h-16 w-auto object-contain">
+                    <img src="{{ asset('uploads/az-media-full-logo.png') }}" alt="AZmedia Coaching & Marketing" class="h-16 w-48 object-contain">
                 </div>
                 <h2 class="text-2xl sm:text-3xl font-extrabold text-orange-600 tracking-tight">
                     AZ SUPPORT

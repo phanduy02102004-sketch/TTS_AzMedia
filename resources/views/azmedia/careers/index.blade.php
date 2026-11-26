@@ -2,13 +2,49 @@
 
 @section('title', 'Tuyển Dụng Thực Tập Sinh 2026 - AZ Media Đà Nẵng')
 
+@push('styles')
+<style>
+    .careers-hero {
+        background: linear-gradient(112deg, #231912 12%, #51280f 58%, #b94c13 100%);
+        border-bottom: 5px solid #f97316;
+    }
+    .careers-hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: repeating-radial-gradient(circle at 95% 115%, transparent 0 58px, rgb(255 187 120 / 13%) 59px 60px);
+        mask-image: linear-gradient(90deg, transparent 20%, black 85%);
+    }
+    .careers-hero .text-gradient {
+        background-image: linear-gradient(110deg, #ff963e, #ffd7a6);
+    }
+    .careers-program {
+        background-color: #ff8d00;
+    }
+    .program-phase-card {
+        box-shadow: 0 3px 8px rgba(102, 49, 0, 0.12), 0 16px 30px -10px rgba(102, 49, 0, 0.38);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        .careers-enter {
+            animation: careers-enter 480ms cubic-bezier(.2,.7,.2,1) backwards;
+        }
+        @keyframes careers-enter {
+            from { opacity: 0; transform: translateY(18px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    }
+    @media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
+        [data-reveal-group] > .careers-enter:nth-child(3n + 2) { animation-delay: 55ms; }
+        [data-reveal-group] > .careers-enter:nth-child(3n) { animation-delay: 110ms; }
+    }
+</style>
+@endpush
+
 @section('content')
 
 <!-- Hero Section -->
-<section class="relative overflow-hidden bg-slate-900 text-white pt-16 pb-24 lg:pt-24 lg:pb-32">
-    <!-- Decorative glow background -->
-    <div class="absolute top-0 right-0 -mt-12 -mr-12 w-96 h-96 bg-brand-600/20 rounded-full blur-3xl pointer-events-none"></div>
-    <div class="absolute bottom-0 left-0 -mb-12 -ml-12 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl pointer-events-none"></div>
+<section class="careers-hero relative overflow-hidden text-white pt-16 pb-24 lg:pt-24 lg:pb-32">
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
@@ -118,83 +154,106 @@
 </section>
 
 <!-- Section: Ý Nghĩa Thương Hiệu AZ MEDIA & 7 Giá Trị Cốt Lõi -->
-<section id="about" class="py-20 bg-white">
+<section id="about" class="py-20 bg-orange-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center max-w-3xl mx-auto mb-16">
-            <span class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-orange-100 text-brand-700">
-                Văn Hóa Doanh Nghiệp AZ MEDIA
-            </span>
-            <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 mt-3 mb-4">
-                Ý Nghĩa Thương Hiệu & 7 Giá Trị Cốt Lõi
+            <h2 data-reveal class="text-3xl sm:text-4xl font-extrabold text-slate-900 mb-4">
+                Ý Nghĩa Cái Tên AZMedia Là Gì?
             </h2>
-            <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
-                Được thành lập từ năm 2019, Chi nhánh AZ Media tại Đà Nẵng (84 Nguyễn Hữu Dật) là bệ phóng vững chắc giúp các bạn trẻ khai mở tư duy, rèn luyện kỹ năng và chinh phục thị trường số.
-            </p>
         </div>
 
         <!-- 3 Trụ Cột: A - Z - M -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+        <div data-reveal-group class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
             <!-- A: Action -->
-            <div class="bg-gradient-to-br from-orange-50 to-white p-8 rounded-2xl border border-orange-100 shadow-sm hover:shadow-md transition">
+            <div class="bg-gradient-to-br from-orange-50 to-white p-8 rounded-2xl border border-orange-100 shadow-md shadow-orange-100/70 hover:shadow-xl hover:shadow-orange-200/70 hover:-translate-y-1 transition duration-300">
                 <div class="w-14 h-14 rounded-2xl gradient-brand text-white flex items-center justify-center text-2xl font-black mb-6 shadow">
                     A
                 </div>
-                <h3 class="text-xl font-bold text-slate-900 mb-2">ACTION • HÀNH ĐỘNG</h3>
+                <h3 class="text-xl font-bold text-slate-900 mb-2">A (Action)</h3>
                 <p class="text-sm font-semibold text-brand-600 mb-3">"Học lý thuyết để nắm rõ bản chất, hành động để thành công"</p>
                 <p class="text-xs text-slate-600 leading-relaxed">
-                    AZ Media lấy hành động làm trung tâm. Mọi kiến thức giảng dạy hay đào tạo thực tập sinh đều được đưa vào áp dụng trực tiếp trên các hệ thống thực tế.
+                    Tức là “hành động”, AZmedia muốn học viên “học lý thuyết để nắm rõ bản chất, hành động để thành công”.
                 </p>
             </div>
 
             <!-- Z: Zoom -->
-            <div class="bg-gradient-to-br from-slate-50 to-white p-8 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition">
+            <div class="bg-gradient-to-br from-slate-50 to-white p-8 rounded-2xl border border-slate-200 shadow-md shadow-slate-200/80 hover:shadow-xl hover:shadow-slate-300/70 hover:-translate-y-1 transition duration-300">
                 <div class="w-14 h-14 rounded-2xl bg-slate-900 text-white flex items-center justify-center text-2xl font-black mb-6 shadow">
                     Z
                 </div>
-                <h3 class="text-xl font-bold text-slate-900 mb-2">ZOOM • PHÓNG TO TẦM NHÌN</h3>
+                <h3 class="text-xl font-bold text-slate-900 mb-2">Z (Zoom)</h3>
                 <p class="text-sm font-semibold text-slate-700 mb-3">Tầm nhìn xa trông rộng & Sự phát triển vượt bậc</p>
                 <p class="text-xs text-slate-600 leading-relaxed">
-                    Đại diện cho hành động "phóng to", bứt phá giới hạn của bản thân. Đồng hành đưa doanh nghiệp từ nhỏ bé thành khổng lồ, đưa cá nhân từ bình thường sang phi thường.
+                    Được hiểu là phóng to. Phóng to được hiểu là tầm nhìn xa trông rộng, là sự phát triển, sự trưởng thành.
                 </p>
             </div>
 
             <!-- M: Media -->
-            <div class="bg-gradient-to-br from-blue-50 to-white p-8 rounded-2xl border border-blue-100 shadow-sm hover:shadow-md transition">
+            <div class="bg-gradient-to-br from-blue-50 to-white p-8 rounded-2xl border border-blue-100 shadow-md shadow-blue-100/80 hover:shadow-xl hover:shadow-blue-200/70 hover:-translate-y-1 transition duration-300">
                 <div class="w-14 h-14 rounded-2xl bg-blue-600 text-white flex items-center justify-center text-2xl font-black mb-6 shadow">
                     M
                 </div>
-                <h3 class="text-xl font-bold text-slate-900 mb-2">MEDIA • TRUYỀN THÔNG SỐ</h3>
+                <h3 class="text-xl font-bold text-slate-900 mb-2">M (Media)</h3>
                 <p class="text-sm font-semibold text-blue-600 mb-3">Công cụ kết nối & Dữ liệu chuyển đổi số</p>
                 <p class="text-xs text-slate-600 leading-relaxed">
-                    Media chính là những kênh truyền thông, công nghệ phần mềm, công cụ lưu trữ dữ liệu và giải pháp chuyển đổi số toàn diện kết nối doanh nghiệp với hàng triệu khách hàng.
+                    Media là những kênh truyền tải truyền thông hoặc các công cụ được sử dụng để lưu trữ và cung cấp thông tin hoặc dữ liệu.
                 </p>
             </div>
         </div>
 
+        <!-- Cam kết thương hiệu A - Z - M -->
+        <div data-reveal-group class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+            <section class="p-7 rounded-2xl border-2 border-orange-400 bg-orange-50/30 shadow-md shadow-orange-100/80 hover:shadow-xl hover:shadow-orange-200/70 hover:-translate-y-1 transition duration-300">
+                <ul class="space-y-4 text-sm leading-relaxed text-slate-700">
+                    <li class="flex gap-2"><i class="fa-solid fa-check mt-1 text-brand-600"></i><span>Không hướng dẫn lý thuyết suông. Thực hành, ứng dụng chính là cách để thấm thấu kiến thức một cách tốt nhất.</span></li>
+                    <li class="flex gap-2"><i class="fa-solid fa-check mt-1 text-brand-600"></i><span>Không làm tốn thời gian của bạn, kiến thức cô đọng trong những gì hữu ích nhất.</span></li>
+                    <li class="flex gap-2"><i class="fa-solid fa-check mt-1 text-brand-600"></i><span>Huấn luyện chuẩn, hành động ngay. AZmedia là môi trường để thúc đẩy bạn hành động không ngừng, đến khi bạn vươn đến thành công.</span></li>
+                </ul>
+            </section>
+
+            <section class="p-7 rounded-2xl border-2 border-orange-400 bg-slate-50 shadow-md shadow-slate-200/80 hover:shadow-xl hover:shadow-slate-300/70 hover:-translate-y-1 transition duration-300">
+                <ul class="space-y-4 text-sm leading-relaxed text-slate-700">
+                    <li class="flex gap-2"><i class="fa-solid fa-check mt-1 text-brand-600"></i><span>Mang đến cho bạn lối tư duy của người thành công, thoát khỏi lối mòn tư duy thông thường.</span></li>
+                    <li class="flex gap-2"><i class="fa-solid fa-check mt-1 text-brand-600"></i><span>Tư vấn cho bạn giải pháp, chiến lược để phát triển lâu dài, bền vững.</span></li>
+                    <li class="flex gap-2"><i class="fa-solid fa-check mt-1 text-brand-600"></i><span>Giúp bạn rèn luyện những tố chất cần thiết để bạn sẵn sàng vươn mình, trưởng thành.</span></li>
+                </ul>
+            </section>
+
+            <section class="p-7 rounded-2xl border-2 border-orange-400 bg-blue-50/30 shadow-md shadow-blue-100/80 hover:shadow-xl hover:shadow-blue-200/70 hover:-translate-y-1 transition duration-300">
+                <ul class="space-y-4 text-sm leading-relaxed text-slate-700">
+                    <li class="flex gap-2"><i class="fa-solid fa-check mt-1 text-brand-600"></i><span>Media là người dẫn lối cho bạn vượt qua những ngã rẽ cuộc đời.</span></li>
+                    <li class="flex gap-2"><i class="fa-solid fa-check mt-1 text-brand-600"></i><span>Media là người lắng nghe khi bạn đưa ra quyết định.</span></li>
+                    <li class="flex gap-2"><i class="fa-solid fa-check mt-1 text-brand-600"></i><span>Media là người thầy thông thái giúp bạn khai phá bản thân.</span></li>
+                    <li class="flex gap-2"><i class="fa-solid fa-check mt-1 text-brand-600"></i><span>Media là người tạo động lực bạn cần khi hành động mạnh mẽ.</span></li>
+                    <li class="flex gap-2"><i class="fa-solid fa-check mt-1 text-brand-600"></i><span>Media là người đồng hành cùng bạn tạo ra những thành quả phi thường.</span></li>
+                </ul>
+            </section>
+        </div>
+
         <!-- 7 Giá Trị Cốt Lõi Grid -->
-        <div id="core-values" class="bg-slate-50 rounded-3xl p-8 sm:p-12 border border-slate-100">
+        <div id="core-values" class="bg-orange-100 rounded-3xl p-8 sm:p-12 border border-slate-100 shadow-xl shadow-slate-200/70">
             <div class="text-center max-w-2xl mx-auto mb-10">
                 <h3 class="text-2xl font-extrabold text-slate-900">7 Giá Trị Cốt Lõi AZ Media Cống Hiến</h3>
                 <p class="text-xs text-slate-500 mt-2">Kim chỉ nam định hình môi trường làm việc và văn hóa ứng xử chuyên nghiệp</p>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div data-reveal-group class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 <!-- 1. Đạo đức -->
-                <div class="bg-white p-6 rounded-xl border border-slate-200/80 shadow-sm">
+                <div class="bg-white p-6 rounded-xl border border-slate-200/80 shadow-md shadow-slate-200/70 hover:shadow-xl hover:-translate-y-1 transition duration-300">
                     <div class="text-brand-600 text-2xl mb-3"><i class="fa-solid fa-shield-heart"></i></div>
                     <h4 class="font-bold text-base text-slate-900 mb-1">1. Đạo đức</h4>
                     <p class="text-xs text-slate-600">Giá trị cốt lõi tối thượng, chân thành, trung thực, minh bạch và cam kết không bao giờ bỏ rơi đối tác.</p>
                 </div>
 
                 <!-- 2. Trí tuệ -->
-                <div class="bg-white p-6 rounded-xl border border-slate-200/80 shadow-sm">
+                <div class="bg-white p-6 rounded-xl border border-slate-200/80 shadow-md shadow-slate-200/70 hover:shadow-xl hover:-translate-y-1 transition duration-300">
                     <div class="text-brand-600 text-2xl mb-3"><i class="fa-solid fa-brain"></i></div>
                     <h4 class="font-bold text-base text-slate-900 mb-1">2. Trí tuệ</h4>
                     <p class="text-xs text-slate-600">Tri thức là chìa khóa cạnh tranh. Không ngừng cập nhật Marketing, Công nghệ, AI và tư duy sáng tạo dám nghĩ dám làm.</p>
                 </div>
 
                 <!-- 3. Môi trường -->
-                <div class="bg-white p-6 rounded-xl border border-slate-200/80 shadow-sm">
+                <div class="bg-white p-6 rounded-xl border border-slate-200/80 shadow-md shadow-slate-200/70 hover:shadow-xl hover:-translate-y-1 transition duration-300">
                     <div class="text-brand-600 text-2xl mb-3"><i class="fa-solid fa-seedling"></i></div>
                     <h4 class="font-bold text-base text-slate-900 mb-1">3. Môi trường</h4>
                     <p class="text-xs text-slate-600 font-semibold text-brand-700">"Thầy giỏi - Bạn tốt - Sách hay"</p>
@@ -202,7 +261,7 @@
                 </div>
 
                 <!-- 4. Tận tâm -->
-                <div class="bg-white p-6 rounded-xl border border-slate-200/80 shadow-sm">
+                <div class="bg-white p-6 rounded-xl border border-slate-200/80 shadow-md shadow-slate-200/70 hover:shadow-xl hover:-translate-y-1 transition duration-300">
                     <div class="text-brand-600 text-2xl mb-3"><i class="fa-solid fa-heart-pulse"></i></div>
                     <h4 class="font-bold text-base text-slate-900 mb-1">4. Tận tâm</h4>
                     <p class="text-xs text-slate-600 font-semibold text-slate-800">"Có tâm ắt sẽ có tầm"</p>
@@ -210,28 +269,28 @@
                 </div>
 
                 <!-- 5. Cam kết -->
-                <div class="bg-white p-6 rounded-xl border border-slate-200/80 shadow-sm">
+                <div class="bg-white p-6 rounded-xl border border-slate-200/80 shadow-md shadow-slate-200/70 hover:shadow-xl hover:-translate-y-1 transition duration-300">
                     <div class="text-brand-600 text-2xl mb-3"><i class="fa-solid fa-handshake-angle"></i></div>
                     <h4 class="font-bold text-base text-slate-900 mb-1">5. Cam kết</h4>
                     <p class="text-xs text-slate-600">Nói đi đôi với làm, giữ trọn chữ tín về tiến độ và chất lượng thực tế thay vì những lời hứa hẹn suông.</p>
                 </div>
 
                 <!-- 6. Đổi mới sáng tạo -->
-                <div class="bg-white p-6 rounded-xl border border-slate-200/80 shadow-sm">
+                <div class="bg-white p-6 rounded-xl border border-slate-200/80 shadow-md shadow-slate-200/70 hover:shadow-xl hover:-translate-y-1 transition duration-300">
                     <div class="text-brand-600 text-2xl mb-3"><i class="fa-solid fa-lightbulb"></i></div>
                     <h4 class="font-bold text-base text-slate-900 mb-1">6. Đổi mới sáng tạo</h4>
                     <p class="text-xs text-slate-600">Gìn giữ bản sắc truyền thống đồng thời không ngừng tìm kiếm giải pháp công nghệ mới để tối ưu hiệu quả.</p>
                 </div>
 
                 <!-- 7. Kết quả -->
-                <div class="bg-white p-6 rounded-xl border border-slate-200/80 shadow-sm">
+                <div class="bg-white p-6 rounded-xl border border-slate-200/80 shadow-md shadow-slate-200/70 hover:shadow-xl hover:-translate-y-1 transition duration-300">
                     <div class="text-brand-600 text-2xl mb-3"><i class="fa-solid fa-trophy"></i></div>
                     <h4 class="font-bold text-base text-slate-900 mb-1">7. Kết quả</h4>
                     <p class="text-xs text-slate-600">Thước đo thực tế của mọi sự cống hiến, giúp thực tập sinh bứt phá từ "bình thường" sang "phi thường".</p>
                 </div>
 
                 <!-- Thông tin chi nhánh Đà Nẵng -->
-                <div class="bg-gradient-to-br from-brand-600 to-orange-700 text-white p-6 rounded-xl shadow">
+                <div class="bg-gradient-to-br from-brand-600 to-orange-700 text-white p-6 rounded-xl shadow-lg shadow-orange-300/70 hover:shadow-xl hover:shadow-orange-400/60 hover:-translate-y-1 transition duration-300">
                     <div class="text-white text-2xl mb-3"><i class="fa-solid fa-location-dot"></i></div>
                     <h4 class="font-bold text-base mb-1">Chi nhánh Đà Nẵng</h4>
                     <p class="text-xs text-orange-100">84 Nguyễn Hữu Dật, P. Hòa Cường, Q. Hải Châu, TP. Đà Nẵng</p>
@@ -243,23 +302,23 @@
 </section>
 
 <!-- Section: Lộ Trình Đào Tạo Thực Tập Sinh 3 Tháng (Internship Roadmap) -->
-<section id="internship-program" class="py-20 bg-slate-50 border-t border-b border-slate-200/70">
+<section id="internship-program" class="careers-program py-20">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center max-w-3xl mx-auto mb-16">
             <span class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-orange-100 text-brand-700">
                 Lộ Trình Đào Tạo Thực Tập Chuẩn
             </span>
-            <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 mt-3 mb-4">
+            <h2 data-reveal class="text-3xl sm:text-4xl font-extrabold text-stone-900 mt-3 mb-4">
                 3 Tháng Thực Chiến Từ Cơ Bản Đến Làm Chủ Dự Án
             </h2>
-            <p class="text-slate-600 text-sm sm:text-base">
+            <p class="text-stone-800 text-sm sm:text-base">
                 Quy trình đào tạo bài bản được thiết kế bởi Mentor Lê Đình Quang, đảm bảo bạn vững vàng kiến thức và sẵn sàng đi làm ngay sau kỳ thực tập.
             </p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
+        <div data-reveal-group class="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
             <!-- Phase 1 -->
-            <div class="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm relative">
+            <div class="program-phase-card bg-white rounded-2xl p-8 border border-slate-200 relative">
                 <span class="absolute -top-4 left-8 px-4 py-1 rounded-full text-xs font-black bg-brand-600 text-white shadow">
                     GIAI ĐOẠN 1 • TUẦN 1 - 4
                 </span>
@@ -284,7 +343,7 @@
             </div>
 
             <!-- Phase 2 -->
-            <div class="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm relative">
+            <div class="program-phase-card bg-white rounded-2xl p-8 border border-slate-200 relative">
                 <span class="absolute -top-4 left-8 px-4 py-1 rounded-full text-xs font-black bg-slate-900 text-white shadow">
                     GIAI ĐOẠN 2 • TUẦN 5 - 8
                 </span>
@@ -309,7 +368,7 @@
             </div>
 
             <!-- Phase 3 -->
-            <div class="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm relative">
+            <div class="program-phase-card bg-white rounded-2xl p-8 border border-slate-200 relative">
                 <span class="absolute -top-4 left-8 px-4 py-1 rounded-full text-xs font-black bg-emerald-600 text-white shadow">
                     GIAI ĐOẠN 3 • TUẦN 9 - 12
                 </span>
@@ -344,7 +403,7 @@
                 <span class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-orange-100 text-brand-700">
                     Cơ Hội Nghề Nghiệp 2026
                 </span>
-                <h2 class="text-3xl font-extrabold text-slate-900 mt-2">
+                <h2 data-reveal class="text-3xl font-extrabold text-slate-900 mt-2">
                     Các Vị Trí Thực Tập Sinh Đang Mở Tuyển
                 </h2>
                 <p class="text-xs sm:text-sm text-slate-500 mt-1">
@@ -363,15 +422,10 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <!-- Chuyên ngành -->
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1.5">Chuyên ngành / Vị trí:</label>
+                    <label class="block text-xs font-bold text-slate-700 mb-1.5">Lĩnh vực / Chuyên ngành:</label>
                     <select name="category" onchange="this.form.submit()" class="w-full text-xs sm:text-sm rounded-xl border-slate-200 py-2.5 px-3 bg-white focus:ring-2 focus:ring-brand-500 focus:outline-none">
                         <option value="all" {{ request('category') == 'all' ? 'selected' : '' }}>Tất cả chuyên ngành</option>
-                        <option value="backend" {{ request('category') == 'backend' ? 'selected' : '' }}>Backend PHP / Laravel</option>
-                        <option value="frontend" {{ request('category') == 'frontend' ? 'selected' : '' }}>Frontend Vue / React</option>
-                        <option value="tester" {{ request('category') == 'tester' ? 'selected' : '' }}>QA / QC / Tester</option>
-                        <option value="uiux" {{ request('category') == 'uiux' ? 'selected' : '' }}>Thiết kế UI/UX & Đồ họa</option>
-                        <option value="marketing" {{ request('category') == 'marketing' ? 'selected' : '' }}>Digital Marketing & Social Media</option>
-                        <option value="ai" {{ request('category') == 'ai' ? 'selected' : '' }}>AI Solutions & Tự động hóa</option>
+                        @include('azmedia.partials.specialty-options', ['includeFields' => true])
                     </select>
                 </div>
 
@@ -410,7 +464,7 @@
         </form>
 
         <!-- Positions Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div data-reveal-group class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             @forelse($positions as $job)
                 <div class="bg-white rounded-2xl border border-slate-200 hover:border-brand-300 hover:shadow-xl transition-all duration-300 p-6 flex flex-col justify-between group">
                     <div>
@@ -485,13 +539,13 @@
 </section>
 
 <!-- Section: Cảm nhận Thực tế từ Sinh viên Thực tập sinh -->
-<section class="py-20 bg-slate-50 border-t border-slate-200/60">
+<section class="py-20 bg-orange-100 border-t border-orange-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center max-w-3xl mx-auto mb-16">
             <span class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-orange-100 text-brand-700">
                 Chia Sẻ Từ Các Cựu Thực Tập Sinh
             </span>
-            <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 mt-3 mb-4">
+            <h2 data-reveal class="text-3xl sm:text-4xl font-extrabold text-slate-900 mt-3 mb-4">
                 Trải Nghiệm Thực Tế Tại AZ Media Đà Nẵng
             </h2>
             <p class="text-slate-600 text-sm sm:text-base">
@@ -499,7 +553,7 @@
             </p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div data-reveal-group class="grid grid-cols-1 md:grid-cols-3 gap-8">
             <!-- Review 1: Nguyễn Nhật Linh Ân (Từ báo cáo thực tập file bên trái!) -->
             <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm relative">
                 <div class="flex items-center gap-1 text-amber-400 mb-4 text-xs">
@@ -609,12 +663,12 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Họ và tên của bạn <span class="text-rose-500">*</span></label>
-                    <input type="text" name="name" required placeholder="VD: Nguyễn Nhật Linh Ân"
+                    <input type="text" name="name" required placeholder="VD: Nguyễn Thị Thanh Hằng"
                            class="w-full text-xs sm:text-sm rounded-xl border border-slate-300 py-2.5 px-3 focus:ring-2 focus:ring-brand-500 focus:outline-none">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Địa chỉ Email <span class="text-rose-500">*</span></label>
-                    <input type="email" name="email" required placeholder="VD: linhan.nguyen@gmail.com"
+                    <input type="email" name="email" required placeholder="VD: hn2500215@gmail.com"
                            class="w-full text-xs sm:text-sm rounded-xl border border-slate-300 py-2.5 px-3 focus:ring-2 focus:ring-brand-500 focus:outline-none">
                 </div>
             </div>
@@ -623,7 +677,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Số điện thoại <span class="text-rose-500">*</span></label>
-                    <input type="tel" name="phone" required placeholder="VD: 0968825068"
+                    <input type="tel" name="phone" required placeholder="VD: 0843619219"
                            class="w-full text-xs sm:text-sm rounded-xl border border-slate-300 py-2.5 px-3 focus:ring-2 focus:ring-brand-500 focus:outline-none">
                 </div>
                 <div>
@@ -725,6 +779,21 @@
 
 @push('scripts')
 <script>
+    if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        const observer = new IntersectionObserver(entries => {
+            for (const entry of entries) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('careers-enter');
+                    observer.unobserve(entry.target);
+                }
+            }
+        }, { threshold: 0.06 });
+
+        document.querySelectorAll('[data-reveal], [data-reveal-group] > *').forEach(element => {
+            observer.observe(element);
+        });
+    }
+
     function handleSubmitApply(form) {
         const btn = document.getElementById('btnSubmitModal');
         const icon = document.getElementById('btnSubmitIcon');

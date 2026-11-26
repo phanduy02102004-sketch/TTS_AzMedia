@@ -264,6 +264,62 @@ class InternAuthController extends Controller
         return view('azmedia.intern.dashboard', compact('candidate', 'application', 'testResult', 'graduation', 'mentor'));
     }
 
+    public function profile()
+    {
+        $candidate = $this->currentInternCandidate();
+
+        if (!$candidate) {
+            return redirect()->route('azmedia.intern.login')->with('error', 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
+        }
+
+        return view('azmedia.intern.profile', compact('candidate'));
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $candidate = $this->currentInternCandidate();
+
+        if (!$candidate) {
+            return redirect()->route('azmedia.intern.login')->with('error', 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
+        }
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:150',
+            'email' => 'required|email|max:150|unique:candidates,email,' . $candidate->id,
+            'phone' => 'required|string|max:20',
+            'university' => 'required|string|max:255',
+            'major' => 'required|string|max:255',
+            'academic_year' => 'nullable|string|max:100',
+            'gpa' => 'nullable|numeric|min:0|max:4',
+            'github_url' => 'nullable|url|max:255',
+            'portfolio_url' => 'nullable|url|max:255',
+            'working_shift' => 'required|in:morning,afternoon,fulltime,flexible',
+            'address' => 'nullable|string|max:255',
+        ], [
+            'email.unique' => 'Email này đã được sử dụng cho một hồ sơ khác.',
+            'gpa.max' => 'Điểm GPA không được lớn hơn 4.0.',
+        ]);
+
+        $candidate->update($validated);
+
+        Session::put('intern_user', array_merge(Session::get('intern_user', []), [
+            'name' => $candidate->name,
+            'email' => $candidate->email,
+            'phone' => $candidate->phone,
+            'university' => $candidate->university,
+            'major' => $candidate->major,
+        ]));
+
+        return redirect()->route('azmedia.intern.profile')->with('success', 'Thông tin cá nhân đã được cập nhật.');
+    }
+
+    private function currentInternCandidate()
+    {
+        $internUser = Session::get('intern_user');
+
+        return $internUser ? Candidate::find($internUser['id']) : null;
+    }
+
     /**
      * Đăng xuất Thực tập sinh
      */
