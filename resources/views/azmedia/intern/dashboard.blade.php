@@ -138,7 +138,7 @@
                             </div>
                             <div>
                                 <h2 class="text-lg font-extrabold text-slate-900">Chuẩn Đầu Ra & Cấp Mộc (Exit Criteria)</h2>
-                                <p class="text-xs text-slate-500">Quy trình 3 mục: Khảo sát, Báo cáo AZ SUPPORT, Đánh giá 5 kênh</p>
+                                <p class="text-xs text-slate-500">3 nhóm tiêu chí, bài test đầu ra và ký xác nhận kết thúc</p>
                             </div>
                         </div>
 
@@ -166,7 +166,7 @@
                         </div>
 
                         <!-- 3 Tiêu chí -->
-                        <div class="grid grid-cols-3 gap-2 text-center text-xs">
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-center text-xs">
                             <div class="p-3 rounded-2xl border {{ ($graduation->survey_1_completed && $graduation->survey_2_completed) ? 'bg-emerald-50 border-emerald-200 text-emerald-800 font-bold' : 'bg-slate-50 border-slate-200 text-slate-500' }}">
                                 <div class="text-sm mb-1"><i class="fa-solid fa-poll"></i></div>
                                 <div>Mục 1: Khảo sát</div>
@@ -183,6 +183,12 @@
                                 <div class="text-sm mb-1"><i class="fa-solid fa-star"></i></div>
                                 <div>Mục 3: Đánh giá</div>
                                 <div class="text-[10px] mt-0.5">{{ ($graduation->review_map1 && $graduation->review_map2) ? 'Đã review' : 'Chưa xong' }}</div>
+                            </div>
+
+                            <div class="p-3 rounded-2xl border {{ ($graduation->exit_test_completed_at && $graduation->completion_confirmed_at) ? 'bg-emerald-50 border-emerald-200 text-emerald-800 font-bold' : 'bg-slate-50 border-slate-200 text-slate-500' }}">
+                                <div class="text-sm mb-1"><i class="fa-solid fa-pen-to-square"></i></div>
+                                <div>Test & xác nhận</div>
+                                <div class="text-[10px] mt-0.5">{{ ($graduation->exit_test_completed_at && $graduation->completion_confirmed_at) ? 'Đã ký' : 'Chưa hoàn tất' }}</div>
                             </div>
                         </div>
                     @endif

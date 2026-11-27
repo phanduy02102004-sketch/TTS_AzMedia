@@ -31,27 +31,17 @@
             gap: 12px;
             margin-bottom: 12px;
         }
-        .logo-box {
-            width: 48px;
-            height: 48px;
-            background: rgba(255,255,255,0.25);
+        .header-logo img {
+            display: block;
+            width: 160px;
+            max-width: 100%;
+            height: auto;
+            padding: 6px;
+            background: #fff;
             border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            font-weight: 900;
-            color: #fff;
-            letter-spacing: -1px;
         }
         .logo-text {
             text-align: left;
-        }
-        .logo-text .brand {
-            font-size: 22px;
-            font-weight: 800;
-            color: #fff;
-            letter-spacing: -0.5px;
         }
         .logo-text .tagline {
             font-size: 11px;
@@ -96,6 +86,8 @@
             .wrapper { margin: 0; border-radius: 0; }
             .content, .footer { padding: 24px 20px; }
             .header { padding: 24px 20px; }
+            .header-logo { flex-direction: column; gap: 8px; }
+            .logo-text { text-align: center; }
         }
     </style>
 </head>
@@ -105,9 +97,8 @@
         <!-- Header Brand -->
         <div class="header">
             <div class="header-logo">
-                <div class="logo-box">AZ</div>
+                <img src="{{ asset('frontend/assets/images/azmedia-logo.png') }}" alt="AZ Media">
                 <div class="logo-text">
-                    <div class="brand">AZ<span style="color:#ffffff">HR</span></div>
                     <div class="tagline">Hệ Thống Tuyển Dụng Thực Tập Sinh AZ Media · Đà Nẵng</div>
                 </div>
             </div>

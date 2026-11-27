@@ -85,6 +85,59 @@
                 </div>
             </div>
 
+            <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
+                <div class="text-sm font-extrabold text-slate-900 flex items-center gap-2">
+                    <i class="fa-solid fa-pen-to-square text-brand-600"></i> Bài test & ký xác nhận kết thúc
+                </div>
+
+                <div class="flex items-center justify-between text-xs">
+                    <span class="text-slate-500">Điểm bài test đầu ra:</span>
+                    <strong class="{{ $graduation->exit_test_completed_at ? 'text-emerald-700' : 'text-slate-700' }}">
+                        {{ $graduation->exit_test_score !== null ? $graduation->exit_test_score . '/100' : 'Chưa làm' }}
+                    </strong>
+                </div>
+
+                @if($graduation->exit_test_answers)
+                    <div class="space-y-2 border-t border-slate-100 pt-3">
+                        @foreach($exitTestQuestions as $questionKey => $question)
+                            @php
+                                $selectedAnswer = data_get($graduation->exit_test_answers, $questionKey);
+                                $isCorrectAnswer = $selectedAnswer === $question['correct_option'];
+                            @endphp
+                            <div class="text-[11px] text-slate-600">
+                                <span class="font-bold text-slate-800">{{ $loop->iteration }}.</span>
+                                {{ $question['question'] }}
+                                <span class="block mt-0.5 {{ $isCorrectAnswer ? 'text-emerald-700' : 'text-rose-700' }}">
+                                    Đã chọn: {{ $selectedAnswer }}. {{ $question['options'][$selectedAnswer] ?? 'Không có dữ liệu' }}
+                                    @if(!$isCorrectAnswer)
+                                        · Đáp án đúng: {{ $question['correct_option'] }}. {{ $question['options'][$question['correct_option']] }}
+                                    @endif
+                                </span>
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
+
+                @if($graduation->exit_test_completed_at)
+                    <div class="text-[11px] text-emerald-700">
+                        Đã nộp lúc {{ $graduation->exit_test_completed_at->format('d/m/Y H:i') }}
+                    </div>
+                @endif
+
+                <div class="border-t border-slate-100 pt-3">
+                    @if($graduation->completion_confirmed_at && $graduation->completion_signature)
+                        <div class="text-xs font-bold text-emerald-800 mb-2">
+                            Đã ký xác nhận lúc {{ $graduation->completion_confirmed_at->format('d/m/Y H:i') }}
+                        </div>
+                        <img src="{{ $graduation->completion_signature }}" alt="Chữ ký xác nhận kết thúc"
+                             class="max-h-28 max-w-full rounded-xl border border-slate-200 bg-white p-2">
+                        <p class="text-[10px] text-slate-500 mt-2">Chữ ký điện tử lưu nội bộ, không thay thế chữ ký số pháp lý.</p>
+                    @else
+                        <div class="text-xs text-amber-700 font-semibold">Chưa có chữ ký xác nhận kết thúc.</div>
+                    @endif
+                </div>
+            </div>
+
             <!-- Card Quyết Định Phê Duyệt Của Ban Điều Hành -->
             <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
                 <div class="text-sm font-extrabold text-slate-900 flex items-center gap-2">

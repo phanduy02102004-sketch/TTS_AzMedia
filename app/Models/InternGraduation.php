@@ -26,6 +26,9 @@ class InternGraduation extends Model
         'review_page_homes' => 'boolean',
         'review_page_media' => 'boolean',
         'review_page_hr' => 'boolean',
+        'exit_test_answers' => 'array',
+        'exit_test_completed_at' => 'datetime',
+        'completion_confirmed_at' => 'datetime',
         'approved_at' => 'datetime',
     ];
 
@@ -44,7 +47,29 @@ class InternGraduation extends Model
      */
     public function getProgressPercentAttribute()
     {
-        $items = [
+        $items = array_merge($this->getCoreProgressItems(), [
+            (bool) $this->exit_test_completed_at,
+            $this->completion_confirmed_at && !empty($this->completion_signature),
+        ]);
+
+        $completed = count(array_filter($items));
+        return (int) round(($completed / count($items)) * 100);
+    }
+
+    public function isReadyForCompletionConfirmation()
+    {
+        return $this->isCoreChecklistComplete()
+            && (bool) $this->exit_test_completed_at;
+    }
+
+    public function isCoreChecklistComplete()
+    {
+        return !in_array(false, $this->getCoreProgressItems(), true);
+    }
+
+    private function getCoreProgressItems()
+    {
+        return [
             $this->survey_1_completed && $this->survey_2_completed,
             !empty($this->survey_proof_link),
             $this->report_draft_submitted,
@@ -56,9 +81,6 @@ class InternGraduation extends Model
             ($this->review_map1 && $this->review_map2 && $this->review_page_homes && $this->review_page_media && $this->review_page_hr),
             !empty($this->review_proof_link),
         ];
-
-        $completed = count(array_filter($items));
-        return (int) round(($completed / count($items)) * 100);
     }
 
     /**

@@ -96,6 +96,10 @@ class InternGraduationController extends Controller
         $config = $this->getGraduationConfig();
         $sessionUser = Session::get('intern_user');
         $candidate = Candidate::with(['applications.position', 'graduations'])->find($sessionUser['id']);
+        $exitTestQuestions = array_map(function ($question) {
+            unset($question['correct_option']);
+            return $question;
+        }, $this->getExitTestQuestionBank());
 
         $graduation = null;
         $application = null;
@@ -127,7 +131,7 @@ class InternGraduationController extends Controller
         // Lấy danh sách hồ sơ gần đây để sinh viên tham khảo nếu cần
         $recentGraduations = InternGraduation::latest()->take(5)->get();
 
-        return view('azmedia.graduation.index', compact('config', 'keyword', 'graduation', 'application', 'recentGraduations', 'candidate'));
+        return view('azmedia.graduation.index', compact('config', 'keyword', 'graduation', 'application', 'recentGraduations', 'candidate', 'exitTestQuestions'));
     }
 
     /**
@@ -210,7 +214,10 @@ class InternGraduationController extends Controller
             'appointment_time.required' => 'Vui lòng chọn giờ hẹn.',
         ]);
 
-        $graduation = InternGraduation::where('graduation_code', $request->graduation_code)->firstOrFail();
+        $graduation = $this->findInternGraduation($request->graduation_code);
+        if ($graduation->completion_confirmed_at) {
+            return back()->with('error', 'Hồ sơ đã được ký xác nhận kết thúc và không thể thay đổi lịch hẹn.');
+        }
 
         $graduation->update([
             'appointment_booked' => true,
@@ -257,7 +264,10 @@ class InternGraduationController extends Controller
             'cv_file.mimes' => 'Hệ thống chỉ nhận file định dạng PDF, JPG, PNG hoặc DOC/DOCX.',
         ]);
 
-        $graduation = InternGraduation::where('graduation_code', $request->graduation_code)->firstOrFail();
+        $graduation = $this->findInternGraduation($request->graduation_code);
+        if ($graduation->completion_confirmed_at) {
+            return back()->with('error', 'Hồ sơ đã được ký xác nhận kết thúc và không thể thay đổi thông tin 1+1.');
+        }
 
         $filePath = $graduation->referral_cv_file;
 
@@ -307,7 +317,11 @@ class InternGraduationController extends Controller
             'review_proof_link' => ['nullable', 'url', 'max:2048', 'regex:/^https?:\/\//i'],
         ]);
 
-        $graduation = InternGraduation::where('graduation_code', $request->graduation_code)->firstOrFail();
+        $graduation = $this->findInternGraduation($request->graduation_code);
+
+        if ($graduation->completion_confirmed_at && $graduation->status !== 'needs_update') {
+            return back()->with('error', 'Hồ sơ đã được ký xác nhận kết thúc. Vui lòng liên hệ Ban Điều Hành nếu cần điều chỉnh.');
+        }
 
         $graduation->survey_1_completed = $request->has('survey_1_completed');
         $graduation->survey_2_completed = $request->has('survey_2_completed');
@@ -333,8 +347,17 @@ class InternGraduationController extends Controller
         $graduation->review_page_hr = $request->has('review_page_hr');
         $graduation->review_proof_link = $request->review_proof_link ? trim($request->review_proof_link) : $graduation->review_proof_link;
 
-        // Nếu người dùng bấm gửi duyệt
+        if ($graduation->status === 'needs_update') {
+            $graduation->completion_signature = null;
+            $graduation->completion_confirmed_at = null;
+            $graduation->status = 'in_progress';
+        }
+
+        // The signed completion step, not this checklist form, sends the application for review.
         if ($request->has('submit_for_review')) {
+            if ($graduation->progress_percent !== 100 || !$graduation->completion_confirmed_at) {
+                return back()->with('error', 'Chỉ gửi duyệt được khi checklist, bài test và xác nhận kết thúc đều hoàn tất 100%.');
+            }
             $graduation->status = 'pending_review';
         }
 
@@ -342,6 +365,158 @@ class InternGraduationController extends Controller
 
         return redirect()->route('azmedia.graduation.index', ['code' => $graduation->graduation_code])
             ->with('success', 'Đã lưu tiến độ chuẩn đầu ra thành công! Hồ sơ của bạn đã được cập nhật.');
+    }
+
+    public function submitExitTest(Request $request, $code)
+    {
+        if (!Session::has('intern_user')) {
+            return redirect()->route('azmedia.intern.login', [
+                'redirect' => route('azmedia.graduation.index', ['code' => $code]),
+                'code' => $code,
+            ])->with('warning', 'Vui lòng đăng nhập để làm bài kiểm tra đầu ra.');
+        }
+
+        $graduation = $this->findInternGraduation($code);
+        if ($graduation->completion_confirmed_at || $graduation->status === 'approved') {
+            return back()->with('error', 'Hồ sơ đã được xác nhận kết thúc và không thể làm lại bài test.');
+        }
+        $rules = ['answers' => 'required|array|size:5'];
+        foreach (array_keys($this->getExitTestQuestionBank()) as $key) {
+            $rules["answers.{$key}"] = 'required|in:A,B,C,D';
+        }
+        $validated = $request->validate($rules, [
+            'answers.required' => 'Vui lòng trả lời đầy đủ 5 câu hỏi.',
+            'answers.size' => 'Bài kiểm tra cần đủ 5 câu trả lời.',
+            'answers.*.required' => 'Vui lòng chọn đáp án cho tất cả câu hỏi.',
+            'answers.*.in' => 'Có đáp án không hợp lệ. Vui lòng kiểm tra và làm lại.',
+        ]);
+
+        $questions = $this->getExitTestQuestionBank();
+        $score = 0;
+        foreach ($questions as $key => $question) {
+            if ($validated['answers'][$key] === $question['correct_option']) {
+                $score++;
+            }
+        }
+
+        $graduation->exit_test_answers = $validated['answers'];
+        $graduation->exit_test_score = (int) round(($score / count($questions)) * 100);
+        $graduation->exit_test_completed_at = Carbon::now();
+        $graduation->save();
+
+        return back()->with('success', "Đã ghi nhận bài kiểm tra đầu ra: {$graduation->exit_test_score}/100. Bạn có thể làm lại trước khi ký xác nhận kết thúc.");
+    }
+
+    public function confirmCompletion(Request $request, $code)
+    {
+        if (!Session::has('intern_user')) {
+            return redirect()->route('azmedia.intern.login', [
+                'redirect' => route('azmedia.graduation.index', ['code' => $code]),
+                'code' => $code,
+            ])->with('warning', 'Vui lòng đăng nhập để ký xác nhận kết thúc.');
+        }
+
+        $graduation = $this->findInternGraduation($code);
+        if ($graduation->completion_confirmed_at || $graduation->status === 'approved') {
+            return back()->with('error', 'Hồ sơ này đã được xác nhận kết thúc.');
+        }
+        if (!$graduation->isReadyForCompletionConfirmation()) {
+            return back()->with('error', 'Bạn cần hoàn thành 100% checklist và đạt 100% bài kiểm tra đầu ra trước khi ký xác nhận.');
+        }
+
+        $validated = $request->validate([
+            'completion_signature' => [
+                'required',
+                'string',
+                'max:262144',
+                'regex:/^data:image\/png;base64,[A-Za-z0-9+\/]+={0,2}$/',
+            ],
+            'completion_acknowledged' => 'accepted',
+        ], [
+            'completion_signature.required' => 'Vui lòng ký tên trong khung xác nhận.',
+            'completion_signature.regex' => 'Ảnh chữ ký không hợp lệ. Vui lòng ký lại.',
+            'completion_acknowledged.accepted' => 'Bạn cần xác nhận đã hoàn tất các nội dung trước khi gửi.',
+        ]);
+
+        $signatureData = substr($validated['completion_signature'], strlen('data:image/png;base64,'));
+        $signatureBytes = base64_decode($signatureData, true);
+        if ($signatureBytes === false || substr($signatureBytes, 0, 8) !== "\x89PNG\r\n\x1a\n") {
+            return back()->with('error', 'Không đọc được chữ ký. Vui lòng ký lại và thử lại.');
+        }
+
+        $graduation->completion_signature = $validated['completion_signature'];
+        $graduation->completion_confirmed_at = Carbon::now();
+        $graduation->status = 'pending_review';
+        $graduation->save();
+
+        return redirect()->route('azmedia.graduation.index', ['code' => $graduation->graduation_code])
+            ->with('success', 'Đã ghi nhận chữ ký xác nhận kết thúc. Hồ sơ đạt 100% và đang chờ Ban Điều Hành duyệt.');
+    }
+
+    private function findInternGraduation($code)
+    {
+        $intern = Session::get('intern_user', []);
+        abort_unless(!empty($intern['id']), 403, 'Tài khoản TTS không hợp lệ.');
+
+        return InternGraduation::where('graduation_code', $code)
+            ->where('candidate_id', (int) $intern['id'])
+            ->firstOrFail();
+    }
+
+    private function getExitTestQuestionBank()
+    {
+        return [
+            'q1' => [
+                'question' => 'Theo Cổng Chuẩn Đầu Ra, ba nhóm công việc chính cần hoàn thành là gì?',
+                'options' => [
+                    'A' => 'Khảo sát; báo cáo 4 bước AZ SUPPORT & giới thiệu 1+1; video và đánh giá 5 kênh',
+                    'B' => 'Chỉ nộp CV, phỏng vấn và nhận việc',
+                    'C' => 'Chỉ hoàn thành bài test đầu vào',
+                    'D' => 'Nộp một bài đăng mạng xã hội',
+                ],
+                'correct_option' => 'A',
+            ],
+            'q2' => [
+                'question' => 'Bước 1 và bước 2 trong phần nộp báo cáo lần lượt là gì?',
+                'options' => [
+                    'A' => 'Đặt lịch hẹn và đánh giá 5 kênh',
+                    'B' => 'Nộp bản thảo và nộp bản sửa cuối',
+                    'C' => 'Làm video và nộp CV',
+                    'D' => 'Nộp khảo sát và ký xác nhận',
+                ],
+                'correct_option' => 'B',
+            ],
+            'q3' => [
+                'question' => 'Mục tiêu giới thiệu 1+1 yêu cầu thực tập sinh làm gì?',
+                'options' => [
+                    'A' => 'Giới thiệu một sinh viên cho đợt tuyển dụng tiếp theo',
+                    'B' => 'Viết một bài đánh giá cho mỗi đồng nghiệp',
+                    'C' => 'Đặt hai lịch hẹn AZ SUPPORT',
+                    'D' => 'Nộp hai bản CV của chính mình',
+                ],
+                'correct_option' => 'A',
+            ],
+            'q4' => [
+                'question' => 'Cổng Chuẩn Đầu Ra yêu cầu đánh giá bao nhiêu kênh của công ty?',
+                'options' => [
+                    'A' => 'Hai kênh',
+                    'B' => 'Ba kênh',
+                    'C' => 'Bốn kênh',
+                    'D' => 'Năm kênh',
+                ],
+                'correct_option' => 'D',
+            ],
+            'q5' => [
+                'question' => 'Khi checklist chưa đạt 100%, trạng thái nào là chính xác?',
+                'options' => [
+                    'A' => 'Đã hoàn thành chuẩn đầu ra',
+                    'B' => 'Đã được cấp mộc',
+                    'C' => 'Cần tiếp tục hoàn thiện; chưa thể ký xác nhận kết thúc',
+                    'D' => 'Tự động được Ban Điều Hành duyệt',
+                ],
+                'correct_option' => 'C',
+            ],
+        ];
     }
 
     // =========================================================================
@@ -420,8 +595,9 @@ class InternGraduationController extends Controller
 
         $graduation = InternGraduation::with(['candidate', 'application.position'])->findOrFail($id);
         $config = $this->getGraduationConfig();
+        $exitTestQuestions = $this->getExitTestQuestionBank();
 
-        return view('azmedia.portal.graduations.detail', compact('user', 'graduation', 'config'));
+        return view('azmedia.portal.graduations.detail', compact('user', 'graduation', 'config', 'exitTestQuestions'));
     }
 
     /**
@@ -440,6 +616,9 @@ class InternGraduationController extends Controller
         ]);
 
         $graduation = InternGraduation::findOrFail($id);
+        if (in_array($request->status, ['pending_review', 'approved'], true) && $graduation->progress_percent !== 100) {
+            return back()->with('error', 'Chỉ chuyển sang chờ duyệt hoặc đạt chuẩn khi hồ sơ đã đủ 100%, gồm bài test và chữ ký xác nhận.');
+        }
 
         $graduation->status = $request->status;
         $graduation->admin_notes = $request->admin_notes ? trim($request->admin_notes) : null;
@@ -448,10 +627,13 @@ class InternGraduationController extends Controller
             $graduation->approved_by = $user['name'] ?? 'Lê Đình Quang (BĐH)';
             $graduation->approved_at = Carbon::now();
         } else {
-            if ($graduation->status !== 'approved') {
-                $graduation->approved_by = null;
-                $graduation->approved_at = null;
-            }
+            $graduation->approved_by = null;
+            $graduation->approved_at = null;
+        }
+
+        if (in_array($request->status, ['in_progress', 'needs_update'], true)) {
+            $graduation->completion_signature = null;
+            $graduation->completion_confirmed_at = null;
         }
 
         $graduation->save();
@@ -483,7 +665,16 @@ class InternGraduationController extends Controller
         }
 
         $graduation = InternGraduation::findOrFail($id);
+        if ($graduation->status === 'approved') {
+            return response()->json(['success' => false, 'message' => 'Không thể sửa checklist đã được duyệt.'], 409);
+        }
+
         $graduation->{$field} = !$graduation->{$field};
+        if ($graduation->completion_confirmed_at) {
+            $graduation->completion_signature = null;
+            $graduation->completion_confirmed_at = null;
+            $graduation->status = 'in_progress';
+        }
         $graduation->save();
 
         return response()->json([

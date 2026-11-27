@@ -347,8 +347,24 @@ class AZMediaATSController extends Controller
         $filename = "Bai_Test_AZ_{$application->application_code}.pdf";
         $filePath = public_path("uploads/test_results/{$filename}");
 
-        // Nếu file chưa tồn tại trên đĩa, tự động tạo mới ngay lập tức
-        if (!file_exists($filePath)) {
+        $templatePath = resource_path('views/azmedia/pdf/test_result_pdf.blade.php');
+        $templateHash = hash_file('sha256', $templatePath);
+        if ($templateHash === false) {
+            throw new \RuntimeException('Không thể đọc mẫu báo cáo PDF kết quả bài test.');
+        }
+
+        $hashDirectory = storage_path('app/test_result_template_hashes');
+        $hashPath = $hashDirectory . DIRECTORY_SEPARATOR . sha1($application->application_code) . '.sha256';
+        $cachedTemplateHash = '';
+        if (is_file($hashPath)) {
+            $cachedTemplateHash = file_get_contents($hashPath);
+            if ($cachedTemplateHash === false) {
+                throw new \RuntimeException('Không thể đọc phiên bản mẫu báo cáo PDF đã lưu.');
+            }
+            $cachedTemplateHash = trim($cachedTemplateHash);
+        }
+
+        if (!file_exists($filePath) || !hash_equals($templateHash, $cachedTemplateHash)) {
             $dir = public_path('uploads/test_results');
             if (!file_exists($dir)) {
                 mkdir($dir, 0755, true);
@@ -361,6 +377,13 @@ class AZMediaATSController extends Controller
                     'isRemoteEnabled' => true,
                 ]);
             $pdf->save($filePath);
+
+            if (!is_dir($hashDirectory) && !mkdir($hashDirectory, 0755, true) && !is_dir($hashDirectory)) {
+                throw new \RuntimeException('Không thể tạo thư mục lưu phiên bản mẫu báo cáo PDF.');
+            }
+            if (file_put_contents($hashPath, $templateHash, LOCK_EX) === false) {
+                throw new \RuntimeException('Không thể lưu phiên bản mẫu báo cáo PDF.');
+            }
         }
 
         if ($request->has('download')) {

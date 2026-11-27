@@ -52,12 +52,8 @@
         <div>
             <!-- Brand Logo -->
             <div class="h-20 flex items-center px-6 border-b border-slate-800 gap-3">
-                <div class="w-10 h-10 rounded-xl gradient-brand flex items-center justify-center text-white font-extrabold text-xl shadow">
-                    AZ
-                </div>
-                <div>
-                    <div class="text-base font-extrabold text-white tracking-tight">AZ <span class="text-brand-500">ATS</span></div>
-                    <div class="text-[10px] text-slate-400">Tuyển Dụng Nội Bộ Đà Nẵng</div>
+                <div class="rounded-lg bg-white p-1.5">
+                    <img src="{{ asset('frontend/assets/images/azmedia-logo.png') }}" alt="AZ Media" class="block w-36 h-auto">
                 </div>
             </div>
 

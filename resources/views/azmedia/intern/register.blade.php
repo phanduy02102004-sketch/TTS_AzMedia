@@ -3,7 +3,7 @@
 @section('title', 'Đăng Ký Tài Khoản Mới – AZ Media Đà Nẵng')
 
 @section('content')
-<div class="min-h-[calc(100vh-11rem)] bg-slate-50 bg-cover bg-center py-8 flex items-center justify-center px-4 sm:px-6 lg:px-8" style="background-image: url('{{ asset('uploads/intern-login-background.jpg') }}');">
+<div class="min-h-[calc(100vh-11rem)] bg-slate-900 bg-cover bg-center py-8 flex items-center justify-center px-4 sm:px-6 lg:px-8" style="background-image: linear-gradient(135deg, rgba(15, 23, 42, 0.58), rgba(15, 23, 42, 0.3) 55%, rgba(124, 45, 18, 0.38)), url('{{ asset('frontend/assets/images/intern-login-background.jpg') }}');">
     <div class="max-w-xl w-full space-y-8">
 
         <!-- Card Form Đăng Ký -->

@@ -1,5 +1,6 @@
 services:
   app:
+    user: www-data
     environment:
       APP_ENV: local
       APP_DEBUG: "true"

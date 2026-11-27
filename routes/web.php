@@ -112,6 +112,8 @@ Route::post('/chuan-dau-ra/dang-ky', [InternGraduationController::class, 'regist
 Route::post('/chuan-dau-ra/dat-lich-hen', [InternGraduationController::class, 'bookAppointment'])->name('azmedia.graduation.appointment');
 Route::post('/chuan-dau-ra/gioi-thieu-1-1', [InternGraduationController::class, 'submitReferral'])->name('azmedia.graduation.referral');
 Route::post('/chuan-dau-ra/cap-nhat-tien-do', [InternGraduationController::class, 'updateChecklist'])->name('azmedia.graduation.update');
+Route::post('/chuan-dau-ra/{code}/test-dau-ra', [InternGraduationController::class, 'submitExitTest'])->name('azmedia.graduation.exit-test');
+Route::post('/chuan-dau-ra/{code}/xac-nhan-ket-thuc', [InternGraduationController::class, 'confirmCompletion'])->name('azmedia.graduation.confirm-completion');
 
 // Download báo cáo công việc tuần (tạo mới mỗi lần tải)
 Route::get('/portal/download-report', [AZMediaATSController::class, 'downloadWeeklyReport'])->name('azmedia.portal.download.report');

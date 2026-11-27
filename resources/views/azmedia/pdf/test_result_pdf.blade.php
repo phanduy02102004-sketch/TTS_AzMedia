@@ -2,171 +2,203 @@
 <html lang="vi">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>Báo Cáo Thu Hoạch & Đánh Giá Năng Lực - {{ $application->candidate->name }}</title>
+    <title>Báo Cáo Kết Quả Bài Kiểm Tra Đầu Vào - {{ $application->candidate->name }}</title>
     <style type="text/css">
         * {
             font-family: 'DejaVu Sans', sans-serif !important;
             box-sizing: border-box;
         }
         body {
-            font-size: 13px;
-            color: #222222;
-            line-height: 1.4;
+            font-size: 11px;
+            color: #1e293b;
+            line-height: 1.5;
             margin: 0;
             padding: 0;
+        }
+        @page {
+            margin: 34px 38px 38px;
         }
         .no-break {
             page-break-inside: avoid;
         }
 
-        /* Header table */
         .header-table {
             width: 100%;
-            border-bottom: 1px solid #777777;
-            padding-bottom: 6px;
-            margin-bottom: 10px;
+            border-bottom: 2px solid #ea580c;
+            padding-bottom: 9px;
+            margin-bottom: 14px;
         }
         .company-name {
-            font-size: 12px;
+            font-size: 11px;
             font-weight: bold;
-            color: #222222;
+            color: #0f172a;
             text-transform: uppercase;
         }
         .company-meta {
-            font-size: 9px;
-            color: #666666;
-            margin-top: 2px;
+            font-size: 8px;
+            color: #475569;
+            margin-top: 4px;
         }
 
-        /* Document Title */
         .doc-title {
             text-align: center;
-            font-size: 14px;
+            font-size: 17px;
             font-weight: bold;
-            color: #222222;
+            color: #0f172a;
             text-transform: uppercase;
-            margin: 6px 0 2px 0;
+            margin: 12px 0 4px;
             letter-spacing: 0;
         }
         .doc-subtitle {
             text-align: center;
-            font-size: 13px;
-            color: #555555;
+            font-size: 10px;
+            color: #475569;
             font-weight: bold;
-            margin-bottom: 12px;
+            margin-bottom: 15px;
         }
 
-        /* Candidate Info Box */
         .info-table {
             width: 100%;
             border: 1px solid #cbd5e1;
             background-color: #ffffff;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             border-collapse: collapse;
         }
         .info-table td {
-            padding: 5px 8px;
-            font-size: 13px;
-            border: 1px solid #e2e8f0;
+            padding: 6px 7px;
+            font-size: 9px;
+            border: 1px solid #cbd5e1;
+            vertical-align: top;
         }
         .info-label {
             font-weight: bold;
             color: #334155;
-            width: 22%;
-            background-color: #f1f1f1;
+            width: 19%;
+            background-color: #f1f5f9;
         }
         .info-val {
             color: #0f172a;
         }
 
-        /* Section Title */
         .section-header {
-            background-color: #eeeeee;
-            color: #222222;
-            font-size: 13px;
+            background-color: #172554;
+            color: #ffffff;
+            font-size: 11px;
             font-weight: bold;
-            padding: 5px 7px;
-            margin-top: 9px;
-            margin-bottom: 6px;
+            padding: 8px 10px;
+            margin-top: 14px;
+            margin-bottom: 9px;
             text-transform: uppercase;
-            border-left: 2px solid #777777;
+            border: 1px solid #c2410c;
+            page-break-after: avoid;
         }
         .subsection-header {
-            font-size: 13px;
+            font-size: 10px;
             font-weight: bold;
-            color: #333333;
-            border-left: 2px solid #aaaaaa;
-            padding-left: 6px;
-            margin: 8px 0 5px 0;
+            color: #172554;
+            background-color: #f8fafc;
+            border: 1px solid #cbd5e1;
+            padding: 6px 8px;
+            margin: 10px 0 6px;
+            page-break-after: avoid;
         }
 
-        /* General tables */
         .data-table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 10px;
+            margin-bottom: 9px;
+        }
+        .data-table thead {
+            display: table-header-group;
+        }
+        .data-table tr {
+            page-break-inside: avoid;
         }
         .data-table th {
-            background-color: #eeeeee;
-            color: #222222;
-            font-size: 13px;
-            padding: 5px 6px;
-            border: 1px solid #cccccc;
+            background-color: #172554;
+            color: #ffffff;
+            font-size: 9px;
+            padding: 6px 6px;
+            border: 1px solid #cbd5e1;
             text-align: center;
+            vertical-align: middle;
         }
         .data-table td {
-            font-size: 13px;
-            padding: 4px 5px;
-            border: 1px solid #d5d5d5;
+            font-size: 9px;
+            padding: 5px 6px;
+            border: 1px solid #cbd5e1;
             vertical-align: top;
         }
         .data-table tr:nth-child(even) td {
-            background-color: #fafafa;
+            background-color: #f8fafc;
         }
 
-        /* Answer block */
         .answer-box {
-            background-color: #ffffff;
-            border: 1px solid #dddddd;
-            border-left: 2px solid #888888;
-            padding: 5px 7px;
-            margin-bottom: 5px;
-            font-size: 13px;
+            background-color: #f8fafc;
+            border: 1px solid #cbd5e1;
+            padding: 8px 9px;
+            margin-bottom: 7px;
+            font-size: 10px;
+            page-break-inside: avoid;
         }
         .answer-box strong {
-            color: #222222;
+            color: #172554;
         }
         .answer-box p {
-            margin: 3px 0 0 0;
-            color: #444444;
-            line-height: 1.4;
+            margin: 4px 0 0;
+            color: #334155;
+            line-height: 1.5;
         }
 
-        /* Badges */
         .badge {
             display: inline-block;
-            padding: 2px 5px;
-            font-size: 13px;
+            padding: 2px 6px;
+            font-size: 9px;
             font-weight: bold;
-            border-radius: 3px;
+            border-radius: 2px;
         }
         .badge-success {
-            background-color: #f1f1f1;
-            color: #333333;
-            border: 1px solid #dddddd;
+            background-color: #ecfdf5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
         }
         .badge-danger {
-            background-color: #f1f1f1;
-            color: #333333;
-            border: 1px solid #dddddd;
+            background-color: #fff1f2;
+            color: #9f1239;
+            border: 1px solid #fecdd3;
         }
         .badge-orange {
-            background-color: #f1f1f1;
-            color: #333333;
-            border: 1px solid #dddddd;
+            background-color: #fff7ed;
+            color: #9a3412;
+            border: 1px solid #fed7aa;
         }
 
-        /* Signatures */
+        .result-summary {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0 0 13px;
+        }
+        .result-summary td {
+            width: 33.333%;
+            padding: 7px 8px;
+            border: 1px solid #cbd5e1;
+            vertical-align: top;
+        }
+        .result-summary-label {
+            display: block;
+            color: #475569;
+            font-size: 8px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .result-summary-value {
+            display: block;
+            margin-top: 3px;
+            color: #172554;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
         .sign-table {
             width: 100%;
             margin-top: 10px;
@@ -176,7 +208,7 @@
             width: 50%;
             text-align: center;
             vertical-align: top;
-            font-size: 13px;
+            font-size: 10px;
         }
     </style>
 </head>
@@ -215,8 +247,8 @@
         </tr>
     </table>
 
-    <div class="doc-title">BÁO CÁO KẾT QUẢ ĐÁNH GIÁ NĂNG LỰC TOÀN DIỆN</div>
-    <div class="doc-subtitle">Quy trình tuyển chọn & Đào tạo Thực tập sinh AZ Media (Phần 1 - 2 - 3 - 4)</div>
+    <div class="doc-title">BÁO CÁO KẾT QUẢ BÀI KIỂM TRA ĐẦU VÀO</div>
+    <div class="doc-subtitle">Hồ sơ đánh giá ứng viên thực tập sinh · AZ Media</div>
 
     <!-- THÔNG TIN ỨNG VIÊN -->
     <table class="info-table">
@@ -228,30 +260,51 @@
         </tr>
         <tr>
             <td class="info-label">Email liên hệ:</td>
-            <td class="info-val">{{ $application->candidate->email }}</td>
+            <td class="info-val">{{ $application->candidate->email ?: 'Chưa cung cấp' }}</td>
             <td class="info-label">Số điện thoại:</td>
-            <td class="info-val">{{ $application->candidate->phone }}</td>
+            <td class="info-val">{{ $application->candidate->phone ?: 'Chưa cung cấp' }}</td>
         </tr>
         <tr>
             <td class="info-label">Trường ĐH / Cao đẳng:</td>
-            <td class="info-val">{{ $application->candidate->university ?? 'Cao đẳng Đà Nẵng (DNC)' }}</td>
+            <td class="info-val">{{ $application->candidate->university ?: 'Chưa cung cấp' }}</td>
             <td class="info-label">Chuyên ngành đào tạo:</td>
-            <td class="info-val">{{ $application->candidate->major ?? 'Công nghệ Thông tin' }}</td>
+            <td class="info-val">{{ $application->candidate->major ?: 'Chưa cung cấp' }}</td>
+        </tr>
+    </table>
+
+    <table class="result-summary">
+        <tr>
+            <td>
+                <span class="result-summary-label">Kết quả văn hóa AZ</span>
+                <span class="result-summary-value">{{ isset($test->score) ? $test->score . ' / 100 điểm' : 'Chưa có dữ liệu' }}</span>
+            </td>
+            <td>
+                <span class="result-summary-label">Số câu trả lời đúng</span>
+                <span class="result-summary-value">{{ isset($test->correct_answers, $test->total_questions) ? $test->correct_answers . ' / ' . $test->total_questions : 'Chưa có dữ liệu' }}</span>
+            </td>
+            <td>
+                <span class="result-summary-label">Thời gian hoàn thành</span>
+                <span class="result-summary-value">{{ isset($test->time_spent_seconds) ? round($test->time_spent_seconds / 60) . ' phút' : 'Chưa có dữ liệu' }}</span>
+            </td>
         </tr>
         <tr>
-            <td class="info-label">Điểm Văn Hóa AZ Media:</td>
-            <td class="info-val">
-                <span class="badge {{ ($test->score ?? 100) >= 60 ? 'badge-success' : 'badge-danger' }}" style="font-size: 10px;">
-                    {{ $test->score ?? 100 }} / 100 Điểm ({{ $test->correct_answers ?? 5 }}/{{ $test->total_questions ?? 5 }} Câu đúng)
-                </span>
+            <td>
+                <span class="result-summary-label">Phong cách NLP nổi trội</span>
+                <span class="result-summary-value">{{ data_get($nlp, 'dominant_title', 'Chưa có dữ liệu') }}</span>
             </td>
-            <td class="info-label">Thời gian làm bài:</td>
-            <td class="info-val">{{ round(($test->time_spent_seconds ?? 600) / 60) }} phút</td>
+            <td>
+                <span class="result-summary-label">Nhóm DISC</span>
+                <span class="result-summary-value">{{ data_get($disc, 'title', data_get($disc, 'group', 'Chưa có dữ liệu')) }}</span>
+            </td>
+            <td>
+                <span class="result-summary-label">Mã tính cách MBTI</span>
+                <span class="result-summary-value">{{ data_get($mbti, 'code', 'Chưa có dữ liệu') }}</span>
+            </td>
         </tr>
     </table>
 
     <!-- ==================== PHẦN 1 ==================== -->
-    <div class="section-header">PHẦN 1. ĐÁNH GIÁ NĂNG LỰC & TÍNH CÁCH (NLP - DISC - MBTI - THẦN SỐ HỌC)</div>
+    <div class="section-header">PHẦN 1. NĂNG LỰC & PHONG CÁCH LÀM VIỆC (NLP · DISC · MBTI)</div>
 
     <!-- 1.1 NLP -->
     <div class="subsection-header">1.1 Mô hình NLP (Phong cách tiếp nhận thông tin V-A-K-Ad)</div>
@@ -267,16 +320,18 @@
             </thead>
             <tbody>
                 <tr>
-                    <td style="text-align: center; font-weight: bold; font-size: 10px;">{{ $nlp['scores']['Visual'] ?? 0 }} điểm</td>
-                    <td style="text-align: center; font-weight: bold; font-size: 10px;">{{ $nlp['scores']['Auditory'] ?? 0 }} điểm</td>
-                    <td style="text-align: center; font-weight: bold; font-size: 10px;">{{ $nlp['scores']['Kinesthetic'] ?? 0 }} điểm</td>
-                    <td style="text-align: center; font-weight: bold; font-size: 10px;">{{ $nlp['scores']['Auditory_Digital'] ?? 0 }} điểm</td>
+                    <td style="text-align: center; font-weight: bold;">{{ isset($nlp['scores']['Visual']) ? $nlp['scores']['Visual'] . ' điểm' : '—' }}</td>
+                    <td style="text-align: center; font-weight: bold;">{{ isset($nlp['scores']['Auditory']) ? $nlp['scores']['Auditory'] . ' điểm' : '—' }}</td>
+                    <td style="text-align: center; font-weight: bold;">{{ isset($nlp['scores']['Kinesthetic']) ? $nlp['scores']['Kinesthetic'] . ' điểm' : '—' }}</td>
+                    <td style="text-align: center; font-weight: bold;">{{ isset($nlp['scores']['Auditory_Digital']) ? $nlp['scores']['Auditory_Digital'] . ' điểm' : '—' }}</td>
                 </tr>
             </tbody>
         </table>
         <div class="answer-box">
-            <strong>Phong cách tiếp nhận vượt trội:</strong> <span class="badge badge-orange">{{ $nlp['dominant_title'] ?? 'Toàn diện' }}</span><br>
-            <p>{{ $nlp['dominant_summary'] ?? 'Ứng viên có phong cách tiếp nhận thông tin và xử lý công việc hài hòa.' }}</p>
+            <strong>Phong cách tiếp nhận vượt trội:</strong> <span class="badge badge-orange">{{ $nlp['dominant_title'] ?? 'Chưa xác định' }}</span><br>
+            @if(!empty($nlp['dominant_summary']))
+                <p>{{ $nlp['dominant_summary'] }}</p>
+            @endif
         </div>
         @if(!empty($nlp['raw_input']) && is_array($nlp['raw_input']))
             @php
@@ -309,12 +364,16 @@
                     <tr>
                         <td style="font-weight: bold;">Tổng điểm</td>
                         @foreach($nlpTypes as $type)
-                            <td style="font-weight: bold; text-align: center;">{{ data_get($nlp, 'scores.' . $type['score'], 0) }}</td>
+                            <td style="font-weight: bold; text-align: center;">{{ data_get($nlp, 'scores.' . $type['score'], '—') }}</td>
                         @endforeach
                     </tr>
                 </tbody>
             </table>
+        @else
+            <div class="answer-box">Chưa có bảng câu trả lời chi tiết NLP.</div>
         @endif
+    @else
+        <div class="answer-box">Chưa có dữ liệu đánh giá NLP.</div>
     @endif
 
     <!-- 1.2 DISC -->
@@ -332,7 +391,7 @@
             'precision' => 'Chuẩn mực chất lượng, tài liệu rõ ràng, hạn chế tối đa sai sót.',
         ];
     @endphp
-    <div class="subsection-header">1.2 Nhóm phong cách DISC</div>
+    <div class="subsection-header">1.2 Phong cách làm việc · DISC</div>
     @if($disc)
         <div class="answer-box">
             <strong>Nhóm nổi trội:</strong> <span class="badge badge-orange">{{ $disc['title'] ?? $disc['group'] ?? 'Chưa có dữ liệu' }}</span>
@@ -378,13 +437,10 @@
             'T' => 'T – Lý trí (Thinking): Đưa ra quyết định thuần túy dựa trên quy chuẩn logic, tính khách quan tuyệt đối và phân tích số liệu không thiên vị.',
         ];
     @endphp
-    <div class="subsection-header">1.3 Kiểu tính cách MBTI</div>
+    <div class="subsection-header">1.3 Xu hướng tính cách · MBTI</div>
     @if($mbti)
         <div class="answer-box">
             <strong>Đặc tính MBTI:</strong> <span class="badge badge-orange">{{ $mbti['title'] ?? $mbti['code'] ?? 'Chưa có dữ liệu' }}</span>
-            @if(!empty($mbti['summary']))
-                <p>{{ $mbti['summary'] }}</p>
-            @endif
         </div>
         <table class="data-table">
             <thead>
@@ -415,8 +471,10 @@
     @if($numerology)
         <div class="subsection-header" style="margin-top: 6px;">1.4 Con số đường đời (Nhân số học ứng dụng)</div>
         <div class="answer-box">
-            <strong>{{ $numerology['title'] ?? 'Con số đường đời 9' }}</strong> (Ngày sinh: {{ $numerology['dob'] ?? $application->candidate->birth_date ?? 'N/A' }}):
-            <p>{{ $numerology['summary'] ?? 'Gắn với lòng trắc ẩn, tính bao dung, tinh thần trách nhiệm cao và mong muốn mang lại giá trị tích cực.' }}</p>
+            <strong>{{ $numerology['title'] ?? 'Con số đường đời' }}</strong> (Ngày sinh: {{ $numerology['dob'] ?? $application->candidate->birth_date ?? 'Chưa cung cấp' }}):
+            @if(!empty($numerology['summary']))
+                <p>{{ $numerology['summary'] }}</p>
+            @endif
         </div>
     @endif
 
@@ -444,7 +502,7 @@
 
             foreach ($wheelChartLabels as $key => $label) {
                 $angle = deg2rad(-90 + count($wheelChartAngles) * (360 / $wheelChartCount));
-                $score = max(0, min(10, (int) ($wheel['dimensions'][$key]['score'] ?? 5)));
+                $score = max(0, min(10, (int) ($wheel['dimensions'][$key]['score'] ?? 0)));
                 $x = round($wheelChartCenterX + cos($angle) * $wheelChartRadius * $score / 10, 2);
                 $y = round($wheelChartCenterY + sin($angle) * $wheelChartRadius * $score / 10, 2);
                 $labelRadius = $wheelChartRadius + 34;
@@ -498,30 +556,29 @@
         @endif
     </div>
     @if($wheel && !empty($wheel['dimensions']))
+        <div class="subsection-header">Bảng điểm hiện tại và mục tiêu</div>
         <table class="data-table">
             <thead>
                 <tr>
-                    <th style="width: 12.5%;">Tài chính</th>
-                    <th style="width: 12.5%;">Phát triển</th>
-                    <th style="width: 12.5%;">Sức khỏe</th>
-                    <th style="width: 12.5%;">Gia đình</th>
-                    <th style="width: 12.5%;">Mối quan hệ</th>
-                    <th style="width: 12.5%;">Xã hội</th>
-                    <th style="width: 12.5%;">Tinh thần</th>
-                    <th style="width: 12.5%;">Sự nghiệp</th>
+                    <th style="width: 31%;">Lĩnh vực</th>
+                    <th style="width: 23%;">Hiện tại</th>
+                    <th style="width: 23%;">Mong muốn 10 năm</th>
+                    <th style="width: 23%;">Chênh lệch</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td style="text-align: center; font-weight: bold;">{{ $wheel['dimensions']['finance']['score'] ?? 5 }}/10</td>
-                    <td style="text-align: center; font-weight: bold;">{{ $wheel['dimensions']['personal_growth']['score'] ?? 5 }}/10</td>
-                    <td style="text-align: center; font-weight: bold;">{{ $wheel['dimensions']['health']['score'] ?? 5 }}/10</td>
-                    <td style="text-align: center; font-weight: bold;">{{ $wheel['dimensions']['family']['score'] ?? 5 }}/10</td>
-                    <td style="text-align: center; font-weight: bold;">{{ $wheel['dimensions']['relationships']['score'] ?? 5 }}/10</td>
-                    <td style="text-align: center; font-weight: bold;">{{ $wheel['dimensions']['social_life']['score'] ?? 5 }}/10</td>
-                    <td style="text-align: center; font-weight: bold;">{{ $wheel['dimensions']['spirituality']['score'] ?? 5 }}/10</td>
-                    <td style="text-align: center; font-weight: bold;">{{ $wheel['dimensions']['career']['score'] ?? 5 }}/10</td>
-                </tr>
+                @foreach($wheelChartLabels as $key => $label)
+                    @php
+                        $currentScore = data_get($wheel, 'dimensions.' . $key . '.score');
+                        $desiredScore = data_get($wheel, 'desired_dimensions.' . $key . '.score');
+                    @endphp
+                    <tr>
+                        <td style="font-weight: bold;">{{ $label }}</td>
+                        <td style="text-align: center; font-weight: bold;">{{ is_numeric($currentScore) ? $currentScore . '/10' : '—' }}</td>
+                        <td style="text-align: center;">{{ is_numeric($desiredScore) ? $desiredScore . '/10' : '—' }}</td>
+                        <td style="text-align: center;">{{ is_numeric($currentScore) && is_numeric($desiredScore) ? (($desiredScore - $currentScore > 0 ? '+' : '') . ($desiredScore - $currentScore)) : '—' }}</td>
+                    </tr>
+                @endforeach
             </tbody>
         </table>
         @if(!empty($wheel['lesson']))
@@ -530,40 +587,12 @@
                 <p>{{ $wheel['lesson'] }}</p>
             </div>
         @endif
-    @endif
-
-    @if(!empty($wheel['desired_dimensions']))
-        <div class="section-header">BÁNH XE CUỘC ĐỜI MONG MUỐN TRONG 10 NĂM TỚI</div>
-        <table class="data-table">
-            <thead>
-                <tr>
-                    <th style="width: 12.5%;">Tài chính</th>
-                    <th style="width: 12.5%;">Phát triển</th>
-                    <th style="width: 12.5%;">Sức khỏe</th>
-                    <th style="width: 12.5%;">Gia đình</th>
-                    <th style="width: 12.5%;">Mối quan hệ</th>
-                    <th style="width: 12.5%;">Xã hội</th>
-                    <th style="width: 12.5%;">Tinh thần</th>
-                    <th style="width: 12.5%;">Sự nghiệp</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td style="text-align: center; font-weight: bold;">{{ $wheel['desired_dimensions']['finance']['score'] ?? 5 }}/10</td>
-                    <td style="text-align: center; font-weight: bold;">{{ $wheel['desired_dimensions']['personal_growth']['score'] ?? 5 }}/10</td>
-                    <td style="text-align: center; font-weight: bold;">{{ $wheel['desired_dimensions']['health']['score'] ?? 5 }}/10</td>
-                    <td style="text-align: center; font-weight: bold;">{{ $wheel['desired_dimensions']['family']['score'] ?? 5 }}/10</td>
-                    <td style="text-align: center; font-weight: bold;">{{ $wheel['desired_dimensions']['relationships']['score'] ?? 5 }}/10</td>
-                    <td style="text-align: center; font-weight: bold;">{{ $wheel['desired_dimensions']['social_life']['score'] ?? 5 }}/10</td>
-                    <td style="text-align: center; font-weight: bold;">{{ $wheel['desired_dimensions']['spirituality']['score'] ?? 5 }}/10</td>
-                    <td style="text-align: center; font-weight: bold;">{{ $wheel['desired_dimensions']['career']['score'] ?? 5 }}/10</td>
-                </tr>
-            </tbody>
-        </table>
+    @else
+        <div class="answer-box">Chưa có dữ liệu Bánh xe cuộc đời.</div>
     @endif
 
     <!-- ==================== PHẦN 3 ==================== -->
-    <div class="section-header">PHẦN 3. PHIẾU KHẢO SÁT HOÀI BÃO, ĐỘNG CƠ & TỰ ĐÁNH GIÁ BẢN THÂN</div>
+    <div class="section-header">PHẦN 3. HOÀI BÃO, ĐỘNG CƠ & TỰ NHẬN THỨC BẢN THÂN</div>
     @if($survey)
         <div class="answer-box">
             <strong>1. Mục tiêu ngắn hạn (1 - 2 năm tới):</strong>
@@ -593,13 +622,21 @@
             <strong>7. Lý do AZ Media nên chọn bạn thay vì ứng viên khác:</strong>
             <p>{{ $survey['why_choose_you'] ?? 'Chưa cung cấp' }}</p>
         </div>
+    @else
+        <div class="answer-box">Chưa có dữ liệu khảo sát Hoài bão, Động cơ & Tự nhận thức bản thân.</div>
     @endif
 
     <!-- ==================== PHẦN 4 ==================== -->
-    <div class="section-header" style="margin-top: 14px; page-break-before: always;">PHẦN 4. TÌM HIỂU VỀ DOANH NGHIỆP AZ MEDIA</div>
+    <div class="section-header" style="margin-top: 14px; page-break-before: always;">PHẦN 4. KIẾN THỨC & MỨC ĐỘ TÌM HIỂU VỀ AZ MEDIA</div>
 
     <!-- 4.1 Trắc nghiệm văn hóa -->
-    <div class="subsection-header">4.1 Kết quả trắc nghiệm hiểu biết về AZ Media ({{ $quiz['correct'] ?? 5 }}/{{ $quiz['total'] ?? 5 }} câu đúng)</div>
+    <div class="subsection-header">4.1 Kết quả trắc nghiệm hiểu biết về AZ Media
+        @if(isset($quiz['correct'], $quiz['total']))
+            ({{ $quiz['correct'] }}/{{ $quiz['total'] }} câu đúng)
+        @else
+            (Chưa có dữ liệu điểm)
+        @endif
+    </div>
     @if(!empty($quiz['details']))
         <table class="data-table">
             <thead>
@@ -631,6 +668,8 @@
                 @endforeach
             </tbody>
         </table>
+    @else
+        <div class="answer-box">Chưa có dữ liệu chi tiết cho phần trắc nghiệm văn hóa AZ Media.</div>
     @endif
 
     <!-- 4.2 Kênh tìm hiểu & Tự luận cảm nhận -->
@@ -666,6 +705,8 @@
                 <p style="white-space: pre-line;">{{ $azSurvey['impression'] }}</p>
             </div>
         @endif
+    @else
+        <div class="answer-box">Chưa có dữ liệu khảo sát về kênh tìm hiểu và cảm nhận về AZ Media.</div>
     @endif
 
     <!-- XÁC NHẬN CHỮ KÝ -->

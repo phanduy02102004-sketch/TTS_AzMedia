@@ -127,7 +127,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-28 lg:h-32">
                 <a href="{{ route('azmedia.home') }}" aria-label="AZmedia - Trang chủ" class="flex shrink-0 items-center group">
-                    <img src="{{ asset('uploads/az-media-full-logo-transparent.png') }}" alt="AZmedia Coaching & Marketing" class="w-52 h-20 lg:w-60 lg:h-24 object-contain object-left transition group-hover:scale-[1.03]">
+                    <img src="{{ asset('frontend/assets/images/azmedia-logo.png') }}" alt="AZ Media" class="block w-52 lg:w-60 h-auto object-contain object-left transition group-hover:scale-[1.03]">
                 </a>
 
                 <!-- Desktop Menu -->
@@ -246,9 +246,10 @@
                 <!-- Col 1: AZ Media Overview -->
                 <div>
                     <div class="flex items-center gap-3 mb-4">
-                        <img src="{{ asset('uploads/az-media-full-logo-transparent.png') }}" alt="AZmedia Coaching & Marketing" class="w-24 h-11 object-contain object-left">
+                        <span class="inline-flex rounded-lg bg-white p-2">
+                            <img src="{{ asset('frontend/assets/images/azmedia-logo.png') }}" alt="AZ Media" class="block w-24 h-auto object-contain">
+                        </span>
                         <div>
-                            <span class="text-2xl font-extrabold tracking-tight text-brand-900">AZ<span class="text-brand-700">HR</span></span>
                             <p class="text-sm text-stone-700">Coaching & Marketing Online</p>
                         </div>
                     </div>

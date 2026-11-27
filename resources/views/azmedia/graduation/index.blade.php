@@ -20,7 +20,7 @@
                     </h1>
                     <p class="text-sm text-slate-300 leading-relaxed">
                         <span class="text-brand-400 font-semibold">(Thay mặt anh Lê Đình Quang – Ban Điều Hành AZ MEDIA)</span><br>
-                        Để hoàn tất chuẩn đầu ra và được nhận báo cáo, ký nhận mộc thực tập, các bạn TTS cần hoàn thành đầy đủ <strong>3 mục tiêu chuẩn bắt buộc</strong>: Khảo sát, Nộp báo cáo 4 bước (Cổng AZ SUPPORT & Giới thiệu 1+1), Video & Đánh giá 5 kênh của công ty.
+                        Hoàn thành đủ <strong>3 nhóm tiêu chí bắt buộc</strong>: Khảo sát, Báo cáo 4 bước (AZ SUPPORT & Giới thiệu 1+1), Video & Đánh giá 5 kênh. Sau đó làm bài test đầu ra, ký xác nhận kết thúc; chỉ hồ sơ đạt <strong>100%</strong> mới được gửi Ban Điều Hành duyệt.
                     </p>
                 </div>
 
@@ -30,6 +30,9 @@
                     </a>
                     <a href="#graduation-checklist" class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-slate-800/80 hover:bg-slate-700 text-slate-200 font-semibold text-sm border border-slate-700 transition">
                         <i class="fa-solid fa-list-check text-brand-400"></i> Xem Checklist 3 Mục
+                    </a>
+                    <a href="#section-exit-completion" class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-white/10 hover:bg-white/20 text-white font-semibold text-sm border border-white/20 transition">
+                        <i class="fa-solid fa-pen-to-square"></i> Test & ký kết thúc
                     </a>
                 </div>
             </div>
@@ -172,7 +175,7 @@
         <div id="az-support-portal" class="bg-white rounded-3xl p-6 sm:p-10 shadow-sm border border-slate-200 space-y-8">
             <div class="text-center max-w-xl mx-auto space-y-3">
                 <div class="inline-flex items-center justify-center p-3 rounded-2xl bg-orange-50 mb-2">
-                    <img src="{{ asset('uploads/az-media-full-logo-transparent.png') }}" alt="AZmedia Coaching & Marketing" class="h-16 w-48 object-contain">
+                    <img src="{{ asset('frontend/assets/images/azmedia-logo.png') }}" alt="AZ Media" class="block h-auto w-48 object-contain">
                 </div>
                 <h2 class="text-2xl sm:text-3xl font-extrabold text-orange-600 tracking-tight">
                     AZ SUPPORT
@@ -551,6 +554,12 @@
             </div>
 
             @if($graduation)
+                @if($graduation->completion_confirmed_at)
+                    <div class="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-900">
+                        <i class="fa-solid fa-lock mr-1"></i>
+                        Checklist đã khóa sau khi bạn ký xác nhận kết thúc. Nếu cần chỉnh sửa, vui lòng liên hệ Ban Điều Hành.
+                    </div>
+                @else
                 <form action="{{ route('azmedia.graduation.update') }}" method="POST" class="space-y-8">
                     @csrf
                     <input type="hidden" name="graduation_code" value="{{ $graduation->graduation_code }}">
@@ -940,24 +949,153 @@
                         </div>
                     </div>
 
-                    <!-- Hành động gửi duyệt -->
+                    <!-- Hành động lưu tiến độ -->
                     <div class="flex flex-col sm:flex-row items-center justify-between gap-4 p-6 bg-slate-900 rounded-3xl text-white">
                         <div>
                             <div class="text-sm font-extrabold">Cập nhật tiến độ hồ sơ chuẩn đầu ra</div>
-                            <p class="text-xs text-slate-400">Lưu lại tiến độ đã làm hoặc gửi yêu cầu để Ban Điều Hành kiểm tra & ký duyệt báo cáo.</p>
+                            <p class="text-xs text-slate-400">Lưu checklist tại đây. Khi đạt 100% và hoàn thành bài test, bạn sẽ ký xác nhận kết thúc để gửi Ban Điều Hành duyệt.</p>
                         </div>
                         <div class="flex items-center gap-3 w-full sm:w-auto">
                             <button type="submit" name="save_only" value="1"
                                     class="flex-1 sm:flex-none px-5 py-3 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition">
                                 <i class="fa-solid fa-floppy-disk mr-1"></i> Lưu Tiến Độ
                             </button>
-                            <button type="submit" name="submit_for_review" value="1"
-                                    class="flex-1 sm:flex-none px-6 py-3 rounded-2xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white text-xs font-extrabold shadow-lg transition">
-                                <i class="fa-solid fa-paper-plane mr-1"></i> Gửi Ban Điều Hành Duyệt
-                            </button>
                         </div>
                     </div>
                 </form>
+                @endif
+
+                <section id="section-exit-completion" class="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-200 space-y-6">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-11 h-11 rounded-2xl bg-orange-100 text-orange-700 flex items-center justify-center text-lg">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-extrabold text-slate-900">Bài test đầu ra & xác nhận kết thúc</h3>
+                                <p class="text-xs text-slate-500">Hoàn thành checklist, nộp bài test và ký xác nhận để đạt 100% và gửi hồ sơ duyệt.</p>
+                            </div>
+                        </div>
+                        <span class="px-3 py-1 rounded-full text-xs font-bold border {{ $graduation->progress_percent === 100 ? 'bg-emerald-100 text-emerald-800 border-emerald-200' : 'bg-amber-50 text-amber-800 border-amber-200' }}">
+                            Tiến độ chuẩn đầu ra: {{ $graduation->progress_percent }}%
+                        </span>
+                    </div>
+
+                    @if($graduation->completion_confirmed_at)
+                        <div class="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-5 items-center p-5 rounded-2xl bg-emerald-50 border border-emerald-200">
+                            <div class="space-y-1">
+                                <div class="font-extrabold text-emerald-900 flex items-center gap-2">
+                                    <i class="fa-solid fa-circle-check"></i> Đã ký xác nhận kết thúc
+                                </div>
+                                <p class="text-xs text-emerald-800">
+                                    {{ $graduation->completion_confirmed_at->format('d/m/Y H:i') }}
+                                    · Hồ sơ đang ở trạng thái {{ $graduation->status_badge['label'] }}.
+                                </p>
+                                <p class="text-[11px] text-emerald-800">Chữ ký điện tử này được lưu để đối chiếu trong hồ sơ nội bộ, không thay thế chữ ký số pháp lý.</p>
+                            </div>
+                            @if($graduation->completion_signature)
+                                <img src="{{ $graduation->completion_signature }}" alt="Chữ ký xác nhận kết thúc của {{ $graduation->student_name }}"
+                                     class="max-h-24 max-w-full rounded-xl border border-emerald-200 bg-white p-2">
+                            @endif
+                        </div>
+                    @else
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <div class="space-y-4">
+                                <div class="flex items-center justify-between">
+                                    <h4 class="font-extrabold text-slate-900">Kiểm tra hiểu biết về chuẩn đầu ra</h4>
+                                    <span class="text-[11px] font-bold text-slate-500">5 câu · có thể làm lại</span>
+                                </div>
+                                @if($graduation->exit_test_score !== null)
+                                    <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 text-xs font-bold">
+                                        Kết quả gần nhất: {{ $graduation->exit_test_score }}/100
+                                        · Đã ghi nhận lượt làm bài.
+                                    </div>
+                                @endif
+
+                                @if($graduation->status !== 'approved')
+                                    <form action="{{ route('azmedia.graduation.exit-test', $graduation->graduation_code) }}" method="POST" class="space-y-4">
+                                        @csrf
+                                        @foreach($exitTestQuestions as $questionKey => $question)
+                                            <fieldset class="p-4 rounded-xl border border-slate-200 space-y-3">
+                                                <legend class="px-1 text-xs font-bold text-slate-800">{{ $loop->iteration }}. {{ $question['question'] }}</legend>
+                                                @foreach($question['options'] as $optionKey => $option)
+                                                    <label class="flex items-start gap-2.5 text-xs text-slate-700 cursor-pointer">
+                                                        <input type="radio" name="answers[{{ $questionKey }}]" value="{{ $optionKey }}"
+                                                               {{ old("answers.{$questionKey}", data_get($graduation->exit_test_answers, $questionKey)) === $optionKey ? 'checked' : '' }}
+                                                               required class="mt-0.5 text-brand-600 focus:ring-brand-500">
+                                                        <span><strong>{{ $optionKey }}.</strong> {{ $option }}</span>
+                                                    </label>
+                                                @endforeach
+                                            </fieldset>
+                                        @endforeach
+                                        <button type="submit" class="w-full sm:w-auto px-5 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-extrabold transition focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2">
+                                            <i class="fa-solid fa-check-to-slot mr-1"></i> {{ $graduation->exit_test_completed_at ? 'Nộp lại bài test' : 'Nộp bài test đầu ra' }}
+                                        </button>
+                                    </form>
+                                @else
+                                    <div class="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-sm text-emerald-900">
+                                        <i class="fa-solid fa-circle-check mr-1"></i> Đã hoàn thành bài test đầu ra.
+                                    </div>
+                                @endif
+                            </div>
+
+                            <div class="space-y-4">
+                                <div>
+                                    <h4 class="font-extrabold text-slate-900">Ký xác nhận kết thúc</h4>
+                                    <p class="text-xs text-slate-500 mt-1">Bước ký chỉ mở khi checklist và bài test đã hoàn tất, tổng tiến độ đạt 100%.</p>
+                                </div>
+
+                                @if($graduation->isReadyForCompletionConfirmation() && $graduation->status !== 'approved')
+                                    <form action="{{ route('azmedia.graduation.confirm-completion', $graduation->graduation_code) }}" method="POST" id="completion-signature-form" class="space-y-4">
+                                        @csrf
+                                        <div>
+                                            <label for="completion-signature-canvas" class="block text-xs font-bold text-slate-700 mb-2">Chữ ký của bạn</label>
+                                            <canvas id="completion-signature-canvas" tabindex="0" aria-label="Khung ký xác nhận kết thúc"
+                                                    class="w-full h-40 rounded-xl border border-slate-300 bg-white touch-none"></canvas>
+                                            <input type="hidden" name="completion_signature" id="completion-signature-data">
+                                            <div class="flex items-center justify-between gap-3 mt-2">
+                                                <span class="text-[11px] text-slate-500">Dùng chuột hoặc ngón tay để ký.</span>
+                                                <button type="button" id="clear-completion-signature"
+                                                        class="px-3 py-1.5 rounded-lg border border-slate-300 text-xs font-bold text-slate-700 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-orange-500">
+                                                    Xóa chữ ký
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <label class="flex items-start gap-2.5 text-xs text-slate-700">
+                                            <input type="checkbox" name="completion_acknowledged" value="1" required
+                                                   class="mt-0.5 rounded text-brand-600 focus:ring-brand-500">
+                                            <span>Tôi xác nhận đã hoàn thành đầy đủ checklist và bài test chuẩn đầu ra, thông tin đã khai báo là chính xác.</span>
+                                        </label>
+                                        <p id="completion-signature-error" class="hidden text-xs font-semibold text-rose-700" role="status" aria-live="polite"></p>
+                                        <p class="text-[11px] text-slate-500">Đây là xác nhận điện tử nội bộ, không thay thế chữ ký số pháp lý.</p>
+                                        <button type="submit" class="w-full px-5 py-3 rounded-xl bg-gradient-to-r from-orange-600 to-amber-500 hover:from-orange-700 hover:to-amber-600 text-white text-xs font-extrabold transition focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2">
+                                            <i class="fa-solid fa-file-signature mr-1"></i> Ký & xác nhận hoàn tất 100%
+                                        </button>
+                                    </form>
+                                @elseif($graduation->status === 'approved')
+                                    <div class="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-sm font-bold text-emerald-900">
+                                        Chuẩn đầu ra đã được Ban Điều Hành phê duyệt.
+                                    </div>
+                                @else
+                                    <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2 text-xs text-slate-700">
+                                        <div class="font-bold">Các bước cần hoàn tất trước khi ký:</div>
+                                        <div class="flex items-center gap-2">
+                                            <i class="fa-solid {{ $graduation->isCoreChecklistComplete() ? 'fa-circle-check text-emerald-600' : 'fa-circle text-slate-400' }}"></i>
+                                            <span>Checklist chuẩn đầu ra: {{ $graduation->isCoreChecklistComplete() ? 'đã hoàn tất' : 'còn nội dung cần cập nhật' }}</span>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <i class="fa-solid {{ $graduation->exit_test_completed_at ? 'fa-circle-check text-emerald-600' : 'fa-circle text-slate-400' }}"></i>
+                                            <span>Bài test đầu ra đã được nộp</span>
+                                        </div>
+                                        <a href="#graduation-checklist" class="inline-flex items-center gap-1 font-bold text-brand-700 hover:underline">
+                                            <i class="fa-solid fa-arrow-up"></i> Kiểm tra checklist
+                                        </a>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    @endif
+                </section>
             @else
                 <!-- Khi chưa tra cứu hồ sơ -->
                 <div class="bg-white rounded-3xl p-8 sm:p-12 text-center border border-dashed border-slate-300 space-y-4">
@@ -980,4 +1118,77 @@
 
     </div>
 </div>
+@push('scripts')
+<script>
+    (function () {
+        const canvas = document.getElementById('completion-signature-canvas');
+        const form = document.getElementById('completion-signature-form');
+        if (!canvas || !form) return;
+
+        const context = canvas.getContext('2d');
+        const scale = window.devicePixelRatio || 1;
+        const bounds = canvas.getBoundingClientRect();
+        canvas.width = Math.round(bounds.width * scale);
+        canvas.height = Math.round(bounds.height * scale);
+        context.scale(scale, scale);
+        context.strokeStyle = '#0f172a';
+        context.lineWidth = 2.5;
+        context.lineCap = 'round';
+        context.lineJoin = 'round';
+
+        let isDrawing = false;
+        let hasInk = false;
+
+        function position(event) {
+            const rect = canvas.getBoundingClientRect();
+            return { x: event.clientX - rect.left, y: event.clientY - rect.top };
+        }
+
+        canvas.addEventListener('pointerdown', function (event) {
+            event.preventDefault();
+            isDrawing = true;
+            canvas.setPointerCapture(event.pointerId);
+            const point = position(event);
+            context.beginPath();
+            context.moveTo(point.x, point.y);
+        });
+
+        canvas.addEventListener('pointermove', function (event) {
+            if (!isDrawing) return;
+            event.preventDefault();
+            const point = position(event);
+            context.lineTo(point.x, point.y);
+            context.stroke();
+            hasInk = true;
+        });
+
+        function stopDrawing() {
+            isDrawing = false;
+        }
+
+        canvas.addEventListener('pointerup', stopDrawing);
+        canvas.addEventListener('pointercancel', stopDrawing);
+        canvas.addEventListener('lostpointercapture', stopDrawing);
+
+        document.getElementById('clear-completion-signature').addEventListener('click', function () {
+            context.clearRect(0, 0, canvas.width / scale, canvas.height / scale);
+            hasInk = false;
+            document.getElementById('completion-signature-data').value = '';
+        });
+
+        form.addEventListener('submit', function (event) {
+            const error = document.getElementById('completion-signature-error');
+            if (!hasInk) {
+                event.preventDefault();
+                error.textContent = 'Vui lòng ký trong khung trước khi xác nhận.';
+                error.classList.remove('hidden');
+                canvas.focus();
+                return;
+            }
+
+            document.getElementById('completion-signature-data').value = canvas.toDataURL('image/png');
+        });
+    })();
+</script>
+@endpush
 @endsection
