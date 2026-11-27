@@ -1,0 +1,16 @@
+services:
+  app:
+    environment:
+      APP_ENV: local
+      APP_DEBUG: "true"
+      SESSION_SECURE_COOKIE: "false"
+    volumes:
+      - .:/var/www/html
+      - app_vendor:/var/www/html/vendor
+
+  nginx:
+    volumes:
+      - ./public:/var/www/html/public:ro
+
+volumes:
+  app_vendor:

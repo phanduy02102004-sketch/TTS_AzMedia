@@ -4,6 +4,48 @@ Hệ thống Tuyển dụng & Quản lý Đánh giá Năng lực Thực tập si
 
 ---
 
+## 🐳 Chạy bằng Docker và triển khai VPS
+
+Stack Docker gồm PHP-FPM, Nginx và MySQL 8.4. Dữ liệu MySQL, file Laravel và các file tải lên được giữ trong Docker volumes; database không mở cổng trực tiếp ra Internet. Image ứng dụng build asset frontend và chỉ cài Composer dependency production.
+
+### Chạy local
+
+1. Sao chép `.env.docker.example` thành `.env`, tạo `APP_KEY` bằng `php artisan key:generate --show`, rồi đặt `APP_KEY`, `DB_PASSWORD` và `DB_ROOT_PASSWORD` trong `.env`. Dùng mật khẩu riêng cho môi trường local.
+2. Đặt `APP_IMAGE=azmedia-app:local`, `NGINX_IMAGE=azmedia-nginx:local`, `APP_URL=http://localhost:8080`, `HTTP_BIND=0.0.0.0`, `HTTP_PORT=8080` trong `.env`.
+3. Build và chạy (Compose tự nạp `docker-compose.override.yml` khi chạy local):
+
+```bash
+docker compose up -d --build
+docker compose exec app php artisan migrate --force
+```
+
+Mở `http://localhost:8080`. Override gắn mã nguồn hiện tại vào container và bật debug; không dùng file override này trên production.
+
+### Triển khai VPS / CI/CD
+
+1. Cài Docker Engine và Docker Compose plugin trên VPS. Sao chép `.env.docker.example` thành `.env`, điền domain, `APP_KEY` được tạo an toàn, database name/user và mật khẩu mạnh riêng biệt; giữ `APP_DEBUG=false`. Không commit hoặc đưa `.env` vào image.
+2. Đặt `APP_IMAGE` và `NGINX_IMAGE` thành image tags bất biến do CI build/push (ví dụ tag commit SHA). Cấp quyền registry cho VPS nếu image private. Dùng TLS reverse proxy trên host và giữ `HTTP_BIND=127.0.0.1`; proxy tới `127.0.0.1:8080`. Nếu phục vụ HTTP trực tiếp, cấu hình firewall/TLS trước khi mở port ra Internet.
+3. CI build và push hai target của Dockerfile với các giá trị image tương ứng (nên gắn tag theo commit SHA để rollback chính xác):
+
+```bash
+docker buildx build --target app --tag "$APP_IMAGE" --push .
+docker buildx build --target nginx --tag "$NGINX_IMAGE" --push .
+```
+
+VPS chỉ dùng file Compose chính để không nạp override local:
+
+```bash
+docker compose -f docker-compose.yml pull
+docker compose -f docker-compose.yml up -d
+docker compose -f docker-compose.yml run --rm app php artisan migrate --force
+```
+
+Trước lần đầu chạy migration, có thể khôi phục `webazhr.sql` vào database `db` nếu cần dữ liệu hiện có; không import dump rồi chạy migrations một cách mù quáng nếu chưa kiểm tra bảng `migrations`. Sao lưu database và volume uploads trước khi nâng cấp. Không chạy `docker compose down -v` trên production vì lệnh đó xóa các volume dữ liệu.
+
+Kiểm tra trạng thái bằng `docker compose -f docker-compose.yml ps` và log bằng `docker compose -f docker-compose.yml logs -f app nginx db`. MySQL chỉ truy cập trong mạng Docker; không publish port 3306.
+
+---
+
 ## 🌟 Các Phân Hệ Chính
 
 ### 1. Phân hệ Ứng viên (Careers & Candidate Portal)
