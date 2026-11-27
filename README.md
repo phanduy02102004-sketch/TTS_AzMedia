@@ -58,6 +58,7 @@ Kiểm tra trạng thái bằng `docker compose -f docker-compose.yml ps` và lo
   2. *Phần 2: Bánh xe cuộc đời (Đánh giá mức độ hài lòng trên thang điểm 1-10).*
   3. *Phần 3: Hoài bão, Động cơ & Kế hoạch phát triển bản thân (Cam kết, tự luận).*
   4. *Phần 4: Hiểu biết về Văn hóa & Doanh nghiệp AZ Media (Trắc nghiệm + Tự luận cảm nhận).*
+- **Tự động lưu bản nháp:** Câu trả lời được lưu vào database khi ứng viên nhập/chọn và trước khi chuyển phần; bản nháp được khôi phục khi mở lại bài test chưa nộp.
 - **Xuất PDF Bài Test:** Hệ thống tự động biên dịch kết quả bài test thành file PDF hoàn chỉnh chuẩn báo cáo cho Admin/Mentor đánh giá.
 - **Tra cứu kết quả hồ sơ (`/candidate/track`):** Tra cứu theo mã ứng viên hoặc email.
 

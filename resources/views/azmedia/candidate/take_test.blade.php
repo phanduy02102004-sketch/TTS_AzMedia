@@ -262,9 +262,15 @@
         </a>
     </div>
 
-    <form id="test_form" novalidate action="{{ route('azmedia.candidate.test.submit', $application->application_code) }}" method="POST">
+    <form id="test_form" novalidate
+          action="{{ route('azmedia.candidate.test.submit', $application->application_code) }}"
+          data-autosave-url="{{ route('azmedia.candidate.test.autosave', $application->application_code) }}"
+          method="POST">
         @csrf
         <input type="hidden" name="time_spent" id="time_spent_input" value="0">
+        <p id="autosave_status" class="mb-4 text-xs font-semibold text-slate-500" role="status" aria-live="polite">
+            Câu trả lời sẽ tự động lưu khi bạn thay đổi.
+        </p>
 
         <!-- ==========================================
              PHẦN 1: BÀI TRẮC NGHIỆM TÍNH CÁCH (NLP – DISC – MBTI – NHÂN SỐ HỌC)
@@ -1050,8 +1056,18 @@
 
 @push('scripts')
 <script>
+    const savedDraftFields = @json($draftFields, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT);
+    let autosaveTimer = null;
+    let autosavePromise = null;
+    let draftDirty = false;
+
     // 1. Chuyển Tab / Step mượt mà
-    function switchTab(step) {
+    async function switchTab(step) {
+        if ((draftDirty || autosavePromise) && !(await saveDraftNow())) {
+            alert('Chưa lưu được câu trả lời. Vui lòng kiểm tra kết nối và thử lại trước khi chuyển phần.');
+            return false;
+        }
+
         for (let i = 1; i <= 4; i++) {
             const sec = document.getElementById(`section_${i}`);
             const btn = document.getElementById(`tab_btn_${i}`);
@@ -1066,6 +1082,7 @@
             }
         }
         window.scrollTo({ top: 120, behavior: 'smooth' });
+        return true;
     }
 
     // 2. Ghi nhận thời gian làm bài (không giới hạn, không đếm ngược)
@@ -1074,6 +1091,7 @@
     setInterval(function() {
         secondsSpent++;
         if (timeSpentInput) timeSpentInput.value = secondsSpent;
+        if (secondsSpent % 30 === 0) markDraftDirty();
     }, 1000);
 
     // 3. Cập nhật biểu đồ Bánh xe cuộc đời
@@ -1082,6 +1100,14 @@
     const wheelRadius = 154;
 
     document.addEventListener('DOMContentLoaded', function() {
+        restoreDraftFields();
+
+        const testForm = document.getElementById('test_form');
+        if (testForm) {
+            testForm.addEventListener('input', markDraftDirty);
+            testForm.addEventListener('change', markDraftDirty);
+        }
+
         document.querySelectorAll('select[name^="nlp["]').forEach(function(select) {
             select.addEventListener('change', function() {
                 handleNlpChange(select);
@@ -1089,6 +1115,146 @@
         });
         updateNlpRatings();
 
+    });
+
+    function restoreDraftFields() {
+        const form = document.getElementById('test_form');
+        if (!form || !Array.isArray(savedDraftFields) || savedDraftFields.length === 0) return;
+
+        const valuesByName = {};
+        savedDraftFields.forEach(function(field) {
+            if (!field || typeof field.name !== 'string') return;
+            if (!valuesByName[field.name]) valuesByName[field.name] = [];
+            valuesByName[field.name].push(String(field.value == null ? '' : field.value));
+        });
+
+        Object.keys(valuesByName).forEach(function(name) {
+            const controls = Array.from(form.elements).filter(function(control) {
+                return control.name === name;
+            });
+            if (controls.length === 0) return;
+
+            const values = valuesByName[name];
+            const first = controls[0];
+            if (first.type === 'radio' || first.type === 'checkbox') {
+                controls.forEach(function(control) {
+                    control.checked = values.indexOf(control.value) !== -1;
+                });
+            } else {
+                first.value = values[values.length - 1];
+            }
+        });
+
+        const elapsed = parseInt(timeSpentInput ? timeSpentInput.value : '0', 10);
+        if (!Number.isNaN(elapsed)) secondsSpent = elapsed;
+
+        document.querySelectorAll('input[name^="wheel["]').forEach(function(input) {
+            updateWheelValue(input.name.match(/\[([^\]]+)\]/)[1], input.value);
+        });
+        document.querySelectorAll('input[name^="desired_wheel["]').forEach(function(input) {
+            updateDesiredWheelValue(input.name.match(/\[([^\]]+)\]/)[1], input.value);
+        });
+
+        const birthDate = document.querySelector('[name="numerology_dob"]');
+        if (birthDate && birthDate.value) updateNumerology(birthDate.value);
+        updateNlpRatings();
+    }
+
+    function markDraftDirty() {
+        draftDirty = true;
+        const status = document.getElementById('autosave_status');
+        if (status) {
+            status.textContent = 'Có thay đổi chưa lưu...';
+            status.className = 'mb-4 text-xs font-semibold text-amber-700';
+        }
+
+        clearTimeout(autosaveTimer);
+        autosaveTimer = setTimeout(saveDraftNow, 700);
+    }
+
+    function saveDraftNow() {
+        clearTimeout(autosaveTimer);
+        if (autosavePromise) {
+            return autosavePromise.then(function(saved) {
+                return saved && draftDirty ? saveDraftNow() : saved;
+            });
+        }
+        if (!draftDirty) return Promise.resolve(true);
+
+        const form = document.getElementById('test_form');
+        const token = form.querySelector('input[name="_token"]').value;
+        const fields = Array.from(new FormData(form).entries())
+            .filter(function(entry) {
+                return entry[0] !== '_token' && typeof entry[1] === 'string';
+            })
+            .map(function(entry) {
+                return { name: entry[0], value: entry[1] };
+            });
+
+        draftDirty = false;
+        const status = document.getElementById('autosave_status');
+        if (status) {
+            status.textContent = 'Đang lưu câu trả lời...';
+            status.className = 'mb-4 text-xs font-semibold text-slate-500';
+        }
+
+        autosavePromise = fetch(form.dataset.autosaveUrl, {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': token,
+            },
+            body: JSON.stringify({ fields: fields }),
+        })
+            .then(function(response) {
+                return response.json().then(function(data) {
+                    if (!response.ok) {
+                        throw new Error(data.message || 'Không thể lưu câu trả lời.');
+                    }
+                    return true;
+                });
+            })
+            .then(function() {
+                if (status) {
+                    status.textContent = 'Đã lưu bản nháp trên hệ thống.';
+                    status.className = 'mb-4 text-xs font-semibold text-emerald-700';
+                }
+                return true;
+            })
+            .catch(function(error) {
+                draftDirty = true;
+                if (status) {
+                    status.textContent = error.message || 'Lưu thất bại. Câu trả lời vẫn còn trên trang, vui lòng thử lại.';
+                    status.className = 'mb-4 text-xs font-semibold text-rose-700';
+                }
+                return false;
+            })
+            .then(function(saved) {
+                autosavePromise = null;
+                return saved && draftDirty ? saveDraftNow() : saved;
+            });
+
+        return autosavePromise;
+    }
+
+    window.addEventListener('pagehide', function() {
+        if (!draftDirty || autosavePromise) return;
+
+        const form = document.getElementById('test_form');
+        const token = form.querySelector('input[name="_token"]').value;
+        const fields = Array.from(new FormData(form).entries())
+            .filter(function(entry) {
+                return entry[0] !== '_token' && typeof entry[1] === 'string';
+            })
+            .map(function(entry) {
+                return { name: entry[0], value: entry[1] };
+            });
+
+        navigator.sendBeacon(form.dataset.autosaveUrl, new Blob([
+            JSON.stringify({ _token: token, fields: fields }),
+        ], { type: 'application/json' }));
     });
 
     function updateNlpRatings() {
@@ -1273,86 +1439,112 @@
     }
 
     // 4. Xử lý Nộp Toàn Bộ Bài Test Đánh Giá Toàn Diện (Hỗ trợ validate đa bước mượt mà)
-    function submitAssessmentTest() {
-        // Kiểm tra Phần 1: NLP
+    async function submitAssessmentTest() {
         if (!validateNlpRatings()) return;
-        const nlpSelects = document.querySelectorAll('select[name^="nlp["]');
-        let unselectedNlp = 0;
-        nlpSelects.forEach(sel => {
-            if (!sel.value) unselectedNlp++;
+
+        const missingItems = [];
+        let firstMissingSection = null;
+
+        const nlpQuestions = new Map();
+        document.querySelectorAll('select[name^="nlp["]').forEach(function(select) {
+            const question = select.dataset.nlpQuestion;
+            if (!nlpQuestions.has(question)) nlpQuestions.set(question, []);
+            nlpQuestions.get(question).push(select);
+        });
+        nlpQuestions.forEach(function(selects, question) {
+            const unanswered = selects.filter(select => !select.value).length;
+            if (unanswered > 0) {
+                missingItems.push(`Phần 1 - NLP, Câu ${question}: còn ${unanswered} mức điểm chưa chọn`);
+                firstMissingSection ??= 1;
+            }
         });
 
-        if (unselectedNlp > 0) {
-            const confirmReturn1 = confirm(`Tại Phần 1 (NLP): Bạn còn ${unselectedNlp} câu chưa chọn mức điểm (1-4).\n\n• Bấm OK: Để hệ thống chuyển đến Phần 1 giúp bạn chọn nốt điểm.\n• Bấm Cancel: Để nộp bài ngay (các câu chưa chọn sẽ tự nhận điểm mặc định).`);
-            if (confirmReturn1) {
-                switchTab(1);
-                return;
-            }
+        if (!document.querySelector('input[name="disc_choice"]:checked')) {
+            missingItems.push('Phần 1 - DISC: chưa chọn xu hướng làm việc');
+            firstMissingSection ??= 1;
+        }
+        if (!document.querySelector('input[name="disc[q2]"]:checked')) {
+            missingItems.push('Phần 1 - DISC Câu 2: chưa chọn đáp án');
+            firstMissingSection ??= 1;
+        }
+        if (!document.querySelector('input[name="mbti_energy"]:checked')) {
+            missingItems.push('Phần 1 - MBTI: chưa chọn Hướng nội (I) hoặc Hướng ngoại (E)');
+            firstMissingSection ??= 1;
+        }
+        if (!document.querySelector('input[name="mbti_decision"]:checked')) {
+            missingItems.push('Phần 1 - MBTI: chưa chọn Cảm xúc (F) hoặc Lý trí (T)');
+            firstMissingSection ??= 1;
+        }
+        const numerologyDob = document.querySelector('input[name="numerology_dob"]');
+        if (numerologyDob && !numerologyDob.value) {
+            missingItems.push('Phần 1 - Nhân số học: chưa chọn ngày sinh');
+            firstMissingSection ??= 1;
         }
 
-        // Kiểm tra Phần 2: Bánh xe cuộc đời
         const wheelLesson = document.querySelector('textarea[name="wheel_lesson"]');
         if (wheelLesson && !wheelLesson.value.trim()) {
-            const confirmReturn2 = confirm(`Tại Phần 2 (Bánh xe cuộc đời): Bạn chưa nhập "Bài học sâu sắc bạn rút ra".\n\n• Bấm OK: Để hệ thống quay lại Phần 2 cho bạn nhập.\n• Bấm Cancel: Tiếp tục nộp bài.`);
-            if (confirmReturn2) {
-                switchTab(2);
-                wheelLesson.focus();
-                return;
-            }
+            missingItems.push('Phần 2 - Bánh xe cuộc đời: chưa nhập bài học sâu sắc rút ra');
+            firstMissingSection ??= 2;
         }
 
-        // Kiểm tra Phần 3: Khảo sát Hoài bão & Động cơ
-        const p3Fields = ['goal_short', 'goal_long', 'biggest_success', 'why_apply', 'work_organization', 'failure_lesson', 'why_choose_you'];
-        let emptyP3 = 0;
-        p3Fields.forEach(name => {
-            const el = document.querySelector(`textarea[name="${name}"]`);
-            if (el && !el.value.trim()) emptyP3++;
+        const p3Fields = [
+            ['goal_short', 'Mục tiêu ngắn hạn'],
+            ['goal_long', 'Mục tiêu dài hạn'],
+            ['biggest_success', 'Thành công lớn nhất'],
+            ['why_apply', 'Lý do ứng tuyển'],
+            ['work_organization', 'Cách sắp xếp công việc'],
+            ['failure_lesson', 'Bài học từ thất bại'],
+            ['why_choose_you', 'Lý do công ty nên chọn bạn'],
+        ];
+        p3Fields.forEach(function([name, label]) {
+            const field = document.querySelector(`textarea[name="${name}"]`);
+            if (field && !field.value.trim()) {
+                missingItems.push(`Phần 3 - ${label}: chưa nhập nội dung`);
+                firstMissingSection ??= 3;
+            }
         });
 
-        if (emptyP3 > 0) {
-            const confirmReturn3 = confirm(`Tại Phần 3 (Hoài bão & Động cơ): Còn ${emptyP3} câu hỏi tự luận chưa điền đầy đủ.\n\n• Bấm OK: Để quay lại Phần 3 bổ sung thông tin.\n• Bấm Cancel: Vẫn tiếp tục nộp bài.`);
-            if (confirmReturn3) {
-                switchTab(3);
-                return;
-            }
-        }
-
-        // Kiểm tra Phần 4: Câu hỏi trắc nghiệm AZ Media
         const quizGroups = {};
-        document.querySelectorAll('input[type="radio"][name^="answers["]').forEach(rb => {
+        document.querySelectorAll('input[type="radio"][name^="answers["]').forEach(function(rb) {
             if (!quizGroups[rb.name]) quizGroups[rb.name] = false;
             if (rb.checked) quizGroups[rb.name] = true;
         });
-
-        let unselectedQuiz = 0;
-        for (let key in quizGroups) {
-            if (!quizGroups[key]) unselectedQuiz++;
-        }
-
-        if (unselectedQuiz > 0) {
-            alert(`Tại Phần 4 (Tìm hiểu AZ Media): Bạn còn ${unselectedQuiz} câu hỏi trắc nghiệm chưa chọn đáp án. Vui lòng hoàn thành để hệ thống tính điểm trắc nghiệm!`);
-            switchTab(4);
-            return;
+        let quizNumber = 0;
+        for (const key in quizGroups) {
+            quizNumber++;
+            if (!quizGroups[key]) {
+                missingItems.push(`Phần 4 - Câu trắc nghiệm AZ Media số ${quizNumber}: chưa chọn đáp án`);
+                firstMissingSection ??= 4;
+            }
         }
 
         const selectedChannels = document.querySelectorAll('input[name="az_channels[]"]:checked');
         if (selectedChannels.length === 0) {
-            alert('Tại Phần 4: Vui lòng chọn ít nhất một kênh bạn biết đến AZ Media.');
-            switchTab(4);
-            return;
+            missingItems.push('Phần 4 - Kênh tìm hiểu AZ Media: chưa chọn ít nhất một kênh');
+            firstMissingSection ??= 4;
         }
 
         const impression = document.querySelector('textarea[name="az_impression"]');
         if (impression && impression.value.trim().length < 10) {
-            alert('Tại Phần 4: Vui lòng nhập cảm nhận và mong muốn thực tập tại AZ Media (ít nhất 10 ký tự).');
-            switchTab(4);
-            impression.focus();
+            missingItems.push('Phần 4 - Cảm nhận và mong muốn thực tập: cần nhập ít nhất 10 ký tự');
+            firstMissingSection ??= 4;
+        }
+
+        if (missingItems.length > 0) {
+            alert('Bạn chưa hoàn thành đầy đủ bài đánh giá:\n\n• ' + missingItems.join('\n• ') +
+                '\n\nHệ thống đã chuyển bạn đến phần cần hoàn thành đầu tiên.');
+            switchTab(firstMissingSection);
             return;
         }
 
         // Xác nhận nộp bài lần cuối
         const isSure = confirm('Bạn đã sẵn sàng nộp bài Đánh Giá Năng Lực Toàn Diện AZHR?\n\nToàn bộ câu trả lời Phần 1, 2, 3, 4 sẽ được nộp và tự động chuyển đổi thành file PDF lưu trữ hồ sơ cho Ban Tuyển Dụng AZ Media.');
         if (!isSure) return;
+
+        if (!(await saveDraftNow())) {
+            alert('Hệ thống chưa xác nhận lưu được bản nháp. Vui lòng kiểm tra kết nối và thử nộp lại.');
+            return;
+        }
 
         // Cập nhật giao diện nút nộp bài sang trạng thái đang tải
         const btn = document.getElementById('submit_test_btn');

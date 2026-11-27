@@ -55,7 +55,7 @@ Route::group(['prefix'=> 'admin', 'middleware'=>['admin:admin']], function(){
 Route::middleware(['auth:admin'])->group(function(){
     Route::middleware(['auth:sanctum,admin', 'verified'])->get('/admin/dashboard', function () {
         return view('admin.index');
-    })->name('dashboard')->middleware('auth:admin');
+    })->name('admin.dashboard')->middleware('auth:admin');
 
 // Admin All Routes
     Route::get('/admin/logout', [AdminController::class, 'destroy'])->name('admin.logout');
@@ -91,6 +91,7 @@ Route::post('/careers/apply', [AZMediaCareersController::class, 'submitApply'])-
 Route::get('/candidate/track', [CandidatePortalController::class, 'trackPage'])->name('azmedia.candidate.track');
 Route::post('/candidate/track', [CandidatePortalController::class, 'trackSubmit'])->name('azmedia.candidate.track.post');
 Route::get('/candidate/test/{code}', [CandidatePortalController::class, 'takeTest'])->name('azmedia.candidate.test');
+Route::post('/candidate/test/{code}/autosave', [CandidatePortalController::class, 'autosaveTest'])->name('azmedia.candidate.test.autosave');
 Route::post('/candidate/test/{code}/submit', [CandidatePortalController::class, 'submitTest'])->name('azmedia.candidate.test.submit');
 Route::get('/candidate/test/{code}/pdf', [CandidatePortalController::class, 'downloadTestPDF'])->name('azmedia.candidate.test.pdf');
 
@@ -409,5 +410,3 @@ Route::prefix('stock')->group(function(){
 Route::post('/search', [IndexController::class, 'ProductSearch'])->name('product.search');
 
 Route::post('search-product', [IndexController::class, 'SearchProduct']);
-
-

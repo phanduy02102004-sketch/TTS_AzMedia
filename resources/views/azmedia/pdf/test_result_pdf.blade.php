@@ -278,27 +278,138 @@
             <strong>Phong cách tiếp nhận vượt trội:</strong> <span class="badge badge-orange">{{ $nlp['dominant_title'] ?? 'Toàn diện' }}</span><br>
             <p>{{ $nlp['dominant_summary'] ?? 'Ứng viên có phong cách tiếp nhận thông tin và xử lý công việc hài hòa.' }}</p>
         </div>
+        @if(!empty($nlp['raw_input']) && is_array($nlp['raw_input']))
+            @php
+                $nlpTypes = [
+                    'V' => ['label' => 'Visual (Nhìn)', 'score' => 'Visual'],
+                    'A' => ['label' => 'Auditory (Nghe)', 'score' => 'Auditory'],
+                    'K' => ['label' => 'Kinesthetic (Cảm)', 'score' => 'Kinesthetic'],
+                    'Ad' => ['label' => 'Auditory Digital (Logic)', 'score' => 'Auditory_Digital'],
+                ];
+            @endphp
+            <div class="subsection-header">Bảng chi tiết điểm từng câu trả lời NLP</div>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th style="width: 14%;">Câu hỏi</th>
+                        @foreach($nlpTypes as $type)
+                            <th style="width: 21.5%;">{{ $type['label'] }}</th>
+                        @endforeach
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($nlp['raw_input'] as $questionNumber => $ratings)
+                        <tr>
+                            <td style="font-weight: bold; text-align: center;">Câu {{ $questionNumber }}</td>
+                            @foreach($nlpTypes as $code => $type)
+                                <td style="text-align: center;">{{ data_get($ratings, $code, '—') }}</td>
+                            @endforeach
+                        </tr>
+                    @endforeach
+                    <tr>
+                        <td style="font-weight: bold;">Tổng điểm</td>
+                        @foreach($nlpTypes as $type)
+                            <td style="font-weight: bold; text-align: center;">{{ data_get($nlp, 'scores.' . $type['score'], 0) }}</td>
+                        @endforeach
+                    </tr>
+                </tbody>
+            </table>
+        @endif
     @endif
 
-    <!-- 1.2 DISC & MBTI -->
-    <table style="width: 100%; border-collapse: collapse; margin-top: 6px;">
-        <tr>
-            <td style="width: 50%; vertical-align: top; padding-right: 5px;">
-                <div class="subsection-header">1.2 Nhóm phong cách DISC</div>
-                <div class="answer-box">
-                    <strong>Nhóm nổi trội:</strong> <span class="badge badge-orange">{{ $disc['title'] ?? 'Nhóm C – Cẩn trọng' }}</span>
-                    <p>{{ $disc['summary'] ?? 'Chú ý đến chi tiết, yêu cầu sự chính xác cao, chu đáo và muốn hiểu rõ bản chất vấn đề.' }}</p>
-                </div>
-            </td>
-            <td style="width: 50%; vertical-align: top; padding-left: 5px;">
-                <div class="subsection-header">1.3 Kiểu tính cách MBTI</div>
-                <div class="answer-box">
-                    <strong>Đặc tính MBTI:</strong> <span class="badge badge-orange">{{ $mbti['title'] ?? 'I (Hướng nội) & F (Cảm xúc)' }}</span>
-                    <p>{{ $mbti['summary'] ?? 'Coi trọng sự hài hòa, thực tế kết hợp sáng tạo; bản tính trầm tính, quan sát thầm lặng.' }}</p>
-                </div>
-            </td>
-        </tr>
-    </table>
+    <!-- 1.2 DISC -->
+    @php
+        $discChoiceLabels = [
+            'D' => 'Nhóm D (Quyết đoán): Hành động quyết liệt, chấp nhận rủi ro, tập trung vào kết quả nhanh nhất và thích sự cạnh tranh.',
+            'I' => 'Nhóm I (Hòa đồng): Nhiệt tình, hướng ngoại, thích kết nối, truyền cảm hứng và tạo không khí vui vẻ cho cả nhóm.',
+            'S' => 'Nhóm S (Điềm tĩnh): Kiên định, chân thành, luôn sẵn sàng hỗ trợ đồng đội, duy trì sự ổn định và tránh đối đầu.',
+            'C' => 'Nhóm C (Cẩn trọng): Chú ý đến chi tiết, yêu cầu sự chính xác cao, chu đáo và luôn muốn hiểu rõ bản chất vấn đề trước khi thực hiện.',
+        ];
+        $discTeamworkLabels = [
+            'goal' => 'Tốc độ giải quyết vấn đề và năng suất vượt trội.',
+            'spirit' => 'Mối quan hệ cởi mở, sáng tạo và sự gắn bó giữa các thành viên.',
+            'support' => 'Sự đồng lòng, thấu hiểu và chia sẻ khối lượng công việc.',
+            'precision' => 'Chuẩn mực chất lượng, tài liệu rõ ràng, hạn chế tối đa sai sót.',
+        ];
+    @endphp
+    <div class="subsection-header">1.2 Nhóm phong cách DISC</div>
+    @if($disc)
+        <div class="answer-box">
+            <strong>Nhóm nổi trội:</strong> <span class="badge badge-orange">{{ $disc['title'] ?? $disc['group'] ?? 'Chưa có dữ liệu' }}</span>
+            @if(!empty($disc['summary']))
+                <p>{{ $disc['summary'] }}</p>
+            @endif
+        </div>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th style="width: 13%;">Câu hỏi</th>
+                    <th style="width: 34%;">Nội dung</th>
+                    <th>Phương án ứng viên đã chọn</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="font-weight: bold; text-align: center;">Câu 1</td>
+                    <td>Khi tiếp nhận một nhiệm vụ hoặc dự án kỹ thuật mới, xu hướng làm việc tự nhiên nhất của bạn là:</td>
+                    <td>{{ $discChoiceLabels[$disc['group'] ?? ''] ?? ($disc['group'] ?? 'Chưa có dữ liệu') }}</td>
+                </tr>
+                <tr>
+                    <td style="font-weight: bold; text-align: center;">Câu 2</td>
+                    <td>Trong quy trình phối hợp làm việc nhóm, điều bạn chú trọng hàng đầu là:</td>
+                    <td>{{ $discTeamworkLabels[data_get($disc, 'answers.q2', '')] ?? (data_get($disc, 'answers.q2') ?: 'Chưa có dữ liệu') }}</td>
+                </tr>
+            </tbody>
+        </table>
+    @else
+        <div class="answer-box">Chưa có dữ liệu DISC.</div>
+    @endif
+
+    <!-- 1.3 MBTI -->
+    @php
+        $mbtiEnergyCode = substr((string) ($mbti['energy'] ?? ''), 0, 1);
+        $mbtiDecisionCode = substr((string) ($mbti['decision'] ?? ''), 0, 1);
+        $mbtiEnergyLabels = [
+            'I' => 'I – Hướng nội (Introversion): Bản tính trầm tĩnh, ít nói, có khả năng quan sát thầm lặng và nhìn nhận vấn đề sâu sắc hơn; nạp năng lượng qua không gian yên tĩnh.',
+            'E' => 'E – Hướng ngoại (Extraversion): Sôi nổi, thích kết nối đám đông, thích thể hiện ý tưởng bằng lời nói và nạp năng lượng từ các buổi giao lưu.',
+        ];
+        $mbtiDecisionLabels = [
+            'F' => 'F – Cảm xúc (Feeling): Coi trọng sự hài hòa và cảm xúc con người; có sự cân bằng giữa tính thực tế và khả năng sáng tạo; giàu lòng trắc ẩn.',
+            'T' => 'T – Lý trí (Thinking): Đưa ra quyết định thuần túy dựa trên quy chuẩn logic, tính khách quan tuyệt đối và phân tích số liệu không thiên vị.',
+        ];
+    @endphp
+    <div class="subsection-header">1.3 Kiểu tính cách MBTI</div>
+    @if($mbti)
+        <div class="answer-box">
+            <strong>Đặc tính MBTI:</strong> <span class="badge badge-orange">{{ $mbti['title'] ?? $mbti['code'] ?? 'Chưa có dữ liệu' }}</span>
+            @if(!empty($mbti['summary']))
+                <p>{{ $mbti['summary'] }}</p>
+            @endif
+        </div>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th style="width: 13%;">Câu hỏi</th>
+                    <th style="width: 38%;">Khía cạnh đánh giá</th>
+                    <th>Phương án ứng viên đã chọn</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="font-weight: bold; text-align: center;">Câu 1</td>
+                    <td>Về xu hướng năng lượng & giao tiếp (Energy Orientation):</td>
+                    <td>{{ $mbtiEnergyLabels[$mbtiEnergyCode] ?? ($mbti['energy'] ?? 'Chưa có dữ liệu') }}</td>
+                </tr>
+                <tr>
+                    <td style="font-weight: bold; text-align: center;">Câu 2</td>
+                    <td>Về cách xử lý cảm xúc & ra quyết định (Decision Making):</td>
+                    <td>{{ $mbtiDecisionLabels[$mbtiDecisionCode] ?? ($mbti['decision'] ?? 'Chưa có dữ liệu') }}</td>
+                </tr>
+            </tbody>
+        </table>
+    @else
+        <div class="answer-box">Chưa có dữ liệu MBTI.</div>
+    @endif
 
     <!-- 1.4 Thần số học -->
     @if($numerology)
@@ -324,9 +435,9 @@
                 'spirituality' => 'Tinh thần',
                 'career' => 'Sự nghiệp',
             ];
-            $wheelChartCenterX = 180;
-            $wheelChartCenterY = 130;
-            $wheelChartRadius = 82;
+            $wheelChartCenterX = 260;
+            $wheelChartCenterY = 178;
+            $wheelChartRadius = 112;
             $wheelChartAngles = [];
             $wheelChartVertices = [];
             $wheelChartCount = count($wheelChartLabels);
@@ -336,7 +447,7 @@
                 $score = max(0, min(10, (int) ($wheel['dimensions'][$key]['score'] ?? 5)));
                 $x = round($wheelChartCenterX + cos($angle) * $wheelChartRadius * $score / 10, 2);
                 $y = round($wheelChartCenterY + sin($angle) * $wheelChartRadius * $score / 10, 2);
-                $labelRadius = $wheelChartRadius + 24;
+                $labelRadius = $wheelChartRadius + 34;
                 $wheelChartAngles[] = $angle;
                 $wheelChartVertices[] = [
                     'x' => $x,
@@ -362,27 +473,27 @@
                 $wheelChartRings[] = implode(' ', $ringPoints);
             }
 
-            $wheelSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="360" height="260" viewBox="0 0 360 260">';
+            $wheelSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="520" height="360" viewBox="0 0 520 360">';
             foreach ($wheelChartRings as $ring) {
-                $wheelSvg .= '<polygon points="' . $ring . '" fill="none" stroke="#d0d0d0" stroke-width="1" />';
+                $wheelSvg .= '<polygon points="' . $ring . '" fill="none" stroke="#cbd5e1" stroke-width="1.2" />';
             }
             foreach ($wheelChartAngles as $angle) {
                 $axisX = round($wheelChartCenterX + cos($angle) * $wheelChartRadius, 2);
                 $axisY = round($wheelChartCenterY + sin($angle) * $wheelChartRadius, 2);
-                $wheelSvg .= '<line x1="' . $wheelChartCenterX . '" y1="' . $wheelChartCenterY . '" x2="' . $axisX . '" y2="' . $axisY . '" stroke="#d0d0d0" stroke-width="1" />';
+                $wheelSvg .= '<line x1="' . $wheelChartCenterX . '" y1="' . $wheelChartCenterY . '" x2="' . $axisX . '" y2="' . $axisY . '" stroke="#cbd5e1" stroke-width="1" />';
             }
-            $wheelSvg .= '<polygon points="' . $wheelChartPolygon . '" fill="#e5e5e5" stroke="#555555" stroke-width="2" />';
+            $wheelSvg .= '<polygon points="' . $wheelChartPolygon . '" fill="#f97316" fill-opacity="0.22" stroke="#c2410c" stroke-width="2.5" stroke-linejoin="round" />';
             foreach ($wheelChartVertices as $vertex) {
                 $label = htmlspecialchars($vertex['label'], ENT_QUOTES | ENT_XML1, 'UTF-8');
-                $wheelSvg .= '<circle cx="' . $vertex['x'] . '" cy="' . $vertex['y'] . '" r="3" fill="#444444" />';
-                $wheelSvg .= '<text x="' . $vertex['label_x'] . '" y="' . $vertex['label_y'] . '" text-anchor="' . $vertex['anchor'] . '" font-family="DejaVu Sans" font-size="8" font-weight="bold" fill="#333333">';
+                $wheelSvg .= '<circle cx="' . $vertex['x'] . '" cy="' . $vertex['y'] . '" r="4" fill="#c2410c" stroke="#ffffff" stroke-width="1.5" />';
+                $wheelSvg .= '<text x="' . $vertex['label_x'] . '" y="' . ($vertex['label_y'] - 3) . '" text-anchor="' . $vertex['anchor'] . '" font-family="DejaVu Sans" font-size="10" font-weight="bold" fill="#1e293b">';
                 $wheelSvg .= '<tspan x="' . $vertex['label_x'] . '" dy="0">' . $label . '</tspan>';
-                $wheelSvg .= '<tspan x="' . $vertex['label_x'] . '" dy="10" font-weight="normal">' . $vertex['score'] . '/10</tspan></text>';
+                $wheelSvg .= '<tspan x="' . $vertex['label_x'] . '" dy="13" font-size="9" font-weight="normal" fill="#475569">' . $vertex['score'] . '/10</tspan></text>';
             }
             $wheelSvg .= '</svg>';
         @endphp
-        <div style="text-align: center; margin: 4px 0 8px; page-break-inside: avoid;">
-            <img src="data:image/svg+xml;base64,{{ base64_encode($wheelSvg) }}" width="360" height="260" alt="Bánh xe cuộc đời">
+        <div style="text-align: center; margin: 8px 0 12px; page-break-inside: avoid;">
+            <img src="data:image/svg+xml;base64,{{ base64_encode($wheelSvg) }}" width="520" height="360" alt="Biểu đồ Bánh xe cuộc đời với điểm số tám lĩnh vực">
         </div>
         @endif
     </div>

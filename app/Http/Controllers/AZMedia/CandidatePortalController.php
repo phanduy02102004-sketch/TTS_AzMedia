@@ -122,7 +122,172 @@ class CandidatePortalController extends Controller
             $allQuestions = TestQuestion::whereIn('id', [9, 10, 11])->get();
         }
 
-        return view('azmedia.candidate.take_test', compact('application', 'allQuestions'));
+        $draftFields = [];
+        if ($application->testResult && $application->testResult->draft_data) {
+            $decodedDraft = json_decode($application->testResult->draft_data, true);
+            $draftFields = is_array($decodedDraft) ? $decodedDraft : [];
+        }
+
+        return view('azmedia.candidate.take_test', compact('application', 'allQuestions', 'draftFields'));
+    }
+
+    /**
+     * Persist an in-progress test without marking it as completed.
+     */
+    public function autosaveTest(Request $request, $code)
+    {
+        if (!Session::has('intern_user')) {
+            return response()->json(['message' => 'Phiên làm việc đã hết hạn. Vui lòng đăng nhập lại.'], 401);
+        }
+
+        $validated = $request->validate([
+            'fields' => 'required|array|max:200',
+            'fields.*.name' => 'required|string|max:100',
+            'fields.*.value' => 'present|nullable|string|max:10000',
+        ]);
+
+        $draftFields = [];
+        foreach ($validated['fields'] as $field) {
+            $value = (string) ($field['value'] ?? '');
+            if (!$this->isValidDraftField($field['name'], $value)) {
+                return response()->json([
+                    'message' => 'Có câu trả lời không hợp lệ. Vui lòng tải lại trang và thử lại.',
+                ], 422);
+            }
+
+            $draftFields[] = [
+                'name' => $field['name'],
+                'value' => $value,
+            ];
+        }
+
+        $draftData = json_encode($draftFields, JSON_UNESCAPED_UNICODE);
+        if ($draftData === false || strlen($draftData) > 100000) {
+            return response()->json([
+                'message' => 'Bản nháp vượt quá dung lượng cho phép. Vui lòng rút ngắn nội dung.',
+            ], 422);
+        }
+
+        try {
+            $application = Application::where('application_code', $code)->firstOrFail();
+            $intern = Session::get('intern_user', []);
+
+            if ((int) ($intern['id'] ?? 0) !== (int) $application->candidate_id) {
+                return response()->json(['message' => 'Bạn không có quyền lưu bài test này.'], 403);
+            }
+
+            if (!in_array($application->status, ['offered', 'test_sent', 'tested', 'interviewing'], true)) {
+                return response()->json(['message' => 'Hồ sơ hiện không đủ điều kiện làm bài test.'], 403);
+            }
+
+            foreach ($draftFields as $field) {
+                if (preg_match('/^answers\[(\d+)\]$/', $field['name'], $matches)
+                    && !TestQuestion::whereKey((int) $matches[1])->exists()) {
+                    return response()->json([
+                        'message' => 'Câu hỏi không còn hợp lệ. Vui lòng tải lại trang và thử lại.',
+                    ], 422);
+                }
+            }
+
+            $alreadyCompleted = false;
+            DB::transaction(function () use ($application, $draftData, &$alreadyCompleted) {
+                Application::whereKey($application->id)->lockForUpdate()->firstOrFail();
+                $candidateTest = CandidateTest::where('application_id', $application->id)
+                    ->lockForUpdate()
+                    ->first();
+
+                if ($candidateTest && $candidateTest->completed_at) {
+                    $alreadyCompleted = true;
+                    return;
+                }
+
+                if (!$candidateTest) {
+                    $candidateTest = new CandidateTest();
+                    $candidateTest->application_id = $application->id;
+                }
+
+                $candidateTest->draft_data = $draftData;
+                $candidateTest->save();
+            });
+
+            if ($alreadyCompleted) {
+                return response()->json(['message' => 'Bài test đã được nộp trước đó.'], 409);
+            }
+
+            return response()->json(['saved' => true]);
+        } catch (\Illuminate\Database\QueryException $e) {
+            Log::error('[Candidate Test Autosave] Không thể lưu bản nháp.', [
+                'exception' => $e,
+            ]);
+
+            return response()->json([
+                'message' => 'Máy chủ chưa lưu được câu trả lời. Vui lòng kiểm tra kết nối và thử lại.',
+            ], 503);
+        }
+    }
+
+    private function isValidDraftField($name, $value)
+    {
+        if (preg_match('/^answers\[(\d+)\]$/', $name, $matches)) {
+            return ctype_digit($matches[1])
+                && in_array(strtoupper($value), ['A', 'B', 'C', 'D'], true);
+        }
+
+        if (preg_match('/^nlp\[([1-5])\]\[(V|A|K|Ad)\]$/', $name)) {
+            return $value === '' || in_array($value, ['1', '2', '3', '4'], true);
+        }
+
+        if (preg_match('/^(wheel|desired_wheel)\[(finance|personal_growth|health|family|relationships|social_life|spirituality|career)\]$/', $name)) {
+            return ctype_digit($value) && (int) $value >= 1 && (int) $value <= 10;
+        }
+
+        if ($name === 'az_channels[]') {
+            return in_array($value, [
+                'social_media',
+                'school',
+                'friends',
+                'job_fair',
+                'recruitment_sites',
+                'google_website',
+            ], true);
+        }
+
+        if ($name === 'disc_choice') {
+            return in_array($value, ['D', 'I', 'S', 'C'], true);
+        }
+
+        if ($name === 'disc[q2]') {
+            return in_array($value, ['goal', 'spirit', 'support', 'precision'], true);
+        }
+
+        if ($name === 'mbti_energy') {
+            return in_array($value, ['I', 'E'], true);
+        }
+
+        if ($name === 'mbti_decision') {
+            return in_array($value, ['F', 'T'], true);
+        }
+
+        if ($name === 'time_spent') {
+            return ctype_digit($value) && (int) $value <= 604800;
+        }
+
+        if ($name === 'numerology_dob') {
+            return $value === '' || preg_match('/^\d{4}-\d{2}-\d{2}$/', $value) === 1;
+        }
+
+        return in_array($name, [
+            'wheel_lesson',
+            'goal_short',
+            'goal_long',
+            'biggest_success',
+            'why_apply',
+            'work_organization',
+            'failure_lesson',
+            'why_choose_you',
+            'az_channel_other',
+            'az_impression',
+        ], true);
     }
 
     /**
@@ -141,16 +306,83 @@ class CandidatePortalController extends Controller
             ->where('application_code', $code)
             ->firstOrFail();
 
-        $request->validate([
-            'answers' => 'required|array',
-            'az_channels' => 'required|array|min:1',
-            'az_impression' => 'required|string|min:10',
-        ], [
-            'answers.required' => 'Vui lòng hoàn thành câu hỏi trắc nghiệm Phần 4.',
-            'az_channels.required' => 'Vui lòng chọn ít nhất một kênh tìm hiểu AZ Media.',
-            'az_impression.required' => 'Vui lòng nhập cảm nhận và mong muốn thực tập tại AZ Media.',
-            'az_impression.min' => 'Cảm nhận cần nhập ít nhất 10 ký tự.',
-        ]);
+        $missing = [];
+        $nlpInput = $request->input('nlp', []);
+        for ($questionNumber = 1; $questionNumber <= 5; $questionNumber++) {
+            $ratings = $nlpInput[$questionNumber] ?? [];
+            $completed = is_array($ratings) ? array_filter($ratings, fn($value) => $value !== null && $value !== '') : [];
+            if (count($completed) !== 4) {
+                $missing[] = "Phần 1 - NLP, Câu {$questionNumber}: còn mức điểm chưa chọn.";
+            }
+        }
+        if (!$request->filled('disc_choice')) {
+            $missing[] = 'Phần 1 - DISC: chưa chọn xu hướng làm việc.';
+        }
+        if (!($request->input('disc.q2'))) {
+            $missing[] = 'Phần 1 - DISC Câu 2: chưa chọn đáp án.';
+        }
+        if (!$request->filled('mbti_energy')) {
+            $missing[] = 'Phần 1 - MBTI: chưa chọn Hướng nội (I) hoặc Hướng ngoại (E).';
+        }
+        if (!$request->filled('mbti_decision')) {
+            $missing[] = 'Phần 1 - MBTI: chưa chọn Cảm xúc (F) hoặc Lý trí (T).';
+        }
+        if (!$request->filled('numerology_dob')) {
+            $missing[] = 'Phần 1 - Nhân số học: chưa chọn ngày sinh.';
+        }
+        if (!$request->filled('wheel_lesson')) {
+            $missing[] = 'Phần 2 - Bánh xe cuộc đời: chưa nhập bài học sâu sắc rút ra.';
+        }
+
+        $surveyLabels = [
+            'goal_short' => 'Mục tiêu ngắn hạn',
+            'goal_long' => 'Mục tiêu dài hạn',
+            'biggest_success' => 'Thành công lớn nhất',
+            'why_apply' => 'Lý do ứng tuyển',
+            'work_organization' => 'Cách sắp xếp công việc',
+            'failure_lesson' => 'Bài học từ thất bại',
+            'why_choose_you' => 'Lý do công ty nên chọn bạn',
+        ];
+        foreach ($surveyLabels as $field => $label) {
+            if (!trim((string) $request->input($field, ''))) {
+                $missing[] = "Phần 3 - {$label}: chưa nhập nội dung.";
+            }
+        }
+
+        $answers = $request->input('answers', []);
+        $quizQuestions = TestQuestion::where('position_category', 'azmedia')->orderBy('id')->get();
+        if ($quizQuestions->isEmpty()) {
+            $quizQuestions = TestQuestion::where('position_category', 'general')
+                ->whereIn('question', [
+                    'Slogan chính thức của công ty AZ Media là gì?',
+                    'Ý nghĩa chữ "A" trong tên thương hiệu AZ Media đại diện cho giá trị cốt lõi nào?',
+                    'Văn hóa môi trường làm việc tại AZ Media được xây dựng trên triết lý cốt lõi nào sau đây?',
+                ])
+                ->orderBy('id')
+                ->get();
+        }
+        if ($quizQuestions->isEmpty()) {
+            $quizQuestions = TestQuestion::whereIn('id', [9, 10, 11])->get();
+        }
+
+        foreach ($quizQuestions as $index => $question) {
+            if (!array_key_exists($question->id, $answers) || $answers[$question->id] === null || $answers[$question->id] === '') {
+                $missing[] = 'Phần 4 - Câu trắc nghiệm AZ Media số ' . ($index + 1) . ': chưa chọn đáp án.';
+            }
+        }
+
+        $azChannels = $request->input('az_channels', []);
+        if (!is_array($azChannels) || count($azChannels) === 0) {
+            $missing[] = 'Phần 4 - Kênh tìm hiểu AZ Media: chưa chọn ít nhất một kênh.';
+        }
+        $azImpression = trim((string) $request->input('az_impression', ''));
+        if (mb_strlen($azImpression) < 10) {
+            $missing[] = 'Phần 4 - Cảm nhận và mong muốn thực tập: cần nhập ít nhất 10 ký tự.';
+        }
+
+        if (!empty($missing)) {
+            return back()->withInput()->with('error', 'Bạn chưa hoàn thành đầy đủ bài đánh giá: ' . implode(' ', $missing));
+        }
 
         // 1. Xử lý Trắc nghiệm Chuyên môn & Văn hóa
         $answers = $request->input('answers', []);
@@ -450,6 +682,7 @@ class CandidatePortalController extends Controller
                     'time_spent_seconds' => $timeSpent,
                     'passed' => $passed,
                     'answers_data' => null,
+                    'draft_data' => null,
                     'completed_at' => now(),
                 ]
             );

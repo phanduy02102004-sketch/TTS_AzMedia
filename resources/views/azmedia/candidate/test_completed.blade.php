@@ -3,7 +3,198 @@
 @section('title', 'Kết Quả Đánh Giá Năng Lực Toàn Diện - ' . $application->candidate->name)
 
 @push('styles')
+<style>
+    .candidate-test-report .report-section {
+        padding: 1.5rem;
+        background: #fff;
+        border: 1px solid #cbd5e1;
+        border-radius: 0.5rem;
+        box-shadow: none;
+    }
 
+    .candidate-test-report .report-section-heading {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.75rem;
+        margin: -1.5rem -1.5rem 1.25rem;
+        padding: 0.85rem 1.5rem;
+        background: #f1f5f9;
+        border-bottom: 1px solid #cbd5e1;
+        border-radius: 0.5rem 0.5rem 0 0;
+    }
+
+    .candidate-test-report .report-section-heading > div {
+        min-width: 0;
+        flex: 1;
+    }
+
+    .candidate-test-report .report-section-heading h2,
+    .candidate-test-report .report-section-heading h3 {
+        margin: 0;
+        color: #1e293b;
+        font-size: 0.95rem;
+        font-weight: 800;
+        line-height: 1.45;
+        text-transform: uppercase;
+    }
+
+    .candidate-test-report .report-section-heading p {
+        margin-top: 0.2rem;
+        color: #475569;
+        font-size: 0.75rem;
+        line-height: 1.5;
+    }
+
+    .candidate-test-report .report-icon {
+        display: flex;
+        width: 2rem;
+        height: 2rem;
+        flex: 0 0 2rem;
+        align-items: center;
+        justify-content: center;
+        color: #334155;
+    }
+
+    .candidate-test-report .report-table-wrap {
+        overflow-x: auto;
+        border: 1px solid #cbd5e1;
+        border-radius: 0.25rem;
+    }
+
+    .candidate-test-report .report-table {
+        width: 100%;
+        border-collapse: collapse;
+        color: #1e293b;
+        font-size: 0.75rem;
+        text-align: left;
+    }
+
+    .candidate-test-report .report-table th {
+        padding: 0.65rem 0.75rem;
+        background: #f1f5f9;
+        border: 1px solid #cbd5e1;
+        font-weight: 700;
+        vertical-align: top;
+    }
+
+    .candidate-test-report .report-table td {
+        padding: 0.65rem 0.75rem;
+        border: 1px solid #cbd5e1;
+        vertical-align: top;
+    }
+
+    .candidate-test-report .report-answer {
+        padding: 0.8rem 0.9rem;
+        background: #fff;
+        border: 1px solid #cbd5e1;
+        border-radius: 0.25rem;
+        break-inside: avoid;
+    }
+
+    .candidate-test-report .report-answer-label {
+        display: block;
+        margin-bottom: 0.3rem;
+        color: #334155;
+        font-size: 0.75rem;
+        font-weight: 700;
+    }
+
+    .candidate-test-report .report-answer p {
+        color: #334155;
+        font-size: 0.8125rem;
+        line-height: 1.65;
+        white-space: pre-line;
+    }
+
+    .candidate-test-report .report-channel-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.35rem 1.1rem;
+        margin: 0;
+        padding-left: 1.1rem;
+        color: #334155;
+        list-style: disc;
+    }
+
+    @media (max-width: 640px) {
+        .candidate-test-report .report-section-heading {
+            flex-wrap: wrap;
+        }
+
+        .candidate-test-report .report-heading-badge {
+            margin-left: 2.75rem;
+        }
+    }
+
+    @media print {
+        @page {
+            size: A4 portrait;
+            margin: 16mm 14mm;
+        }
+
+        body {
+            background: #fff !important;
+            color: #1e293b !important;
+            font-size: 10pt;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        body > div.bg-slate-900,
+        body > header,
+        body > footer,
+        .candidate-test-report .report-utility {
+            display: none !important;
+        }
+
+        .candidate-test-report {
+            max-width: none !important;
+            padding: 0 !important;
+        }
+
+        .candidate-test-report > :not([hidden]) ~ :not([hidden]) {
+            margin-top: 10px !important;
+        }
+
+        .candidate-test-report .report-section {
+            padding: 14px;
+            border-color: #94a3b8;
+            border-radius: 0;
+            box-shadow: none;
+            break-inside: auto;
+        }
+
+        .candidate-test-report .report-section-heading {
+            margin: -14px -14px 12px;
+            padding: 8px 14px;
+            border-radius: 0;
+            break-after: avoid;
+        }
+
+        .candidate-test-report .report-answer,
+        .candidate-test-report .report-table-wrap,
+        .candidate-test-report tr {
+            break-inside: avoid;
+        }
+
+        .candidate-test-report .report-answer {
+            padding: 8px 10px;
+        }
+
+        .candidate-test-report .report-table {
+            font-size: 9pt;
+        }
+
+        .candidate-test-report .report-table th,
+        .candidate-test-report .report-table td {
+            padding: 6px 7px;
+        }
+
+        .candidate-test-report .report-answer p {
+            font-size: 9.5pt;
+        }
+    }
+</style>
 @endpush
 
 @section('content')
@@ -18,7 +209,7 @@
     $azSurvey = $data['az_survey'] ?? null;
 @endphp
 
-<div class="max-w-4xl mx-auto px-4 sm:px-6 py-12 space-y-8">
+<div class="candidate-test-report max-w-4xl mx-auto px-4 sm:px-6 py-12 space-y-8">
     <!-- Header Thông Báo Hoàn Thành -->
     <div class="bg-white rounded-3xl border border-slate-200 shadow-xl p-8 sm:p-10 text-center">
         <div class="w-20 h-20 rounded-full {{ ($test->passed ?? true) ? 'bg-emerald-100 text-emerald-600' : 'bg-amber-100 text-amber-600' }} flex items-center justify-center text-4xl mx-auto mb-5 shadow-sm">
@@ -90,53 +281,46 @@
 
     @if($nlp)
         <!-- Kết quả NLP Tính cách (File 2) -->
-        <div class="bg-white rounded-3xl border border-slate-200 shadow-md p-6 sm:p-8">
-            <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-6">
-                <div class="flex items-center gap-3">
-                    <span class="w-10 h-10 rounded-2xl bg-orange-100 text-orange-600 flex items-center justify-center text-lg">
-                        🔮
-                    </span>
-                    <div>
-                        <h3 class="font-extrabold text-base text-slate-900">Kết Quả Nhận Diện Tính Cách NLP (V-A-K-Ad)</h3>
-                        <p class="text-xs text-slate-500">Mô hình nhận thức giác quan & phong cách tư duy của ứng viên</p>
-                    </div>
+        <div class="report-section">
+            <div class="report-section-heading">
+                <span class="report-icon" aria-hidden="true"><i class="fa-solid fa-brain"></i></span>
+                <div>
+                    <h3>Kết quả nhận diện tính cách NLP (V-A-K-Ad)</h3>
+                    <p>Mô hình nhận thức giác quan & phong cách tư duy của ứng viên</p>
                 </div>
-                <span class="px-3.5 py-1.5 rounded-xl text-xs font-black bg-orange-50 text-brand-700 border border-orange-200">
+                <span class="report-heading-badge ml-auto shrink-0 rounded border border-slate-300 bg-white px-3 py-1.5 text-xs font-bold text-slate-800">
                     Tuýp: {{ $nlp['dominant_title'] ?? 'Đa dạng' }}
                 </span>
             </div>
 
-            <div class="p-4 rounded-2xl bg-gradient-to-r from-orange-50 to-amber-50 border border-orange-200 mb-6">
-                <div class="text-xs font-bold text-orange-900 uppercase tracking-wider mb-1">
+            <div class="report-answer mb-5">
+                <div class="report-answer-label">
                     Đặc điểm tư duy nổi trội của bạn:
                 </div>
-                <p class="text-sm text-slate-800 leading-relaxed font-medium">
+                <p>
                     {{ $nlp['dominant_summary'] ?? '' }}
                 </p>
             </div>
 
-            <!-- 4 Cột điểm V - A - K - Ad -->
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3.5 text-center">
-                <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 {{ ($nlp['dominant_code'] ?? '') == 'V' ? 'ring-2 ring-orange-500 bg-orange-50/50' : '' }}">
-                    <div class="text-xs font-bold text-slate-500">Visual (Nhìn)</div>
-                    <div class="text-2xl font-black text-orange-600 mt-1">{{ $nlp['scores']['Visual'] ?? 0 }}</div>
-                    <div class="text-[10px] text-slate-400 mt-0.5">Thị giác / Hình ảnh</div>
-                </div>
-                <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 {{ ($nlp['dominant_code'] ?? '') == 'A' ? 'ring-2 ring-blue-500 bg-blue-50/50' : '' }}">
-                    <div class="text-xs font-bold text-slate-500">Auditory (Nghe)</div>
-                    <div class="text-2xl font-black text-blue-600 mt-1">{{ $nlp['scores']['Auditory'] ?? 0 }}</div>
-                    <div class="text-[10px] text-slate-400 mt-0.5">Thính giác / Âm thanh</div>
-                </div>
-                <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 {{ ($nlp['dominant_code'] ?? '') == 'K' ? 'ring-2 ring-emerald-500 bg-emerald-50/50' : '' }}">
-                    <div class="text-xs font-bold text-slate-500">Kinesthetic (Cảm)</div>
-                    <div class="text-2xl font-black text-emerald-600 mt-1">{{ $nlp['scores']['Kinesthetic'] ?? 0 }}</div>
-                    <div class="text-[10px] text-slate-400 mt-0.5">Cảm xúc / Trải nghiệm</div>
-                </div>
-                <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 {{ ($nlp['dominant_code'] ?? '') == 'Ad' ? 'ring-2 ring-purple-500 bg-purple-50/50' : '' }}">
-                    <div class="text-xs font-bold text-slate-500">Auditory Digital (Logic)</div>
-                    <div class="text-2xl font-black text-purple-600 mt-1">{{ $nlp['scores']['Auditory_Digital'] ?? 0 }}</div>
-                    <div class="text-[10px] text-slate-400 mt-0.5">Nội tâm / Lập luận</div>
-                </div>
+            <div class="report-table-wrap">
+                <table class="report-table min-w-[640px]">
+                    <thead>
+                        <tr>
+                            <th>Visual (Thị giác / Nhìn)</th>
+                            <th>Auditory (Thính giác / Nghe)</th>
+                            <th>Kinesthetic (Cảm giác / Trải nghiệm)</th>
+                            <th>Auditory Digital (Logic nội tâm)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="text-center font-bold tabular-nums">
+                            <td>{{ $nlp['scores']['Visual'] ?? 0 }} điểm</td>
+                            <td>{{ $nlp['scores']['Auditory'] ?? 0 }} điểm</td>
+                            <td>{{ $nlp['scores']['Kinesthetic'] ?? 0 }} điểm</td>
+                            <td>{{ $nlp['scores']['Auditory_Digital'] ?? 0 }} điểm</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
 
             @if(!empty($nlp['raw_input']))
@@ -150,34 +334,34 @@
                     ];
                 @endphp
 
-                <div class="mt-6">
-                    <h4 class="font-extrabold text-sm text-slate-900 mb-1">Bảng tổng kết điểm từng câu trả lời</h4>
-                    <p class="text-xs text-slate-500 mb-3">Điểm số bạn đã chọn cho từng phong cách ở mỗi câu hỏi.</p>
-                    <div class="overflow-x-auto rounded-2xl border border-slate-200">
-                        <table class="w-full min-w-[640px] text-left text-xs border-collapse">
+                <div class="mt-5">
+                    <h4 class="mb-1 text-sm font-bold text-slate-900">Bảng tổng kết điểm từng câu trả lời</h4>
+                    <p class="mb-3 text-xs text-slate-600">Điểm số bạn đã chọn cho từng phong cách ở mỗi câu hỏi.</p>
+                    <div class="report-table-wrap">
+                        <table class="report-table min-w-[640px]">
                             <thead>
-                                <tr class="bg-slate-50 text-slate-700">
-                                    <th class="py-2.5 px-3 border-b border-slate-200 font-bold">Câu hỏi</th>
+                                <tr>
+                                    <th>Câu hỏi</th>
                                     @foreach($nlpTypes as $type)
-                                        <th class="py-2.5 px-3 border-b border-slate-200 text-center font-bold">{{ $type['label'] }}</th>
+                                        <th class="text-center">{{ $type['label'] }}</th>
                                     @endforeach
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-slate-100">
+                            <tbody>
                                 @foreach(range(1, 5) as $questionNumber)
                                     <tr>
-                                        <td class="py-2.5 px-3 font-semibold text-slate-800">Câu {{ $questionNumber }}</td>
+                                        <td class="font-semibold">Câu {{ $questionNumber }}</td>
                                         @foreach($nlpTypes as $code => $type)
-                                            <td class="py-2.5 px-3 text-center text-slate-700">
+                                            <td class="text-center">
                                                 {{ data_get($nlpQuestionScores, $questionNumber . '.' . $code) ?? '—' }}
                                             </td>
                                         @endforeach
                                     </tr>
                                 @endforeach
-                                <tr class="bg-slate-50 font-extrabold text-slate-900">
-                                    <td class="py-2.5 px-3">Tổng cộng</td>
+                                <tr class="bg-slate-50 font-extrabold">
+                                    <td>Tổng cộng</td>
                                     @foreach($nlpTypes as $type)
-                                        <td class="py-2.5 px-3 text-center">{{ data_get($nlp, 'scores.' . $type['total'], 0) }}</td>
+                                        <td class="text-center">{{ data_get($nlp, 'scores.' . $type['total'], 0) }}</td>
                                     @endforeach
                                 </tr>
                             </tbody>
@@ -189,73 +373,69 @@
     @endif
 
     <!-- Bảng Thu Hoạch Đánh Giá Tính Cách Toàn Diện (NLP – DISC – MBTI – Nhân Số Học) -->
-    <div class="bg-white rounded-3xl border border-slate-200 shadow-md p-6 sm:p-8 space-y-5">
-        <div class="flex items-center justify-between pb-4 border-b border-slate-100">
-            <div class="flex items-center gap-3">
-                <span class="w-10 h-10 rounded-2xl bg-indigo-100 text-indigo-700 flex items-center justify-center text-lg">
-                    📊
-                </span>
-                <div>
-                    <h3 class="font-extrabold text-base text-slate-900">Báo Cáo Thu Hoạch NLP – DISC – MBTI</h3>
-                    <p class="text-xs text-slate-500">Tổng hợp 3 phương pháp đánh giá tính cách và phong cách làm việc của ứng viên</p>
-                </div>
+    <div class="report-section space-y-5">
+        <div class="report-section-heading">
+            <span class="report-icon" aria-hidden="true"><i class="fa-solid fa-list-check"></i></span>
+            <div>
+                <h3>Báo cáo thu hoạch NLP – DISC – MBTI</h3>
+                <p>Tổng hợp các phương pháp đánh giá tính cách và phong cách làm việc của ứng viên</p>
             </div>
-            <span class="px-3.5 py-1.5 rounded-xl text-xs font-black bg-indigo-50 text-indigo-700 border border-indigo-200">
+            <span class="report-heading-badge ml-auto shrink-0 rounded border border-slate-300 bg-white px-3 py-1.5 text-xs font-bold text-slate-700">
                 Chuẩn Nhân Sự AZ Media
             </span>
         </div>
 
-        <div class="overflow-x-auto rounded-2xl border border-slate-200">
-            <table class="w-full text-left text-xs border-collapse">
+        <div class="report-table-wrap">
+            <table class="report-table">
                 <thead>
-                    <tr class="bg-slate-900 text-white font-bold">
-                        <th class="py-3 px-4 border-b border-slate-800">Phương pháp đánh giá</th>
-                        <th class="py-3 px-4 border-b border-slate-800">Kết quả ghi nhận</th>
-                        <th class="py-3 px-4 border-b border-slate-800">Đặc điểm cốt lõi</th>
+                    <tr>
+                        <th>Phương pháp đánh giá</th>
+                        <th>Kết quả ghi nhận</th>
+                        <th>Đặc điểm cốt lõi</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-100 font-medium">
-                    <tr class="hover:bg-slate-50 transition">
-                        <td class="py-3 px-4 font-bold text-slate-900">
+                <tbody>
+                    <tr>
+                        <td class="font-bold">
                             <span class="inline-flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-orange-500"></span> NLP (Tiếp nhận thông tin)</span>
                         </td>
-                        <td class="py-3 px-4 font-bold text-orange-600">
+                        <td class="font-bold">
                             {{ ($personality['nlp'] ?? $personality['nlb'] ?? [])['dominant_title'] ?? 'Thiên về Visual (Hình ảnh)' }}
                         </td>
-                        <td class="py-3 px-4 text-slate-600">
+                        <td>
                             Tiếp nhận và xử lý công việc qua thị giác, mẫu thiết kế, giao diện và quan sát thực tế.
                         </td>
                     </tr>
-                    <tr class="hover:bg-slate-50 transition">
-                        <td class="py-3 px-4 font-bold text-slate-900">
+                    <tr>
+                        <td class="font-bold">
                             <span class="inline-flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-blue-500"></span> DISC (Cách làm việc)</span>
                         </td>
-                        <td class="py-3 px-4 font-bold text-blue-600">
+                        <td class="font-bold">
                             {{ $personality['disc']['title'] ?? 'Thiên về C – Cẩn trọng' }}
                         </td>
-                        <td class="py-3 px-4 text-slate-600">
+                        <td>
                             Chú ý chi tiết, yêu cầu sự chính xác, chu đáo và muốn hiểu rõ bản chất vấn đề trước khi thực hiện.
                         </td>
                     </tr>
-                    <tr class="hover:bg-slate-50 transition">
-                        <td class="py-3 px-4 font-bold text-slate-900">
+                    <tr>
+                        <td class="font-bold">
                             <span class="inline-flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-indigo-500"></span> MBTI (Tính cách)</span>
                         </td>
-                        <td class="py-3 px-4 font-bold text-indigo-600">
+                        <td class="font-bold">
                             {{ $personality['mbti']['title'] ?? 'Nghiêng về I (Hướng nội), F (Cảm xúc)' }}
                         </td>
-                        <td class="py-3 px-4 text-slate-600">
+                        <td>
                             Coi trọng sự hài hòa, thực tế kết hợp sáng tạo; bản tính trầm tính, khả năng quan sát thầm lặng và nhìn nhận sâu sắc.
                         </td>
                     </tr>
-                    <tr class="hover:bg-slate-50 transition">
-                        <td class="py-3 px-4 font-bold text-slate-900">
+                    <tr>
+                        <td class="font-bold">
                             <span class="inline-flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-purple-500"></span> Nhân số học</span>
                         </td>
-                        <td class="py-3 px-4 font-bold text-purple-600">
+                        <td class="font-bold">
                             {{ $personality['numerology']['title'] ?? 'Đường đời số 9' }}
                         </td>
-                        <td class="py-3 px-4 text-slate-600">
+                        <td>
                             Lòng trắc ẩn, tính bao dung, trực giác tốt, tinh thần trách nhiệm và mong muốn mang lại giá trị tích cực cho cộng đồng.
                         </td>
                     </tr>
@@ -332,69 +512,49 @@
 
     @if($survey)
         <!-- Kết quả Khảo sát Hoài bão, Động cơ & Tự đánh giá (File 1) -->
-        <div class="bg-white rounded-3xl border border-slate-200 shadow-md p-6 sm:p-8">
-            <div class="flex items-center gap-3 pb-4 border-b border-slate-100 mb-6">
-                <span class="w-10 h-10 rounded-2xl bg-indigo-100 text-indigo-600 flex items-center justify-center text-lg">
-                    🎯
-                </span>
+        <div class="report-section">
+            <div class="report-section-heading">
+                <span class="report-icon" aria-hidden="true"><i class="fa-solid fa-bullseye"></i></span>
                 <div>
-                    <h3 class="font-extrabold text-base text-slate-900">Hoài Bão, Động Cơ & Tự Nhận Thức Bản Thân</h3>
-                    <p class="text-xs text-slate-500">Mục tiêu phát triển và cam kết đồng hành cùng AZHR</p>
+                    <h3>Hoài bão, Động cơ & Tự nhận thức bản thân</h3>
+                    <p>Mục tiêu phát triển và cam kết đồng hành cùng AZHR</p>
                 </div>
             </div>
 
-            <div class="space-y-4 text-xs">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100">
-                        <div class="font-bold text-indigo-700 mb-1 flex items-center gap-1.5">
-                            <i class="fa-solid fa-flag text-xs"></i> 1. Mục tiêu 5 tháng tới tại AZHR:
-                        </div>
-                        <p class="text-slate-700 leading-relaxed">{{ $survey['goal_short'] ?? 'Chưa cung cấp' }}</p>
-                    </div>
-
-                    <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100">
-                        <div class="font-bold text-indigo-700 mb-1 flex items-center gap-1.5">
-                            <i class="fa-solid fa-mountain text-xs"></i> 2. Mục tiêu nghề nghiệp 5 năm tới:
-                        </div>
-                        <p class="text-slate-700 leading-relaxed">{{ $survey['goal_long'] ?? 'Chưa cung cấp' }}</p>
-                    </div>
+            <div class="space-y-3">
+                <div class="report-answer">
+                    <strong class="report-answer-label">1. Mục tiêu 5 tháng tới tại AZHR</strong>
+                    <p>{{ $survey['goal_short'] ?? 'Chưa cung cấp' }}</p>
                 </div>
 
-                <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100">
-                    <div class="font-bold text-slate-800 mb-1 flex items-center gap-1.5">
-                        <i class="fa-solid fa-trophy text-amber-500 text-xs"></i> 3. Thành công lớn nhất & Bài học rút ra:
-                    </div>
-                    <p class="text-slate-700 leading-relaxed">{{ $survey['biggest_success'] ?? 'Chưa cung cấp' }}</p>
+                <div class="report-answer">
+                    <strong class="report-answer-label">2. Mục tiêu nghề nghiệp 5 năm tới</strong>
+                    <p>{{ $survey['goal_long'] ?? 'Chưa cung cấp' }}</p>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100">
-                        <div class="font-bold text-slate-800 mb-1 flex items-center gap-1.5">
-                            <i class="fa-solid fa-heart text-rose-500 text-xs"></i> 4. Lý do lựa chọn AZHR:
-                        </div>
-                        <p class="text-slate-700 leading-relaxed">{{ $survey['why_apply'] ?? 'Chưa cung cấp' }}</p>
-                    </div>
-
-                    <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100">
-                        <div class="font-bold text-slate-800 mb-1 flex items-center gap-1.5">
-                            <i class="fa-solid fa-list-check text-emerald-600 text-xs"></i> 5. Phương pháp tổ chức công việc:
-                        </div>
-                        <p class="text-slate-700 leading-relaxed">{{ $survey['work_organization'] ?? 'Chưa cung cấp' }}</p>
-                    </div>
+                <div class="report-answer">
+                    <strong class="report-answer-label">3. Thành công lớn nhất & bài học rút ra</strong>
+                    <p>{{ $survey['biggest_success'] ?? 'Chưa cung cấp' }}</p>
                 </div>
 
-                <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100">
-                    <div class="font-bold text-slate-800 mb-1 flex items-center gap-1.5">
-                        <i class="fa-solid fa-lightbulb text-amber-500 text-xs"></i> 6. Thất bại / sai lầm & Bài học đắt giá:
-                    </div>
-                    <p class="text-slate-700 leading-relaxed">{{ $survey['failure_lesson'] ?? 'Chưa cung cấp' }}</p>
+                <div class="report-answer">
+                    <strong class="report-answer-label">4. Lý do lựa chọn ứng tuyển vào AZ Media / AZHR</strong>
+                    <p>{{ $survey['why_apply'] ?? 'Chưa cung cấp' }}</p>
                 </div>
 
-                <div class="p-4 rounded-2xl bg-gradient-to-r from-orange-50 to-amber-50 border border-orange-200">
-                    <div class="font-bold text-orange-900 mb-1 flex items-center gap-1.5">
-                        <i class="fa-solid fa-star text-orange-500 text-xs"></i> 7. Lý do AZHR nên chọn bạn:
-                    </div>
-                    <p class="text-slate-800 font-medium leading-relaxed">{{ $survey['why_choose_you'] ?? 'Chưa cung cấp' }}</p>
+                <div class="report-answer">
+                    <strong class="report-answer-label">5. Phương pháp tổ chức và quản lý công việc</strong>
+                    <p>{{ $survey['work_organization'] ?? 'Chưa cung cấp' }}</p>
+                </div>
+
+                <div class="report-answer">
+                    <strong class="report-answer-label">6. Thất bại / sai lầm lớn nhất và bài học đắt giá rút ra</strong>
+                    <p>{{ $survey['failure_lesson'] ?? 'Chưa cung cấp' }}</p>
+                </div>
+
+                <div class="report-answer">
+                    <strong class="report-answer-label">7. Lý do AZ Media nên chọn bạn thay vì ứng viên khác</strong>
+                    <p>{{ $survey['why_choose_you'] ?? 'Chưa cung cấp' }}</p>
                 </div>
             </div>
         </div>
@@ -402,47 +562,49 @@
 
     <!-- 4. Tìm Hiểu & Cảm Nhận Về AZ Media -->
     @if($azSurvey)
-        <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-8">
-            <div class="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100">
-                <div class="w-10 h-10 rounded-xl bg-orange-100 text-brand-600 flex items-center justify-center text-lg font-bold">
-                    <i class="fa-solid fa-building"></i>
-                </div>
+        <div class="report-section">
+            <div class="report-section-heading">
+                <span class="report-icon" aria-hidden="true"><i class="fa-solid fa-building"></i></span>
                 <div>
-                    <h2 class="text-base sm:text-lg font-black text-slate-900">4. Kênh Tìm Hiểu & Cảm Nhận Về AZ Media</h2>
-                    <p class="text-xs text-slate-500">Thông tin khảo sát mức độ quan tâm và hiểu biết về doanh nghiệp</p>
+                    <h2>4. Kênh Tìm Hiểu & Cảm Nhận Về AZ Media</h2>
+                    <p>Thông tin khảo sát mức độ quan tâm và hiểu biết về doanh nghiệp</p>
                 </div>
             </div>
 
-            <div class="space-y-4 text-xs sm:text-sm">
-                <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100">
-                    <div class="font-bold text-slate-800 mb-2 flex items-center gap-1.5">
-                        <i class="fa-solid fa-bullhorn text-brand-500 text-xs"></i> Kênh biết đến và tìm hiểu về AZ Media:
-                    </div>
+            <div class="space-y-3">
+                <div class="report-answer">
+                    <strong class="report-answer-label">Kênh biết đến và tìm hiểu về AZ Media</strong>
                     @if(!empty($azSurvey['channels']))
-                        <div class="flex flex-wrap gap-2 mb-2">
+                        @php
+                            $azChannelLabels = [
+                                'social_media' => 'Mạng xã hội AZ Media',
+                                'school' => 'Trường học & Thầy cô giáo',
+                                'friends' => 'Bạn bè & Cựu sinh viên',
+                                'job_fair' => 'Ngày hội việc làm / Workshop',
+                                'recruitment_sites' => 'Trang tin tuyển dụng',
+                                'google_website' => 'Tìm kiếm Google & Website',
+                            ];
+                        @endphp
+                        <ul class="report-channel-list">
                             @foreach($azSurvey['channels'] as $ch)
-                                <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-brand-50 text-brand-700 border border-brand-200">
-                                    <i class="fa-solid fa-check text-[10px]"></i> {{ $ch }}
-                                </span>
+                                <li>{{ $azChannelLabels[$ch] ?? $ch }}</li>
                             @endforeach
-                        </div>
+                        </ul>
                     @endif
                     @if(!empty($azSurvey['channel_other']))
-                        <div class="mt-2 text-slate-600 italic">
-                            <span class="font-semibold text-slate-700">Ghi chú khác:</span> {{ $azSurvey['channel_other'] }}
+                        <div class="mt-2 text-sm leading-relaxed text-slate-700">
+                            <strong>Ghi chú khác:</strong> {{ $azSurvey['channel_other'] }}
                         </div>
                     @endif
                     @if(empty($azSurvey['channels']) && empty($azSurvey['channel_other']))
-                        <p class="text-slate-500">Chưa cung cấp</p>
+                        <p>Chưa cung cấp</p>
                     @endif
                 </div>
 
                 @if(!empty($azSurvey['impression']))
-                    <div class="p-4 rounded-2xl bg-gradient-to-r from-orange-50/60 to-amber-50/60 border border-orange-200">
-                        <div class="font-bold text-orange-900 mb-1 flex items-center gap-1.5">
-                            <i class="fa-solid fa-heart text-rose-500 text-xs"></i> Điều ấn tượng nhất & Mong muốn thực tập tại AZ Media:
-                        </div>
-                        <p class="text-slate-800 font-medium leading-relaxed whitespace-pre-line">{{ $azSurvey['impression'] }}</p>
+                    <div class="report-answer">
+                        <strong class="report-answer-label">Điều ấn tượng nhất & mong muốn thực tập tại AZ Media</strong>
+                        <p>{{ $azSurvey['impression'] }}</p>
                     </div>
                 @endif
             </div>
@@ -450,7 +612,7 @@
     @endif
 
     <!-- Banner Nhóm Zalo Hỗ Trợ & Nhận Thông Báo -->
-    <div class="bg-gradient-to-r from-emerald-50 via-teal-50 to-blue-50 rounded-3xl border-2 border-emerald-300 p-6 sm:p-7 shadow-md flex flex-col md:flex-row items-center justify-between gap-6">
+    <div class="report-utility bg-gradient-to-r from-emerald-50 via-teal-50 to-blue-50 rounded-3xl border-2 border-emerald-300 p-6 sm:p-7 shadow-md flex flex-col md:flex-row items-center justify-between gap-6">
         <div class="flex items-center gap-4">
             <div class="w-14 h-14 rounded-2xl bg-blue-600 text-white font-extrabold flex items-center justify-center text-lg shadow-md flex-shrink-0">
                 Zalo
@@ -474,7 +636,11 @@
     </div>
 
     <!-- Bottom Actions -->
-    <div class="flex flex-col sm:flex-row justify-center gap-3 pt-2">
+    <div class="report-utility flex flex-col sm:flex-row justify-center gap-3 pt-2">
+        <button type="button" onclick="window.print()"
+           class="px-7 py-3.5 rounded-xl font-bold text-slate-700 bg-white border border-slate-300 hover:bg-slate-50 transition text-xs sm:text-sm text-center flex items-center justify-center gap-2">
+            <i class="fa-solid fa-print" aria-hidden="true"></i> In / Lưu PDF
+        </button>
         <a href="{{ route('azmedia.candidate.test.pdf', $application->application_code) }}" target="_blank"
            class="px-7 py-3.5 rounded-xl font-bold text-white bg-emerald-600 hover:bg-emerald-700 shadow-md hover:shadow-lg transition text-xs sm:text-sm text-center flex items-center justify-center gap-2">
             <i class="fa-solid fa-file-pdf"></i> Tải & Xem Bản PDF Bài Đánh Giá (Phần 1, 2, 3, 4)
