@@ -42,7 +42,7 @@ RUN apk add --no-cache \
     && printf '\nclear_env = no\n' >> /usr/local/etc/php-fpm.d/www.conf \
     && printf '%s\n' \
         'opcache.enable=1' \
-        'opcache.validate_timestamps=0' \
+        'opcache.validate_timestamps=1' \
         'opcache.memory_consumption=192' \
         'opcache.max_accelerated_files=20000' \
         > /usr/local/etc/php/conf.d/opcache-production.ini

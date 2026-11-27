@@ -1,0 +1,43 @@
+[1mdiff --git a/bootstrap/cache/.gitignore b/bootstrap/cache/.gitignore[m
+[1mold mode 100644[m
+[1mnew mode 100755[m
+[1mdiff --git a/routes/web.php b/routes/web.php[m
+[1mindex e79dcd6..5775c08 100644[m
+[1m--- a/routes/web.php[m
+[1m+++ b/routes/web.php[m
+[36m@@ -55,7 +55,7 @@[m
+ Route::middleware(['auth:admin'])->group(function(){[m
+     Route::middleware(['auth:sanctum,admin', 'verified'])->get('/admin/dashboard', function () {[m
+         return view('admin.index');[m
+[31m-    })->name('dashboard')->middleware('auth:admin');[m
+[32m+[m[32m    })->name('admin.dashboard')->middleware('auth:admin');[m
+ [m
+ // Admin All Routes[m
+     Route::get('/admin/logout', [AdminController::class, 'destroy'])->name('admin.logout');[m
+[1mdiff --git a/storage/app/.gitignore b/storage/app/.gitignore[m
+[1mold mode 100644[m
+[1mnew mode 100755[m
+[1mdiff --git a/storage/app/public/.gitignore b/storage/app/public/.gitignore[m
+[1mold mode 100644[m
+[1mnew mode 100755[m
+[1mdiff --git a/storage/framework/.gitignore b/storage/framework/.gitignore[m
+[1mold mode 100644[m
+[1mnew mode 100755[m
+[1mdiff --git a/storage/framework/cache/.gitignore b/storage/framework/cache/.gitignore[m
+[1mold mode 100644[m
+[1mnew mode 100755[m
+[1mdiff --git a/storage/framework/cache/data/.gitignore b/storage/framework/cache/data/.gitignore[m
+[1mold mode 100644[m
+[1mnew mode 100755[m
+[1mdiff --git a/storage/framework/sessions/.gitignore b/storage/framework/sessions/.gitignore[m
+[1mold mode 100644[m
+[1mnew mode 100755[m
+[1mdiff --git a/storage/framework/testing/.gitignore b/storage/framework/testing/.gitignore[m
+[1mold mode 100644[m
+[1mnew mode 100755[m
+[1mdiff --git a/storage/framework/views/.gitignore b/storage/framework/views/.gitignore[m
+[1mold mode 100644[m
+[1mnew mode 100755[m
+[1mdiff --git a/storage/logs/.gitignore b/storage/logs/.gitignore[m
+[1mold mode 100644[m
+[1mnew mode 100755[m
