@@ -13,6 +13,7 @@ use App\Models\Application;
 use App\Models\EmailTemplate;
 use App\Models\EmailLog;
 use App\Mail\AZMediaEmail;
+use Database\Seeders\InternshipPositionSeeder;
 
 class AZMediaCareersController extends Controller
 {
@@ -21,6 +22,10 @@ class AZMediaCareersController extends Controller
      */
     public function index(Request $request)
     {
+        if (!InternshipPosition::exists()) {
+            app(InternshipPositionSeeder::class)->run();
+        }
+
         $query = InternshipPosition::where('status', 'open');
 
         // Bộ lọc chuyên ngành / phòng ban
@@ -49,7 +54,11 @@ class AZMediaCareersController extends Controller
             'trained_students' => '1000+',
         ];
 
-        return view('azmedia.careers.index', compact('positions', 'stats'));
+        $internUser = session('intern_user');
+        $candidate = !empty($internUser['id']) ? Candidate::find($internUser['id']) : null;
+        $careerCatalog = config('career_catalog');
+
+        return view('azmedia.careers.index', compact('positions', 'stats', 'candidate', 'careerCatalog'));
     }
 
     /**
@@ -66,7 +75,11 @@ class AZMediaCareersController extends Controller
             ->limit(3)
             ->get();
 
-        return view('azmedia.careers.detail', compact('position', 'relatedPositions'));
+        $internUser = session('intern_user');
+        $candidate = !empty($internUser['id']) ? Candidate::find($internUser['id']) : null;
+        $careerCatalog = config('career_catalog');
+
+        return view('azmedia.careers.detail', compact('position', 'relatedPositions', 'candidate', 'careerCatalog'));
     }
 
     /**
@@ -79,6 +92,7 @@ class AZMediaCareersController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
             'phone' => 'required|string|max:20',
+            'birth_date' => 'required|date|before_or_equal:today',
             'university' => 'required|string|max:255',
             'major' => 'required|string|max:255',
             'working_shift' => 'required|string',
@@ -87,6 +101,9 @@ class AZMediaCareersController extends Controller
             'name.required' => 'Vui lòng nhập họ và tên của bạn.',
             'email.required' => 'Vui lòng cung cấp email liên hệ chính xác.',
             'phone.required' => 'Vui lòng nhập số điện thoại.',
+            'birth_date.required' => 'Vui lòng nhập ngày tháng năm sinh.',
+            'birth_date.date' => 'Ngày tháng năm sinh không hợp lệ.',
+            'birth_date.before_or_equal' => 'Ngày sinh không được lớn hơn ngày hiện tại.',
             'university.required' => 'Vui lòng chọn hoặc nhập trường Đại học / Cao đẳng của bạn.',
             'major.required' => 'Vui lòng nhập ngành học của bạn.',
             'cv_file.required' => 'Vui lòng tải lên file CV định dạng PDF.',
@@ -126,6 +143,7 @@ class AZMediaCareersController extends Controller
             [
                 'name' => $request->name,
                 'phone' => $request->phone,
+                'birth_date' => $request->birth_date,
                 'university' => $request->university,
                 'major' => $request->major,
                 'academic_year' => $request->academic_year ?? 'Năm 3',
@@ -147,13 +165,13 @@ class AZMediaCareersController extends Controller
             if ($request->ajax()) {
                 return response()->json([
                     'success' => true,
-                    'message' => 'Hồ sơ đã được gửi thành công trước đó! Mã tra cứu: ' . $recentApp->application_code,
+                    'message' => 'Cảm ơn bạn đã ứng tuyển công ty chúng tôi. Chúng tôi sẽ liên hệ lại với bạn trong thời gian sớm nhất.',
                     'application_code' => $recentApp->application_code,
                     'track_url' => route('azmedia.candidate.track', ['code' => $recentApp->application_code]),
                 ]);
             }
             return redirect()->route('azmedia.candidate.track', ['code' => $recentApp->application_code])
-                ->with('success', 'Hồ sơ của bạn đã được tiếp nhận thành công! Mã tra cứu: ' . $recentApp->application_code);
+                ->with('success', 'Cảm ơn bạn đã ứng tuyển công ty chúng tôi. Chúng tôi sẽ liên hệ lại với bạn trong thời gian sớm nhất.');
         }
 
         // Xử lý upload file CV an toàn
@@ -225,7 +243,7 @@ class AZMediaCareersController extends Controller
         if ($request->ajax()) {
             return response()->json([
                 'success' => true,
-                'message' => 'Nộp hồ sơ thành công! Hệ thống đã TỰ ĐỘNG DUYỆT CV và gửi link làm bài Test Online đến email: ' . $candidate->email,
+                'message' => 'Cảm ơn bạn đã ứng tuyển công ty chúng tôi. Chúng tôi sẽ liên hệ lại với bạn trong thời gian sớm nhất.',
                 'application_code' => $appCode,
                 'track_url' => $trackUrl,
                 'test_url' => $testUrl,
@@ -233,6 +251,6 @@ class AZMediaCareersController extends Controller
         }
 
         return redirect()->route('azmedia.candidate.test', ['code' => $appCode])
-            ->with('success', "Chúc mừng bạn! Hồ sơ đã được TỰ ĐỘNG DUYỆT CV thành công. Thư mời làm bài Test Online đã được gửi tới email {$candidate->email}. Bạn có thể bắt đầu làm bài Test ngay!");
+            ->with('success', 'Cảm ơn bạn đã ứng tuyển công ty chúng tôi. Chúng tôi sẽ liên hệ lại với bạn trong thời gian sớm nhất.');
     }
 }

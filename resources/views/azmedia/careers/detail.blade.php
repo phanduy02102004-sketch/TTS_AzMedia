@@ -123,50 +123,62 @@
 
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">Họ và tên <span class="text-rose-500">*</span></label>
-                        <input type="text" name="name" required placeholder="VD: Nguyễn Nhật Linh Ân"
+                        <input type="text" name="name" required value="{{ old('name', $candidate->name ?? '') }}" placeholder="VD: Nguyễn Nhật Linh Ân"
                                class="w-full text-xs sm:text-sm rounded-xl border border-slate-300 py-2.5 px-3 focus:ring-2 focus:ring-brand-500 focus:outline-none">
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div>
                             <label class="block text-xs font-bold text-slate-700 mb-1">Email <span class="text-rose-500">*</span></label>
-                            <input type="email" name="email" required placeholder="name@email.com"
+                            <input type="email" name="email" required value="{{ old('email', $candidate->email ?? '') }}" placeholder="name@email.com"
                                    class="w-full text-xs sm:text-sm rounded-xl border border-slate-300 py-2.5 px-3 focus:ring-2 focus:ring-brand-500 focus:outline-none">
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-slate-700 mb-1">Số điện thoại <span class="text-rose-500">*</span></label>
-                            <input type="tel" name="phone" required placeholder="0905..."
+                            <input type="tel" name="phone" required value="{{ old('phone', $candidate->phone ?? '') }}" placeholder="0905..."
                                    class="w-full text-xs sm:text-sm rounded-xl border border-slate-300 py-2.5 px-3 focus:ring-2 focus:ring-brand-500 focus:outline-none">
                         </div>
                     </div>
 
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Trường Đại học / Cao đẳng <span class="text-rose-500">*</span></label>
-                        <input list="uni_list_detail" name="university" required placeholder="VD: Cao đẳng Đà Nẵng (DNC)"
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Ngày tháng năm sinh <span class="text-rose-500">*</span></label>
+                        <input type="date" name="birth_date" required value="{{ old('birth_date', $candidate->birth_date ?? '') }}" max="{{ date('Y-m-d') }}"
+                               class="w-full text-xs sm:text-sm rounded-xl border border-slate-300 py-2.5 px-3 focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Trường Đại học / Cao đẳng / Trung cấp / Nghề <span class="text-rose-500">*</span></label>
+                        <input list="uni_list_detail" name="university" required value="{{ old('university', $candidate->university ?? '') }}" placeholder="VD: Cao đẳng Đà Nẵng (DNC)"
                                class="w-full text-xs sm:text-sm rounded-xl border border-slate-300 py-2.5 px-3 focus:ring-2 focus:ring-brand-500 focus:outline-none">
                         <datalist id="uni_list_detail">
-                            <option value="Cao đẳng Đà Nẵng (DNC)">
-                            <option value="Đại học Bách Khoa - ĐH Đà Nẵng">
-                            <option value="ĐH CNTT & Truyền thông Việt - Hàn (VKU)">
-                            <option value="ĐH Sư phạm Kỹ thuật - ĐH Đà Nẵng">
-                            <option value="Đại học Duy Tân (DTU)">
-                            <option value="Đại học FPT Đà Nẵng">
+                            @foreach($careerCatalog['institutions'] as $institutionType => $institutions)
+                                @foreach($institutions as $institution)
+                                    <option value="{{ $institution }}">
+                                @endforeach
+                            @endforeach
                         </datalist>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div>
                             <label class="block text-xs font-bold text-slate-700 mb-1">Ngành học <span class="text-rose-500">*</span></label>
-                            <input type="text" name="major" required placeholder="VD: Công nghệ Thông tin"
+                            <input list="majors_list_detail" type="text" name="major" required value="{{ old('major', $candidate->major ?? '') }}" placeholder="Chọn hoặc nhập ngành học"
                                    class="w-full text-xs sm:text-sm rounded-xl border border-slate-300 py-2.5 px-3 focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                            <datalist id="majors_list_detail">
+                                @foreach($careerCatalog['majors'] as $field => $majors)
+                                    @foreach($majors as $majorOption)
+                                        <option value="{{ $majorOption }}">
+                                    @endforeach
+                                @endforeach
+                            </datalist>
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-slate-700 mb-1">Ca thực tập <span class="text-rose-500">*</span></label>
                             <select name="working_shift" required class="w-full text-xs sm:text-sm rounded-xl border border-slate-300 py-2.5 px-3 bg-white focus:ring-2 focus:ring-brand-500 focus:outline-none">
-                                <option value="morning">Sáng (8h - 12h)</option>
-                                <option value="afternoon">Chiều (13h30 - 17h30)</option>
-                                <option value="fulltime" selected>Cả ngày (Full-time)</option>
-                                <option value="flexible">Linh hoạt</option>
+                                <option value="morning" {{ old('working_shift', $candidate->working_shift ?? 'fulltime') === 'morning' ? 'selected' : '' }}>Sáng (8h - 12h)</option>
+                                <option value="afternoon" {{ old('working_shift', $candidate->working_shift ?? 'fulltime') === 'afternoon' ? 'selected' : '' }}>Chiều (13h30 - 17h30)</option>
+                                <option value="fulltime" {{ old('working_shift', $candidate->working_shift ?? 'fulltime') === 'fulltime' ? 'selected' : '' }}>Cả ngày (Full-time)</option>
+                                <option value="flexible" {{ old('working_shift', $candidate->working_shift ?? 'fulltime') === 'flexible' ? 'selected' : '' }}>Linh hoạt</option>
                             </select>
                         </div>
                     </div>
@@ -174,7 +186,7 @@
                     <!-- Github / Portfolio -->
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">Link GitHub / Portfolio</label>
-                        <input type="url" name="github_url" placeholder="https://github.com/..."
+                        <input type="url" name="github_url" value="{{ old('github_url', $candidate->github_url ?? '') }}" placeholder="https://github.com/..."
                                class="w-full text-xs sm:text-sm rounded-xl border border-slate-300 py-2.5 px-3 focus:ring-2 focus:ring-brand-500 focus:outline-none">
                     </div>
 

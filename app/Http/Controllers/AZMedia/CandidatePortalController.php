@@ -176,6 +176,43 @@ class CandidatePortalController extends Controller
 
         // 2. Xử lý Bài test nhận diện tính cách NLP (V-A-K-Ad) - File 2
         $nlpInput = $request->input('nlp', []);
+        // Each NLP question may use each score from 1 to 4 only once.
+        foreach ($nlpInput as $questionNumber => $ratings) {
+            if (!is_array($ratings)) {
+                return back()->withInput()->withErrors([
+                    'nlp' => "Dữ liệu trả lời câu {$questionNumber} không hợp lệ.",
+                ]);
+            }
+
+            $values = [];
+            foreach ($ratings as $code => $value) {
+                if (!in_array($code, ['V', 'A', 'K', 'Ad'], true)
+                    || ($value !== null && !is_string($value) && !is_int($value))) {
+                    return back()->withInput()->withErrors([
+                        'nlp' => "Dữ liệu trả lời câu {$questionNumber} không hợp lệ.",
+                    ]);
+                }
+
+                if ($value === null || $value === '') {
+                    continue;
+                }
+
+                $value = (string) $value;
+                if (!in_array($value, ['1', '2', '3', '4'], true)) {
+                    return back()->withInput()->withErrors([
+                        'nlp' => "Câu {$questionNumber}: mức điểm phải nằm trong khoảng 1-4.",
+                    ]);
+                }
+
+                if (in_array($value, $values, true)) {
+                    return back()->withInput()->withErrors([
+                        'nlp' => "Câu {$questionNumber}: mỗi mức điểm chỉ được chọn một lần.",
+                    ]);
+                }
+
+                $values[] = $value;
+            }
+        }
         // Ánh xạ đáp án V-A-K-Ad theo mẫu chuẩn AZ Media
         // Câu 1: K, A, V, Ad
         // Câu 2: A, V, Ad, K
@@ -299,14 +336,14 @@ class CandidatePortalController extends Controller
         // 3. Xử lý Bánh xe cuộc đời (Wheel of Life) - File 3
         $wheelInput = $request->input('wheel', []);
         $wheelLabels = [
-            'finance'         => 'Tài chính (Finance)',
-            'personal_growth' => 'Phát triển bản thân (Personal Growth)',
-            'health'          => 'Sức khỏe (Health)',
-            'family'          => 'Gia đình (Family)',
-            'relationships'   => 'Các mối quan hệ (Relationships)',
-            'social_life'     => 'Đời sống xã hội (Social Life)',
-            'spirituality'    => 'Đời sống tinh thần (Spirituality)',
-            'career'          => 'Sự nghiệp (Career)',
+            'finance'         => 'Tài chính',
+            'personal_growth' => 'Phát triển bản thân',
+            'health'          => 'Sức khỏe',
+            'family'          => 'Gia đình',
+            'relationships'   => 'Các mối quan hệ',
+            'social_life'     => 'Đời sống xã hội',
+            'spirituality'    => 'Đời sống tinh thần',
+            'career'          => 'Sự nghiệp',
         ];
 
         $wheelScores = [];

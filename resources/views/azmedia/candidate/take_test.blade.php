@@ -3,8 +3,190 @@
 @section('title', 'Bài Đánh Giá Năng Lực Toàn Diện AZHR - ' . $application->candidate->name)
 
 @push('styles')
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
+    :root {
+        --test-ink: #132238;
+        --test-muted: #64748b;
+        --test-line: #dbe4ee;
+        --test-surface: #ffffff;
+        --test-canvas: #f4f7fb;
+        --test-accent: #e85d04;
+        --test-accent-dark: #b94500;
+    }
+
+    #candidate-test-shell {
+        background: var(--test-canvas);
+        color: var(--test-ink);
+        min-height: 100vh;
+    }
+
+    #candidate-test-shell .max-w-5xl,
+    #candidate-test-shell .max-w-4xl {
+        width: 100%;
+        max-width: 1360px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    #candidate-test-shell > .sticky {
+        width: 100%;
+    }
+
+    #candidate-test-shell > .max-w-4xl {
+        padding-left: clamp(20px, 3vw, 56px);
+        padding-right: clamp(20px, 3vw, 56px);
+    }
+
+    #candidate-test-shell .sticky {
+        top: 0;
+        background: rgba(19, 34, 56, .97);
+        border-bottom: 1px solid rgba(255,255,255,.12);
+        box-shadow: 0 10px 24px rgba(15, 23, 42, .12);
+        backdrop-filter: blur(12px);
+    }
+
+    #candidate-test-shell .sticky > div:first-child {
+        padding-top: 14px;
+        padding-bottom: 12px;
+    }
+
+    #candidate-test-shell .step-tab {
+        min-height: 46px;
+        border: 1px solid rgba(255,255,255,.12);
+        background: rgba(255,255,255,.06);
+        color: #cbd5e1;
+        text-align: left;
+        justify-content: flex-start;
+        padding: 8px 14px;
+    }
+
+    #candidate-test-shell .step-tab:hover {
+        background: rgba(255,255,255,.12);
+        color: #fff;
+    }
+
+    #candidate-test-shell .step-tab.active {
+        background: var(--test-accent);
+        border-color: var(--test-accent);
+        box-shadow: 0 8px 18px rgba(232, 93, 4, .25);
+    }
+
+    #candidate-test-shell .bg-gradient-to-r.from-orange-500 {
+        background: var(--test-ink);
+        border: 1px solid #263b56;
+        border-radius: 20px;
+        box-shadow: 0 16px 30px rgba(19, 34, 56, .16);
+    }
+
+    #candidate-test-shell .bg-white.rounded-3xl {
+        border-radius: 16px;
+        border-color: var(--test-line);
+        box-shadow: 0 8px 22px rgba(19, 34, 56, .045);
+    }
+
+    #candidate-test-shell .bg-white.rounded-3xl.p-6,
+    #candidate-test-shell .bg-white.rounded-3xl.p-7 {
+        padding: 24px;
+    }
+
+    #candidate-test-shell select,
+    #candidate-test-shell input:not([type="radio"]):not([type="checkbox"]),
+    #candidate-test-shell textarea {
+        border-color: #cbd7e5;
+        border-radius: 10px;
+        background: #fff;
+        color: var(--test-ink);
+    }
+
+    #candidate-test-shell select:focus,
+    #candidate-test-shell input:focus,
+    #candidate-test-shell textarea:focus {
+        border-color: var(--test-accent);
+        box-shadow: 0 0 0 3px rgba(232, 93, 4, .14);
+        outline: none;
+    }
+
+    #candidate-test-shell .space-y-3 > div,
+    #candidate-test-shell .space-y-4 > div {
+        border-radius: 12px;
+    }
+
+    #candidate-test-shell button,
+    #candidate-test-shell a {
+        transition: transform .18s ease, box-shadow .18s ease, background-color .18s ease, border-color .18s ease;
+    }
+
+    #candidate-test-shell button:hover,
+    #candidate-test-shell a:hover {
+        transform: translateY(-1px);
+    }
+
+    #candidate-test-shell button:focus-visible,
+    #candidate-test-shell a:focus-visible,
+    #candidate-test-shell select:focus-visible,
+    #candidate-test-shell textarea:focus-visible,
+    #candidate-test-shell input:focus-visible {
+        outline: 3px solid rgba(232, 93, 4, .4);
+        outline-offset: 3px;
+    }
+
+    #candidate-test-shell #submit_test_btn {
+        background: var(--test-accent);
+        box-shadow: 0 10px 18px rgba(232, 93, 4, .22);
+    }
+
+    #candidate-test-shell #submit_test_btn:hover {
+        background: var(--test-accent-dark);
+        box-shadow: 0 14px 24px rgba(232, 93, 4, .28);
+    }
+
+    @media (max-width: 640px) {
+        #candidate-test-shell .sticky {
+            position: relative;
+        }
+
+        #candidate-test-shell .sticky > div:first-child {
+            align-items: flex-start;
+        }
+
+        #candidate-test-shell .sticky h1 {
+            white-space: normal;
+            line-height: 1.35;
+        }
+
+        #candidate-test-shell .sticky .grid {
+            grid-template-columns: 1fr;
+        }
+
+        #candidate-test-shell .step-tab {
+            min-height: 40px;
+            padding: 7px 11px;
+        }
+
+        #candidate-test-shell .max-w-4xl {
+            padding-top: 20px;
+            padding-bottom: 28px;
+            padding-left: 14px;
+            padding-right: 14px;
+        }
+
+        #candidate-test-shell .bg-white.rounded-3xl.p-6,
+        #candidate-test-shell .bg-white.rounded-3xl.p-7 {
+            padding: 18px;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        #candidate-test-shell *,
+        #candidate-test-shell *::before,
+        #candidate-test-shell *::after {
+            animation-duration: .01ms !important;
+            animation-iteration-count: 1 !important;
+            scroll-behavior: auto !important;
+            transition-duration: .01ms !important;
+        }
+    }
+
     .step-tab.active {
         background: linear-gradient(135deg, #ea580c 0%, #f97316 100%);
         color: #ffffff;
@@ -23,6 +205,8 @@
 @endpush
 
 @section('content')
+
+<div id="candidate-test-shell">
 
 <!-- Header thanh tiến trình & đồng hồ -->
 <div class="sticky top-20 z-40 bg-slate-900 text-white shadow-lg border-b border-slate-800">
@@ -51,7 +235,7 @@
                 <span>🔮</span> 1. Tính cách (NLP - DISC - MBTI)
             </button>
             <button type="button" onclick="switchTab(2)" id="tab_btn_2" class="step-tab py-2 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 bg-slate-800 text-slate-300">
-                <span>🎡</span> 2. Bánh xe cuộc đời
+                <i class="fa-solid fa-chart-pie" aria-hidden="true"></i> 2. Bánh xe cuộc đời
             </button>
             <button type="button" onclick="switchTab(3)" id="tab_btn_3" class="step-tab py-2 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 bg-slate-800 text-slate-300">
                 <span>🎯</span> 3. Hoài bão & Động cơ
@@ -261,6 +445,41 @@
                     </table>
                 </div>
                 <p id="nlp_dominant_result" class="mt-3 text-xs font-bold text-slate-700" aria-live="polite">Chọn điểm để xem phong cách nổi trội tạm tính.</p>
+
+                <div class="mt-5">
+                    <h4 class="font-extrabold text-sm text-slate-900 mb-1">Tổng kết điểm đã chọn theo từng câu</h4>
+                    <p class="text-xs text-slate-500 mb-3">Bảng được cập nhật ngay khi bạn chọn hoặc đổi điểm.</p>
+                    <div class="overflow-x-auto rounded-xl border border-slate-200">
+                        <table class="w-full min-w-[640px] text-left text-xs border-collapse">
+                            <thead class="bg-slate-50 text-slate-600">
+                                <tr>
+                                    <th class="py-2.5 px-3 font-bold">Câu hỏi</th>
+                                    <th class="py-2.5 px-3 text-center font-bold">Visual (Nhìn)</th>
+                                    <th class="py-2.5 px-3 text-center font-bold">Auditory (Nghe)</th>
+                                    <th class="py-2.5 px-3 text-center font-bold">Kinesthetic (Cảm xúc)</th>
+                                    <th class="py-2.5 px-3 text-center font-bold">Auditory Digital (Logic)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100">
+                                @foreach(range(1, 5) as $questionNumber)
+                                    <tr>
+                                        <td class="py-2.5 px-3 font-semibold text-slate-800">Câu {{ $questionNumber }}</td>
+                                        @foreach(['V', 'A', 'K', 'Ad'] as $code)
+                                            <td id="nlp_detail_{{ $questionNumber }}_{{ $code }}" class="py-2.5 px-3 text-center text-slate-500">—</td>
+                                        @endforeach
+                                    </tr>
+                                @endforeach
+                                <tr class="bg-slate-50 font-extrabold text-slate-900">
+                                    <td class="py-2.5 px-3">Tổng cộng</td>
+                                    <td id="nlp_detail_total_V" class="py-2.5 px-3 text-center">0</td>
+                                    <td id="nlp_detail_total_A" class="py-2.5 px-3 text-center">0</td>
+                                    <td id="nlp_detail_total_K" class="py-2.5 px-3 text-center">0</td>
+                                    <td id="nlp_detail_total_Ad" class="py-2.5 px-3 text-center">0</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
 
             <!-- MỤC 1.2: ĐÁNH GIÁ PHONG CÁCH LÀM VIỆC (DISC) -->
@@ -453,30 +672,38 @@
                 <div class="inline-block px-3 py-1 bg-white/20 rounded-full text-xs font-extrabold uppercase tracking-wider mb-2">
                     Tư Duy Cân Bằng Bản Thân • Coaching AZ Media
                 </div>
-                <h2 class="text-xl sm:text-2xl font-black mb-2">WHEEL OF LIFE – BÁNH XE CUỘC ĐỜI</h2>
+                <h2 class="text-xl sm:text-2xl font-black mb-2">BÁNH XE CUỘC ĐỜI</h2>
                 <p class="text-xs sm:text-sm text-emerald-100 leading-relaxed">
-                    Tự đánh giá mức độ thỏa mãn và đầu tư thời gian cho <strong>8 khía cạnh cốt lõi</strong> của bạn trên thang điểm từ 1 đến 10. Biểu đồ Radar bên dưới sẽ tự động mô phỏng độ cân bằng bánh xe cuộc đời của bạn!
+                    Tự đánh giá mức độ hài lòng của bạn trong <strong>8 lĩnh vực quan trọng</strong> theo thang điểm từ 1 đến 10. Biểu đồ sẽ cập nhật ngay khi bạn thay đổi điểm.
                 </p>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
                 <!-- 8 Sliders Cân bằng -->
-                <div class="lg:col-span-7 bg-white rounded-3xl border border-slate-200 p-6 shadow-sm space-y-4">
+                <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm space-y-4">
                     <h3 class="font-extrabold text-sm text-slate-800 uppercase tracking-wider border-b border-slate-100 pb-2 flex items-center gap-2">
-                        <i class="fa-solid fa-sliders text-emerald-600"></i> Đánh Giá 8 Lĩnh Vực (1 - 10 điểm)
+                        <i class="fa-solid fa-sliders text-emerald-600"></i> Tự đánh giá 8 lĩnh vực (1–10 điểm)
                     </h3>
 
                     @php
                         $wheelItems = [
-                            'finance'         => ['title' => 'Tài chính (Finance)', 'val' => 4, 'icon' => 'fa-coins', 'color' => 'text-amber-500'],
-                            'personal_growth' => ['title' => 'Phát triển bản thân (Personal Growth)', 'val' => 8, 'icon' => 'fa-brain', 'color' => 'text-indigo-500'],
-                            'health'          => ['title' => 'Sức khỏe (Health)', 'val' => 7, 'icon' => 'fa-heart-pulse', 'color' => 'text-rose-500'],
-                            'family'          => ['title' => 'Gia đình (Family)', 'val' => 9, 'icon' => 'fa-house-user', 'color' => 'text-blue-500'],
-                            'relationships'   => ['title' => 'Các mối quan hệ (Relationships)', 'val' => 5, 'icon' => 'fa-users', 'color' => 'text-emerald-500'],
-                            'social_life'     => ['title' => 'Đời sống xã hội (Social Life)', 'val' => 6, 'icon' => 'fa-champagne-glasses', 'color' => 'text-purple-500'],
-                            'spirituality'    => ['title' => 'Đời sống tinh thần (Spirituality)', 'val' => 7, 'icon' => 'fa-spa', 'color' => 'text-teal-500'],
-                            'career'          => ['title' => 'Sự nghiệp (Career)', 'val' => 5, 'icon' => 'fa-briefcase', 'color' => 'text-orange-500'],
+                            'finance'         => ['title' => 'Tài chính', 'short_label' => 'Tài chính', 'val' => 4, 'icon' => 'fa-coins', 'color' => 'text-amber-500'],
+                            'personal_growth' => ['title' => 'Phát triển bản thân', 'short_label' => 'Phát triển', 'val' => 8, 'icon' => 'fa-brain', 'color' => 'text-indigo-500'],
+                            'health'          => ['title' => 'Sức khỏe', 'short_label' => 'Sức khỏe', 'val' => 7, 'icon' => 'fa-heart-pulse', 'color' => 'text-rose-500'],
+                            'family'          => ['title' => 'Gia đình', 'short_label' => 'Gia đình', 'val' => 9, 'icon' => 'fa-house-user', 'color' => 'text-blue-500'],
+                            'relationships'   => ['title' => 'Các mối quan hệ', 'short_label' => 'Quan hệ', 'val' => 5, 'icon' => 'fa-users', 'color' => 'text-emerald-500'],
+                            'social_life'     => ['title' => 'Đời sống xã hội', 'short_label' => 'Xã hội', 'val' => 6, 'icon' => 'fa-champagne-glasses', 'color' => 'text-purple-500'],
+                            'spirituality'    => ['title' => 'Đời sống tinh thần', 'short_label' => 'Tinh thần', 'val' => 7, 'icon' => 'fa-spa', 'color' => 'text-teal-500'],
+                            'career'          => ['title' => 'Sự nghiệp', 'short_label' => 'Sự nghiệp', 'val' => 5, 'icon' => 'fa-briefcase', 'color' => 'text-orange-500'],
                         ];
+                        $wheelChartItems = [];
+                        foreach ($wheelItems as $key => $item) {
+                            $wheelChartItems[] = [
+                                'key' => $key,
+                                'short_label' => $item['short_label'],
+                                'score' => $item['val'],
+                            ];
+                        }
                     @endphp
 
                     @foreach($wheelItems as $key => $w)
@@ -496,16 +723,16 @@
                     @endforeach
                 </div>
 
-                <!-- Live Radar Chart -->
-                <div class="lg:col-span-5 bg-white rounded-3xl border border-slate-200 p-6 shadow-sm sticky top-44">
-                    <h3 class="font-extrabold text-xs text-slate-800 uppercase tracking-wider mb-3 text-center">
-                        🎡 Mô Phỏng Bánh Xe Cuộc Đời Trực Quan
+                <div class="bg-white rounded-3xl border border-slate-200 p-5 sm:p-6 shadow-sm lg:sticky lg:top-28 self-start">
+                    <h3 class="font-extrabold text-sm text-slate-800 mb-1 text-center">
+                        Bánh xe của bạn
                     </h3>
-                    <div class="w-full max-w-[280px] mx-auto aspect-square">
-                        <canvas id="wheelChart"></canvas>
+                    <p class="text-xs text-slate-500 text-center mb-3">Mỗi múi tương ứng với một lĩnh vực</p>
+                    <div class="w-full max-w-[500px] mx-auto aspect-square">
+                        @include('azmedia.candidate.partials.wheel_chart', ['chartId' => 'wheelChart'])
                     </div>
-                    <p class="text-[11px] text-slate-400 text-center mt-3 italic">
-                        Bánh xe càng tròn và đồng đều, cuộc sống và tâm lý làm việc của bạn càng ổn định và bền vững.
+                    <p class="text-xs text-slate-600 text-center mt-3">
+                        Điểm càng đồng đều, các lĩnh vực trong cuộc sống càng cân bằng.
                     </p>
                 </div>
             </div>
@@ -513,7 +740,8 @@
             <!-- Bài học rút ra từ Bánh xe cuộc đời -->
             <div class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-7 shadow-sm">
                 <label class="block font-bold text-sm text-slate-900 mb-2">
-                    ✍️ Bài học rút ra qua việc thực hiện "Bánh xe cuộc đời": <span class="text-rose-500">*</span>
+                    <i class="fa-solid fa-pen-to-square text-emerald-600" aria-hidden="true"></i>
+                    Bài học rút ra qua việc thực hiện "Bánh xe cuộc đời": <span class="text-rose-500">*</span>
                 </label>
                 <p class="text-xs text-slate-500 mb-3">
                     Bạn nhận thấy bản thân có điểm mạnh ở lĩnh vực nào và cần dành nhiều thời gian hơn để cải thiện khía cạnh nào trong tương lai?
@@ -803,6 +1031,7 @@
         </div>
     </form>
 </div>
+</div>
 
 @endsection
 
@@ -834,79 +1063,44 @@
         if (timeSpentInput) timeSpentInput.value = secondsSpent;
     }, 1000);
 
-    // 3. Khởi tạo Biểu đồ Radar Bánh xe cuộc đời (Chart.js)
-    const wheelKeys = ['finance', 'personal_growth', 'health', 'family', 'relationships', 'social_life', 'spirituality', 'career'];
-    const wheelLabels = ['Tài chính', 'Phát triển', 'Sức khỏe', 'Gia đình', 'Mối quan hệ', 'Xã hội', 'Tinh thần', 'Sự nghiệp'];
-    let wheelData = [4, 8, 7, 9, 5, 6, 7, 5];
-
-    let radarChart = null;
+    // 3. Cập nhật biểu đồ Bánh xe cuộc đời
+    const wheelLabels = ['Tài chính', 'Phát triển', 'Sức khỏe', 'Gia đình', 'Quan hệ', 'Xã hội', 'Tinh thần', 'Sự nghiệp'];
+    const wheelCenter = 220;
+    const wheelRadius = 154;
 
     document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('select[name^="nlp["]').forEach(function(select) {
-            select.addEventListener('change', updateNlpRatings);
+            select.addEventListener('change', function() {
+                handleNlpChange(select);
+            });
         });
         updateNlpRatings();
 
-        const ctx = document.getElementById('wheelChart');
-        if (ctx) {
-            radarChart = new Chart(ctx, {
-                type: 'radar',
-                data: {
-                    labels: wheelLabels,
-                    datasets: [{
-                        label: 'Mức độ cân bằng (1-10)',
-                        data: wheelData,
-                        fill: true,
-                        backgroundColor: 'rgba(16, 185, 129, 0.25)',
-                        borderColor: '#059669',
-                        pointBackgroundColor: '#ea580c',
-                        pointBorderColor: '#fff',
-                        pointHoverBackgroundColor: '#fff',
-                        pointHoverBorderColor: '#ea580c',
-                        borderWidth: 2
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    scales: {
-                        r: {
-                            min: 0,
-                            max: 10,
-                            ticks: { stepSize: 2, display: false },
-                            grid: { color: 'rgba(148, 163, 184, 0.2)' },
-                            pointLabels: {
-                                font: { size: 10, weight: 'bold' },
-                                color: '#334155'
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: { display: false }
-                    }
-                }
-            });
-        }
     });
 
     function updateNlpRatings() {
         const selects = Array.from(document.querySelectorAll('select[name^="nlp["]'));
         const questions = new Map();
         const scores = { V: 0, A: 0, K: 0, Ad: 0 };
+        const questionScores = {};
         let answered = 0;
 
         selects.forEach(function(select) {
             const question = select.dataset.nlpQuestion;
             if (!questions.has(question)) questions.set(question, []);
             questions.get(question).push(select);
-
-            if (select.value) {
-                scores[select.dataset.nlpCode] += Number(select.value);
-                answered++;
-            }
         });
 
         questions.forEach(function(questionSelects) {
+            const seenValues = new Set();
+            questionSelects.forEach(function(select) {
+                if (select.value && seenValues.has(select.value)) {
+                    select.value = '';
+                } else if (select.value) {
+                    seenValues.add(select.value);
+                }
+            });
+
             const usedValues = new Set(questionSelects
                 .filter(function(select) { return select.value; })
                 .map(function(select) { return select.value; }));
@@ -916,12 +1110,37 @@
                     option.disabled = option.value !== '' && usedValues.has(option.value) && option.value !== select.value;
                 });
             });
+
+            questionSelects.forEach(function(select) {
+                if (!select.value) return;
+
+                const code = select.dataset.nlpCode;
+                const question = select.dataset.nlpQuestion;
+                if (!questionScores[question]) questionScores[question] = {};
+                scores[code] += Number(select.value);
+                questionScores[question][code] = select.value;
+                answered++;
+            });
         });
 
         Object.keys(scores).forEach(function(code) {
             const scoreCell = document.getElementById(`nlp_score_${code}`);
             if (scoreCell) scoreCell.textContent = scores[code];
+
+            const totalCell = document.getElementById(`nlp_detail_total_${code}`);
+            if (totalCell) totalCell.textContent = scores[code];
         });
+
+        for (let question = 1; question <= 5; question++) {
+            Object.keys(scores).forEach(function(code) {
+                const detailCell = document.getElementById(`nlp_detail_${question}_${code}`);
+                if (detailCell) {
+                    detailCell.textContent = questionScores[question] && questionScores[question][code]
+                        ? questionScores[question][code]
+                        : '—';
+                }
+            });
+        }
 
         const progress = document.getElementById('nlp_answer_progress');
         if (progress) progress.textContent = `${answered} / ${selects.length} lựa chọn`;
@@ -939,15 +1158,71 @@
         }
     }
 
+    function handleNlpChange(changedSelect) {
+        if (changedSelect.value) {
+            const question = changedSelect.dataset.nlpQuestion;
+            const duplicate = Array.from(document.querySelectorAll(
+                'select[name^="nlp["][data-nlp-question="' + question + '"]'
+            )).some(function(select) {
+                return select !== changedSelect && select.value === changedSelect.value;
+            });
+
+            if (duplicate) {
+                changedSelect.value = '';
+                changedSelect.setCustomValidity('Mỗi mức điểm chỉ được chọn một lần trong cùng một câu.');
+                changedSelect.reportValidity();
+                changedSelect.setCustomValidity('');
+            }
+        }
+
+        updateNlpRatings();
+    }
+
+    function validateNlpRatings() {
+        const questions = new Map();
+        document.querySelectorAll('select[name^="nlp["]').forEach(function(select) {
+            const question = select.dataset.nlpQuestion;
+            if (!questions.has(question)) questions.set(question, []);
+            questions.get(question).push(select.value);
+        });
+
+        for (const [question, values] of questions) {
+            const selected = values.filter(Boolean);
+            if (new Set(selected).size !== selected.length) {
+                alert(`Câu ${question}: mỗi mức điểm chỉ được chọn một lần.`);
+                switchTab(1);
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     function updateWheelValue(key, val) {
         const label = document.getElementById(`val_label_${key}`);
         if (label) label.textContent = `${val}/10`;
 
-        const idx = wheelKeys.indexOf(key);
-        if (idx !== -1 && radarChart) {
-            radarChart.data.datasets[0].data[idx] = parseInt(val);
-            radarChart.update();
-        }
+        const svg = document.getElementById('wheelChart');
+        if (!svg) return;
+
+        const points = Array.from(document.querySelectorAll('input[name^="wheel["]')).map(function(input, index) {
+            const centerAngle = -67.5 + index * 45;
+            const angle = centerAngle * Math.PI / 180;
+            const radius = wheelRadius * Number(input.value) / 10;
+            const startAngle = (centerAngle - 22.5) * Math.PI / 180;
+            const endAngle = (centerAngle + 22.5) * Math.PI / 180;
+            const startX = wheelCenter + Math.cos(startAngle) * radius;
+            const startY = wheelCenter + Math.sin(startAngle) * radius;
+            const endX = wheelCenter + Math.cos(endAngle) * radius;
+            const endY = wheelCenter + Math.sin(endAngle) * radius;
+            const sector = document.getElementById(`wheelChart_sector_${index}`);
+            if (sector) {
+                sector.setAttribute('d', `M ${wheelCenter} ${wheelCenter} L ${startX.toFixed(2)} ${startY.toFixed(2)} A ${radius.toFixed(2)} ${radius.toFixed(2)} 0 0 1 ${endX.toFixed(2)} ${endY.toFixed(2)} Z`);
+            }
+            const x = wheelCenter + Math.cos(angle) * radius;
+            const y = wheelCenter + Math.sin(angle) * radius;
+            return null;
+        });
     }
 
     function updateNumerology(dateStr) {
@@ -987,6 +1262,7 @@
     // 4. Xử lý Nộp Toàn Bộ Bài Test Đánh Giá Toàn Diện (Hỗ trợ validate đa bước mượt mà)
     function submitAssessmentTest() {
         // Kiểm tra Phần 1: NLP
+        if (!validateNlpRatings()) return;
         const nlpSelects = document.querySelectorAll('select[name^="nlp["]');
         let unselectedNlp = 0;
         nlpSelects.forEach(sel => {

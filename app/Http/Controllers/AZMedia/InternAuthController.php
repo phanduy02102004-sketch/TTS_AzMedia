@@ -125,6 +125,7 @@ class InternAuthController extends Controller
             'name' => $candidate->name,
             'email' => $candidate->email,
             'phone' => $candidate->phone,
+            'birth_date' => $candidate->birth_date,
             'university' => $candidate->university,
             'major' => $candidate->major,
             'application_id' => $application ? $application->id : null,

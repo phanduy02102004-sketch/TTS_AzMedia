@@ -311,7 +311,7 @@
 
     <!-- ==================== PHẦN 2 ==================== -->
     <div style="page-break-inside: avoid;">
-        <div class="section-header" style="margin-top: 14px;">PHẦN 2. BÁNH XE CUỘC ĐỜI (WHEEL OF LIFE - 8 KHÍA CẠNH)</div>
+        <div class="section-header" style="margin-top: 14px;">PHẦN 2. BÁNH XE CUỘC ĐỜI (8 KHÍA CẠNH)</div>
     @if($wheel && !empty($wheel['dimensions']))
         @php
             $wheelChartLabels = [

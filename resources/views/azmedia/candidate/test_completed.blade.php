@@ -3,7 +3,7 @@
 @section('title', 'Kết Quả Đánh Giá Năng Lực Toàn Diện - ' . $application->candidate->name)
 
 @push('styles')
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 @endpush
 
 @section('content')
@@ -106,6 +106,53 @@
                     <div class="text-[10px] text-slate-400 mt-0.5">Nội tâm / Lập luận</div>
                 </div>
             </div>
+
+            @if(!empty($nlp['raw_input']))
+                @php
+                    $nlpQuestionScores = $nlp['raw_input'];
+                    $nlpTypes = [
+                        'V' => ['label' => 'Visual (Nhìn)', 'total' => 'Visual'],
+                        'A' => ['label' => 'Auditory (Nghe)', 'total' => 'Auditory'],
+                        'K' => ['label' => 'Kinesthetic (Cảm xúc)', 'total' => 'Kinesthetic'],
+                        'Ad' => ['label' => 'Auditory Digital (Nội tâm)', 'total' => 'Auditory_Digital'],
+                    ];
+                @endphp
+
+                <div class="mt-6">
+                    <h4 class="font-extrabold text-sm text-slate-900 mb-1">Bảng tổng kết điểm từng câu trả lời</h4>
+                    <p class="text-xs text-slate-500 mb-3">Điểm số bạn đã chọn cho từng phong cách ở mỗi câu hỏi.</p>
+                    <div class="overflow-x-auto rounded-2xl border border-slate-200">
+                        <table class="w-full min-w-[640px] text-left text-xs border-collapse">
+                            <thead>
+                                <tr class="bg-slate-50 text-slate-700">
+                                    <th class="py-2.5 px-3 border-b border-slate-200 font-bold">Câu hỏi</th>
+                                    @foreach($nlpTypes as $type)
+                                        <th class="py-2.5 px-3 border-b border-slate-200 text-center font-bold">{{ $type['label'] }}</th>
+                                    @endforeach
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100">
+                                @foreach(range(1, 5) as $questionNumber)
+                                    <tr>
+                                        <td class="py-2.5 px-3 font-semibold text-slate-800">Câu {{ $questionNumber }}</td>
+                                        @foreach($nlpTypes as $code => $type)
+                                            <td class="py-2.5 px-3 text-center text-slate-700">
+                                                {{ data_get($nlpQuestionScores, $questionNumber . '.' . $code) ?? '—' }}
+                                            </td>
+                                        @endforeach
+                                    </tr>
+                                @endforeach
+                                <tr class="bg-slate-50 font-extrabold text-slate-900">
+                                    <td class="py-2.5 px-3">Tổng cộng</td>
+                                    @foreach($nlpTypes as $type)
+                                        <td class="py-2.5 px-3 text-center">{{ data_get($nlp, 'scores.' . $type['total'], 0) }}</td>
+                                    @endforeach
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            @endif
         </div>
     @endif
 
@@ -190,28 +237,48 @@
         <div class="bg-white rounded-3xl border border-slate-200 shadow-md p-6 sm:p-8">
             <div class="flex items-center gap-3 pb-4 border-b border-slate-100 mb-6">
                 <span class="w-10 h-10 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-lg">
-                    🎡
+                    <i class="fa-solid fa-chart-pie" aria-hidden="true"></i>
                 </span>
                 <div>
-                    <h3 class="font-extrabold text-base text-slate-900">Bánh Xe Cuộc Đời (Wheel of Life)</h3>
+                    <h3 class="font-extrabold text-base text-slate-900">Bánh xe cuộc đời</h3>
                     <p class="text-xs text-slate-500">Mức độ tự nhận thức và phân bổ năng lượng trong cuộc sống</p>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
-                <div class="md:col-span-5 flex justify-center">
-                    <div class="w-full max-w-[260px] aspect-square">
-                        <canvas id="completedWheelChart"></canvas>
+            @php
+                $wheelShortLabels = [
+                    'finance' => 'Tài chính',
+                    'personal_growth' => 'Phát triển',
+                    'health' => 'Sức khỏe',
+                    'family' => 'Gia đình',
+                    'relationships' => 'Quan hệ',
+                    'social_life' => 'Xã hội',
+                    'spirituality' => 'Tinh thần',
+                    'career' => 'Sự nghiệp',
+                ];
+                $wheelChartItems = [];
+                foreach ($wheel['dimensions'] as $key => $dimension) {
+                    $wheelChartItems[] = [
+                        'key' => $key,
+                        'short_label' => $wheelShortLabels[$key] ?? $dimension['label'],
+                        'score' => $dimension['score'],
+                    ];
+                }
+            @endphp
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                <div class="flex justify-center">
+                    <div class="w-full max-w-[440px] aspect-square">
+                        @include('azmedia.candidate.partials.wheel_chart', ['chartId' => 'completedWheelChart'])
                     </div>
                 </div>
 
-                <div class="md:col-span-7 space-y-3">
-                    <div class="grid grid-cols-2 gap-2 text-xs">
-                        @foreach($wheel['dimensions'] as $dim)
-                            <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-100 flex justify-between items-center">
-                                <span class="text-slate-600 font-medium truncate mr-1">{{ $dim['label'] }}</span>
-                                <span class="font-extrabold {{ $dim['score'] >= 7 ? 'text-emerald-600' : ($dim['score'] >= 5 ? 'text-blue-600' : 'text-amber-600') }}">
-                                    {{ $dim['score'] }}/10
+                <div class="space-y-3">
+                    <div class="space-y-2 text-sm" aria-label="Điểm số từng lĩnh vực">
+                        @foreach($wheel['dimensions'] as $key => $dim)
+                            <div class="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 py-2.5 border-b border-slate-100 last:border-b-0">
+                                <span class="text-slate-700 font-medium">{{ $wheelShortLabels[$key] ?? $dim['label'] }}</span>
+                                <span class="min-w-[4rem] text-right tabular-nums font-extrabold {{ $dim['score'] >= 7 ? 'text-emerald-600' : ($dim['score'] >= 5 ? 'text-blue-600' : 'text-amber-600') }}">
+                                    {{ $dim['score'] }}<span class="text-slate-400 font-semibold">/10</span>
                                 </span>
                             </div>
                         @endforeach
@@ -219,7 +286,9 @@
 
                     @if(!empty($wheel['lesson']))
                         <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 text-xs">
-                            <span class="font-bold text-slate-800 block mb-1">💡 Bài học tự nhận thức:</span>
+                            <span class="font-bold text-slate-800 block mb-1">
+                                <i class="fa-solid fa-lightbulb text-amber-500 mr-1" aria-hidden="true"></i> Bài học tự nhận thức:
+                            </span>
                             <p class="text-slate-600 italic leading-relaxed">"{{ $wheel['lesson'] }}"</p>
                         </div>
                     @endif
@@ -389,55 +458,3 @@
 </div>
 
 @endsection
-
-@push('scripts')
-@if($wheel)
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const ctx = document.getElementById('completedWheelChart');
-        if (ctx) {
-            const wheelData = [
-                {{ $wheel['dimensions']['finance']['score'] ?? 5 }},
-                {{ $wheel['dimensions']['personal_growth']['score'] ?? 5 }},
-                {{ $wheel['dimensions']['health']['score'] ?? 5 }},
-                {{ $wheel['dimensions']['family']['score'] ?? 5 }},
-                {{ $wheel['dimensions']['relationships']['score'] ?? 5 }},
-                {{ $wheel['dimensions']['social_life']['score'] ?? 5 }},
-                {{ $wheel['dimensions']['spirituality']['score'] ?? 5 }},
-                {{ $wheel['dimensions']['career']['score'] ?? 5 }}
-            ];
-
-            new Chart(ctx, {
-                type: 'radar',
-                data: {
-                    labels: ['Tài chính', 'Phát triển', 'Sức khỏe', 'Gia đình', 'Quan hệ', 'Xã hội', 'Tinh thần', 'Sự nghiệp'],
-                    datasets: [{
-                        label: 'Bánh xe cuộc đời',
-                        data: wheelData,
-                        fill: true,
-                        backgroundColor: 'rgba(16, 185, 129, 0.25)',
-                        borderColor: '#059669',
-                        pointBackgroundColor: '#ea580c',
-                        borderWidth: 2
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    scales: {
-                        r: {
-                            min: 0,
-                            max: 10,
-                            ticks: { display: false },
-                            grid: { color: 'rgba(148, 163, 184, 0.2)' },
-                            pointLabels: { font: { size: 10, weight: 'bold' }, color: '#334155' }
-                        }
-                    },
-                    plugins: { legend: { display: false } }
-                }
-            });
-        }
-    });
-</script>
-@endif
-@endpush
