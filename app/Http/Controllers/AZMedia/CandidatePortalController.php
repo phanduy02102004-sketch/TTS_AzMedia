@@ -93,10 +93,22 @@ class CandidatePortalController extends Controller
             return view('azmedia.candidate.test_completed', compact('application'));
         }
 
-        // Lấy danh sách câu hỏi cơ bản về AZ Media (loại bỏ hoàn toàn câu hỏi chuyên môn)
+        // Lấy câu hỏi văn hóa AZ Media cho Phần 4.
+        // Hỗ trợ cả dữ liệu mới (azmedia) và dữ liệu hiện có (general).
         $allQuestions = TestQuestion::where('position_category', 'azmedia')
             ->orderBy('id', 'asc')
             ->get();
+
+        if ($allQuestions->isEmpty()) {
+            $allQuestions = TestQuestion::where('position_category', 'general')
+                ->whereIn('question', [
+                    'Slogan chính thức của công ty AZ Media là gì?',
+                    'Ý nghĩa chữ "A" trong tên thương hiệu AZ Media đại diện cho giá trị cốt lõi nào?',
+                    'Văn hóa môi trường làm việc tại AZ Media được xây dựng trên triết lý cốt lõi nào sau đây?',
+                ])
+                ->orderBy('id', 'asc')
+                ->get();
+        }
 
         if ($allQuestions->isEmpty()) {
             $allQuestions = TestQuestion::whereIn('id', [9, 10, 11])->get();
@@ -120,6 +132,17 @@ class CandidatePortalController extends Controller
         $application = Application::with(['candidate', 'position', 'testResult'])
             ->where('application_code', $code)
             ->firstOrFail();
+
+        $request->validate([
+            'answers' => 'required|array',
+            'az_channels' => 'required|array|min:1',
+            'az_impression' => 'required|string|min:10',
+        ], [
+            'answers.required' => 'Vui lòng hoàn thành câu hỏi trắc nghiệm Phần 4.',
+            'az_channels.required' => 'Vui lòng chọn ít nhất một kênh tìm hiểu AZ Media.',
+            'az_impression.required' => 'Vui lòng nhập cảm nhận và mong muốn thực tập tại AZ Media.',
+            'az_impression.min' => 'Cảm nhận cần nhập ít nhất 10 ký tự.',
+        ]);
 
         // 1. Xử lý Trắc nghiệm Chuyên môn & Văn hóa
         $answers = $request->input('answers', []);
@@ -212,7 +235,7 @@ class CandidatePortalController extends Controller
             'raw_input' => $nlpInput,
         ];
 
-        // 2.1 Xử lý DISC, MBTI & Nhân số học (bổ sung từ Báo cáo thu hoạch NLB - DISC - MBTI)
+        // 2.1 Xử lý DISC, MBTI & Nhân số học (bổ sung từ Báo cáo thu hoạch NLP - DISC - MBTI)
         $discChoice = $request->input('disc_choice', 'C');
         $discDescriptions = [
             'D' => ['title' => 'Nhóm D – Quyết đoán (Dominance)', 'summary' => 'Hành động quyết liệt, tập trung vào kết quả nhanh nhất, tự tin và sẵn sàng chấp nhận thử thách.'],
@@ -267,7 +290,7 @@ class CandidatePortalController extends Controller
         ];
 
         $personalityResult = [
-            'nlb' => $nlpResult,
+            'nlp' => $nlpResult,
             'disc' => $discProfile,
             'mbti' => $mbtiProfile,
             'numerology' => $numerologyProfile,
@@ -402,8 +425,9 @@ class CandidatePortalController extends Controller
         $filename = "Bai_Test_AZ_{$application->application_code}.pdf";
         $filePath = public_path("uploads/test_results/{$filename}");
 
-        // Nếu file chưa tồn tại trên đĩa, tự động tạo mới ngay lập tức
-        if (!file_exists($filePath)) {
+        // Regenerate the cached PDF when its Blade template has changed.
+        $templatePath = resource_path('views/azmedia/pdf/test_result_pdf.blade.php');
+        if (!file_exists($filePath) || filemtime($templatePath) > filemtime($filePath)) {
             $dir = public_path('uploads/test_results');
             if (!file_exists($dir)) {
                 mkdir($dir, 0755, true);

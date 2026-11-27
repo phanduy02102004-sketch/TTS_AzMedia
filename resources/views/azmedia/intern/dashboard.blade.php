@@ -44,6 +44,11 @@
                         </div>
                     </div>
 
+                    <a href="{{ route('azmedia.intern.profile') }}"
+                       class="px-4 py-2.5 rounded-2xl bg-white/10 hover:bg-white/20 text-white border border-white/20 text-xs font-bold transition flex items-center gap-2">
+                        <i class="fa-solid fa-id-card"></i> Thông tin cá nhân
+                    </a>
+
                     <a href="{{ route('azmedia.intern.logout') }}"
                        class="px-4 py-2.5 rounded-2xl bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/30 text-xs font-bold transition flex items-center gap-2">
                         <i class="fa-solid fa-arrow-right-from-bracket"></i> Đăng xuất

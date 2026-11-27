@@ -173,13 +173,18 @@
                         <i class="fa-brands fa-google-drive text-amber-600 mr-1"></i> Minh chứng khảo sát của TTS:
                     </span>
                     @if($graduation->survey_proof_link)
-                        <a href="{{ $graduation->survey_proof_link }}" target="_blank" class="font-bold text-brand-600 hover:underline flex items-center gap-1">
-                            <i class="fa-solid fa-arrow-up-right-from-square"></i> Mở Thư Mục Drive
+                        <a href="{{ $graduation->survey_proof_link }}" target="_blank" rel="noopener noreferrer" class="font-bold text-brand-600 hover:underline flex items-center gap-1">
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i> Mở minh chứng
                         </a>
                     @else
                         <span class="text-slate-400 italic">Chưa nộp link</span>
                     @endif
                 </div>
+                @if($graduation->survey_proof_link)
+                    <a href="{{ $graduation->survey_proof_link }}" target="_blank" rel="noopener noreferrer" class="block text-[11px] text-slate-600 font-mono break-all hover:text-brand-600">
+                        {{ $graduation->survey_proof_link }}
+                    </a>
+                @endif
             </div>
 
             <!-- MỤC 2: NỘP BÁO CÁO (4 BƯỚC) -->
@@ -199,6 +204,14 @@
                                 class="w-full py-1.5 rounded-lg text-xs font-bold transition {{ $graduation->report_draft_submitted ? 'bg-emerald-500 text-white' : 'bg-slate-200 text-slate-600' }}">
                             {{ $graduation->report_draft_submitted ? 'Đã nộp form B1' : 'Chưa nộp B1' }}
                         </button>
+                        @if($graduation->report_draft_link)
+                            <a href="{{ $graduation->report_draft_link }}" target="_blank" rel="noopener noreferrer" class="block text-[11px] text-blue-600 font-mono break-all hover:underline">
+                                <i class="fa-solid fa-arrow-up-right-from-square"></i> Mở minh chứng B1
+                                <span class="block mt-1 text-slate-600">{{ $graduation->report_draft_link }}</span>
+                            </a>
+                        @else
+                            <span class="block text-[11px] text-slate-400 italic">Chưa nộp link minh chứng B1</span>
+                        @endif
                     </div>
 
                     <div class="p-3 rounded-xl border border-slate-200 bg-slate-50 space-y-2">
@@ -207,6 +220,14 @@
                                 class="w-full py-1.5 rounded-lg text-xs font-bold transition {{ $graduation->report_final_submitted ? 'bg-emerald-500 text-white' : 'bg-slate-200 text-slate-600' }}">
                             {{ $graduation->report_final_submitted ? 'Đã nộp form B2' : 'Chưa nộp B2' }}
                         </button>
+                        @if($graduation->report_final_link)
+                            <a href="{{ $graduation->report_final_link }}" target="_blank" rel="noopener noreferrer" class="block text-[11px] text-blue-600 font-mono break-all hover:underline">
+                                <i class="fa-solid fa-arrow-up-right-from-square"></i> Mở minh chứng B2
+                                <span class="block mt-1 text-slate-600">{{ $graduation->report_final_link }}</span>
+                            </a>
+                        @else
+                            <span class="block text-[11px] text-slate-400 italic">Chưa nộp link minh chứng B2</span>
+                        @endif
                     </div>
 
                     <div class="p-3 rounded-xl border border-slate-200 bg-slate-50 space-y-2">
@@ -324,8 +345,8 @@
                             </button>
                         </div>
                         @if($graduation->word_report_link)
-                            <a href="{{ $graduation->word_report_link }}" target="_blank" class="text-[11px] text-blue-600 hover:underline flex items-center gap-1 font-mono truncate">
-                                <i class="fa-solid fa-link"></i> {{ $graduation->word_report_link }}
+                            <a href="{{ $graduation->word_report_link }}" target="_blank" rel="noopener noreferrer" class="text-[11px] text-blue-600 hover:underline flex items-start gap-1 font-mono break-all">
+                                <i class="fa-solid fa-arrow-up-right-from-square mt-0.5"></i> <span>{{ $graduation->word_report_link }}</span>
                             </a>
                         @else
                             <span class="text-slate-400 text-[11px] italic">Chưa dán link</span>
@@ -341,8 +362,8 @@
                             </button>
                         </div>
                         @if($graduation->video_link)
-                            <a href="{{ $graduation->video_link }}" target="_blank" class="text-[11px] text-purple-600 hover:underline flex items-center gap-1 font-mono truncate">
-                                <i class="fa-solid fa-link"></i> {{ $graduation->video_link }}
+                            <a href="{{ $graduation->video_link }}" target="_blank" rel="noopener noreferrer" class="text-[11px] text-purple-600 hover:underline flex items-start gap-1 font-mono break-all">
+                                <i class="fa-solid fa-arrow-up-right-from-square mt-0.5"></i> <span>{{ $graduation->video_link }}</span>
                             </a>
                         @else
                             <span class="text-slate-400 text-[11px] italic">Chưa dán link</span>
@@ -406,13 +427,18 @@
                             <i class="fa-solid fa-camera mr-1"></i> Thư mục minh chứng review 5 kênh:
                         </span>
                         @if($graduation->review_proof_link)
-                            <a href="{{ $graduation->review_proof_link }}" target="_blank" class="font-bold text-brand-600 hover:underline flex items-center gap-1">
+                            <a href="{{ $graduation->review_proof_link }}" target="_blank" rel="noopener noreferrer" class="font-bold text-brand-600 hover:underline flex items-center gap-1">
                                 <i class="fa-solid fa-arrow-up-right-from-square"></i> Mở Drive Minh Chứng
                             </a>
                         @else
                             <span class="text-slate-400 italic">Chưa nộp link</span>
                         @endif
                     </div>
+                    @if($graduation->review_proof_link)
+                        <a href="{{ $graduation->review_proof_link }}" target="_blank" rel="noopener noreferrer" class="block text-[11px] text-slate-600 font-mono break-all hover:text-brand-600">
+                            {{ $graduation->review_proof_link }}
+                        </a>
+                    @endif
                 </div>
             </div>
 

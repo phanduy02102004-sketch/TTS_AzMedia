@@ -24,7 +24,7 @@ class AZMediaApiController extends Controller
         $query = InternshipPosition::where('status', 'open');
 
         if ($request->filled('category') && $request->category !== 'all') {
-            $query->where('category', $request->category);
+            $query->forCategory($request->category);
         }
         if ($request->filled('type') && $request->type !== 'all') {
             $query->where('type', $request->type);

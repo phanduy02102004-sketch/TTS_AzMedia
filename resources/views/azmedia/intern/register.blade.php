@@ -9,7 +9,7 @@
         <!-- Header Brand -->
         <div class="text-center space-y-3">
             <div class="inline-flex items-center justify-center p-3 rounded-2xl bg-orange-100 mb-1">
-                <img src="{{ asset('uploads/az-homes-logo.png') }}" alt="AZ Media Logo" class="h-16 w-auto object-contain">
+                <img src="{{ asset('uploads/az-media-full-logo.png') }}" alt="AZmedia Coaching & Marketing" class="h-16 w-48 object-contain">
             </div>
             <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-brand-500/10 text-brand-700 border border-brand-500/20">
                 <i class="fa-solid fa-user-plus"></i> KÍCH HOẠT TÀI KHOẢN THỰC TẬP SINH

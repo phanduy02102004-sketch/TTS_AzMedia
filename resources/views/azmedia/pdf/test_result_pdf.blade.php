@@ -9,14 +9,11 @@
             box-sizing: border-box;
         }
         body {
-            font-size: 11px;
-            color: #1e293b;
-            line-height: 1.45;
+            font-size: 13px;
+            color: #222222;
+            line-height: 1.4;
             margin: 0;
             padding: 0;
-        }
-        .page-break {
-            page-break-before: always;
         }
         .no-break {
             page-break-inside: avoid;
@@ -25,36 +22,36 @@
         /* Header table */
         .header-table {
             width: 100%;
-            border-bottom: 2px solid #ea580c;
-            padding-bottom: 8px;
-            margin-bottom: 14px;
+            border-bottom: 1px solid #777777;
+            padding-bottom: 6px;
+            margin-bottom: 10px;
         }
         .company-name {
             font-size: 12px;
             font-weight: bold;
-            color: #1b365d;
+            color: #222222;
             text-transform: uppercase;
         }
         .company-meta {
             font-size: 9px;
-            color: #64748b;
+            color: #666666;
             margin-top: 2px;
         }
 
         /* Document Title */
         .doc-title {
             text-align: center;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: bold;
-            color: #1b365d;
+            color: #222222;
             text-transform: uppercase;
             margin: 6px 0 2px 0;
-            letter-spacing: 0.5px;
+            letter-spacing: 0;
         }
         .doc-subtitle {
             text-align: center;
-            font-size: 10px;
-            color: #ea580c;
+            font-size: 13px;
+            color: #555555;
             font-weight: bold;
             margin-bottom: 12px;
         }
@@ -63,20 +60,20 @@
         .info-table {
             width: 100%;
             border: 1px solid #cbd5e1;
-            background-color: #f8fafc;
-            margin-bottom: 14px;
+            background-color: #ffffff;
+            margin-bottom: 10px;
             border-collapse: collapse;
         }
         .info-table td {
             padding: 5px 8px;
-            font-size: 10px;
+            font-size: 13px;
             border: 1px solid #e2e8f0;
         }
         .info-label {
             font-weight: bold;
             color: #334155;
             width: 22%;
-            background-color: #f1f5f9;
+            background-color: #f1f1f1;
         }
         .info-val {
             color: #0f172a;
@@ -84,21 +81,21 @@
 
         /* Section Title */
         .section-header {
-            background-color: #1b365d;
-            color: #ffffff;
-            font-size: 11px;
+            background-color: #eeeeee;
+            color: #222222;
+            font-size: 13px;
             font-weight: bold;
-            padding: 6px 10px;
-            margin-top: 12px;
-            margin-bottom: 8px;
+            padding: 5px 7px;
+            margin-top: 9px;
+            margin-bottom: 6px;
             text-transform: uppercase;
-            border-radius: 3px;
+            border-left: 2px solid #777777;
         }
         .subsection-header {
-            font-size: 10.5px;
+            font-size: 13px;
             font-weight: bold;
-            color: #ea580c;
-            border-left: 3px solid #ea580c;
+            color: #333333;
+            border-left: 2px solid #aaaaaa;
             padding-left: 6px;
             margin: 8px 0 5px 0;
         }
@@ -110,38 +107,38 @@
             margin-bottom: 10px;
         }
         .data-table th {
-            background-color: #334155;
-            color: #ffffff;
-            font-size: 9.5px;
+            background-color: #eeeeee;
+            color: #222222;
+            font-size: 13px;
             padding: 5px 6px;
-            border: 1px solid #475569;
+            border: 1px solid #cccccc;
             text-align: center;
         }
         .data-table td {
-            font-size: 9.5px;
-            padding: 4px 6px;
-            border: 1px solid #cbd5e1;
+            font-size: 13px;
+            padding: 4px 5px;
+            border: 1px solid #d5d5d5;
             vertical-align: top;
         }
         .data-table tr:nth-child(even) td {
-            background-color: #f8fafc;
+            background-color: #fafafa;
         }
 
         /* Answer block */
         .answer-box {
-            background-color: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-left: 3px solid #1b365d;
-            padding: 6px 8px;
-            margin-bottom: 6px;
-            font-size: 9.5px;
+            background-color: #ffffff;
+            border: 1px solid #dddddd;
+            border-left: 2px solid #888888;
+            padding: 5px 7px;
+            margin-bottom: 5px;
+            font-size: 13px;
         }
         .answer-box strong {
-            color: #0f172a;
+            color: #222222;
         }
         .answer-box p {
             margin: 3px 0 0 0;
-            color: #334155;
+            color: #444444;
             line-height: 1.4;
         }
 
@@ -149,37 +146,37 @@
         .badge {
             display: inline-block;
             padding: 2px 5px;
-            font-size: 8.5px;
+            font-size: 13px;
             font-weight: bold;
             border-radius: 3px;
         }
         .badge-success {
-            background-color: #dcfce7;
-            color: #166534;
-            border: 1px solid #bbf7d0;
+            background-color: #f1f1f1;
+            color: #333333;
+            border: 1px solid #dddddd;
         }
         .badge-danger {
-            background-color: #fee2e2;
-            color: #991b1b;
-            border: 1px solid #fecaca;
+            background-color: #f1f1f1;
+            color: #333333;
+            border: 1px solid #dddddd;
         }
         .badge-orange {
-            background-color: #ffedd5;
-            color: #9a3412;
-            border: 1px solid #fed7aa;
+            background-color: #f1f1f1;
+            color: #333333;
+            border: 1px solid #dddddd;
         }
 
         /* Signatures */
         .sign-table {
             width: 100%;
-            margin-top: 18px;
+            margin-top: 10px;
             border-collapse: collapse;
         }
         .sign-table td {
             width: 50%;
             text-align: center;
             vertical-align: top;
-            font-size: 10px;
+            font-size: 13px;
         }
     </style>
 </head>
@@ -204,16 +201,16 @@
         <tr>
             <td style="width: 70%; vertical-align: top;">
                 <div class="company-name">CÔNG TY TNHH ĐẦU TƯ PHÁT TRIỂN DOANH NGHIỆP AZ HOMES</div>
-                <div style="font-size: 11px; font-weight: bold; color: #ea580c; margin-top: 1px;">CHI NHÁNH AZ MEDIA – ĐÀ NẴNG</div>
+                <div style="font-size: 11px; font-weight: bold; color: #333333; margin-top: 1px;">CHI NHÁNH AZ MEDIA – ĐÀ NẴNG</div>
                 <div class="company-meta">
                     Địa chỉ: 84 Nguyễn Hữu Dật, P. Hòa Cường, Q. Hải Châu, TP. Đà Nẵng<br>
                     Hotline: 0968.825.068 | Website: azmedia.com.vn | Fanpage: fb.com/congtyazmedia
                 </div>
             </td>
             <td style="width: 30%; text-align: right; vertical-align: top;">
-                <div style="font-size: 10px; font-weight: bold; color: #1b365d;">HỆ THỐNG TUYỂN DỤNG AZHR</div>
-                <div style="font-size: 9px; color: #64748b; margin-top: 2px;">Mã HS: <strong style="color: #ea580c;">{{ $application->application_code }}</strong></div>
-                <div style="font-size: 9px; color: #64748b;">Thời gian nộp: {{ $test->completed_at ? date('H:i - d/m/Y', strtotime($test->completed_at)) : date('d/m/Y') }}</div>
+                <div style="font-size: 10px; font-weight: bold; color: #333333;">HỆ THỐNG TUYỂN DỤNG AZHR</div>
+                <div style="font-size: 9px; color: #666666; margin-top: 2px;">Mã HS: <strong>{{ $application->application_code }}</strong></div>
+                <div style="font-size: 9px; color: #666666;">Thời gian nộp: {{ $test->completed_at ? date('H:i - d/m/Y', strtotime($test->completed_at)) : date('d/m/Y') }}</div>
             </td>
         </tr>
     </table>
@@ -254,10 +251,10 @@
     </table>
 
     <!-- ==================== PHẦN 1 ==================== -->
-    <div class="section-header">PHẦN 1. ĐÁNH GIÁ NĂNG LỰC & TÍNH CÁCH (NLB - DISC - MBTI - THẦN SỐ HỌC)</div>
+    <div class="section-header">PHẦN 1. ĐÁNH GIÁ NĂNG LỰC & TÍNH CÁCH (NLP - DISC - MBTI - THẦN SỐ HỌC)</div>
 
     <!-- 1.1 NLP -->
-    <div class="subsection-header">1.1 Mô hình NLB / NLP (Phong cách tiếp nhận thông tin V-A-K-Ad)</div>
+    <div class="subsection-header">1.1 Mô hình NLP (Phong cách tiếp nhận thông tin V-A-K-Ad)</div>
     @if($nlp)
         <table class="data-table">
             <thead>
@@ -270,10 +267,10 @@
             </thead>
             <tbody>
                 <tr>
-                    <td style="text-align: center; font-weight: bold; font-size: 11px; color: #ea580c;">{{ $nlp['scores']['Visual'] ?? 0 }} điểm</td>
-                    <td style="text-align: center; font-weight: bold; font-size: 11px; color: #2563eb;">{{ $nlp['scores']['Auditory'] ?? 0 }} điểm</td>
-                    <td style="text-align: center; font-weight: bold; font-size: 11px; color: #059669;">{{ $nlp['scores']['Kinesthetic'] ?? 0 }} điểm</td>
-                    <td style="text-align: center; font-weight: bold; font-size: 11px; color: #7c3aed;">{{ $nlp['scores']['Auditory_Digital'] ?? 0 }} điểm</td>
+                    <td style="text-align: center; font-weight: bold; font-size: 10px;">{{ $nlp['scores']['Visual'] ?? 0 }} điểm</td>
+                    <td style="text-align: center; font-weight: bold; font-size: 10px;">{{ $nlp['scores']['Auditory'] ?? 0 }} điểm</td>
+                    <td style="text-align: center; font-weight: bold; font-size: 10px;">{{ $nlp['scores']['Kinesthetic'] ?? 0 }} điểm</td>
+                    <td style="text-align: center; font-weight: bold; font-size: 10px;">{{ $nlp['scores']['Auditory_Digital'] ?? 0 }} điểm</td>
                 </tr>
             </tbody>
         </table>
@@ -313,7 +310,82 @@
     @endif
 
     <!-- ==================== PHẦN 2 ==================== -->
-    <div class="section-header" style="margin-top: 14px;">PHẦN 2. BÁNH XE CUỘC ĐỜI (WHEEL OF LIFE - 8 KHÍA CẠNH)</div>
+    <div style="page-break-inside: avoid;">
+        <div class="section-header" style="margin-top: 14px;">PHẦN 2. BÁNH XE CUỘC ĐỜI (WHEEL OF LIFE - 8 KHÍA CẠNH)</div>
+    @if($wheel && !empty($wheel['dimensions']))
+        @php
+            $wheelChartLabels = [
+                'finance' => 'Tài chính',
+                'personal_growth' => 'Phát triển',
+                'health' => 'Sức khỏe',
+                'family' => 'Gia đình',
+                'relationships' => 'Mối quan hệ',
+                'social_life' => 'Xã hội',
+                'spirituality' => 'Tinh thần',
+                'career' => 'Sự nghiệp',
+            ];
+            $wheelChartCenterX = 180;
+            $wheelChartCenterY = 130;
+            $wheelChartRadius = 82;
+            $wheelChartAngles = [];
+            $wheelChartVertices = [];
+            $wheelChartCount = count($wheelChartLabels);
+
+            foreach ($wheelChartLabels as $key => $label) {
+                $angle = deg2rad(-90 + count($wheelChartAngles) * (360 / $wheelChartCount));
+                $score = max(0, min(10, (int) ($wheel['dimensions'][$key]['score'] ?? 5)));
+                $x = round($wheelChartCenterX + cos($angle) * $wheelChartRadius * $score / 10, 2);
+                $y = round($wheelChartCenterY + sin($angle) * $wheelChartRadius * $score / 10, 2);
+                $labelRadius = $wheelChartRadius + 24;
+                $wheelChartAngles[] = $angle;
+                $wheelChartVertices[] = [
+                    'x' => $x,
+                    'y' => $y,
+                    'label' => $label,
+                    'score' => $score,
+                    'label_x' => round($wheelChartCenterX + cos($angle) * $labelRadius, 2),
+                    'label_y' => round($wheelChartCenterY + sin($angle) * $labelRadius, 2),
+                    'anchor' => abs(cos($angle)) < 0.1 ? 'middle' : (cos($angle) > 0 ? 'start' : 'end'),
+                ];
+            }
+
+            $wheelChartPolygon = implode(' ', array_map(function ($vertex) {
+                return $vertex['x'] . ',' . $vertex['y'];
+            }, $wheelChartVertices));
+            $wheelChartRings = [];
+            foreach ([2, 4, 6, 8, 10] as $level) {
+                $ringPoints = [];
+                foreach ($wheelChartAngles as $angle) {
+                    $ringPoints[] = round($wheelChartCenterX + cos($angle) * $wheelChartRadius * $level / 10, 2)
+                        . ',' . round($wheelChartCenterY + sin($angle) * $wheelChartRadius * $level / 10, 2);
+                }
+                $wheelChartRings[] = implode(' ', $ringPoints);
+            }
+
+            $wheelSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="360" height="260" viewBox="0 0 360 260">';
+            foreach ($wheelChartRings as $ring) {
+                $wheelSvg .= '<polygon points="' . $ring . '" fill="none" stroke="#d0d0d0" stroke-width="1" />';
+            }
+            foreach ($wheelChartAngles as $angle) {
+                $axisX = round($wheelChartCenterX + cos($angle) * $wheelChartRadius, 2);
+                $axisY = round($wheelChartCenterY + sin($angle) * $wheelChartRadius, 2);
+                $wheelSvg .= '<line x1="' . $wheelChartCenterX . '" y1="' . $wheelChartCenterY . '" x2="' . $axisX . '" y2="' . $axisY . '" stroke="#d0d0d0" stroke-width="1" />';
+            }
+            $wheelSvg .= '<polygon points="' . $wheelChartPolygon . '" fill="#e5e5e5" stroke="#555555" stroke-width="2" />';
+            foreach ($wheelChartVertices as $vertex) {
+                $label = htmlspecialchars($vertex['label'], ENT_QUOTES | ENT_XML1, 'UTF-8');
+                $wheelSvg .= '<circle cx="' . $vertex['x'] . '" cy="' . $vertex['y'] . '" r="3" fill="#444444" />';
+                $wheelSvg .= '<text x="' . $vertex['label_x'] . '" y="' . $vertex['label_y'] . '" text-anchor="' . $vertex['anchor'] . '" font-family="DejaVu Sans" font-size="8" font-weight="bold" fill="#333333">';
+                $wheelSvg .= '<tspan x="' . $vertex['label_x'] . '" dy="0">' . $label . '</tspan>';
+                $wheelSvg .= '<tspan x="' . $vertex['label_x'] . '" dy="10" font-weight="normal">' . $vertex['score'] . '/10</tspan></text>';
+            }
+            $wheelSvg .= '</svg>';
+        @endphp
+        <div style="text-align: center; margin: 4px 0 8px; page-break-inside: avoid;">
+            <img src="data:image/svg+xml;base64,{{ base64_encode($wheelSvg) }}" width="360" height="260" alt="Bánh xe cuộc đời">
+        </div>
+        @endif
+    </div>
     @if($wheel && !empty($wheel['dimensions']))
         <table class="data-table">
             <thead>
@@ -349,8 +421,6 @@
         @endif
     @endif
 
-    <div class="page-break"></div>
-
     <!-- ==================== PHẦN 3 ==================== -->
     <div class="section-header">PHẦN 3. PHIẾU KHẢO SÁT HOÀI BÃO, ĐỘNG CƠ & TỰ ĐÁNH GIÁ BẢN THÂN</div>
     @if($survey)
@@ -378,14 +448,14 @@
             <strong>6. Thất bại / sai lầm lớn nhất và bài học đắt giá rút ra:</strong>
             <p>{{ $survey['failure_lesson'] ?? 'Chưa cung cấp' }}</p>
         </div>
-        <div class="answer-box" style="border-left-color: #ea580c; background-color: #fff7ed;">
-            <strong style="color: #9a3412;">7. Lý do AZ Media nên chọn bạn thay vì ứng viên khác:</strong>
-            <p style="color: #9a3412; font-weight: 500;">{{ $survey['why_choose_you'] ?? 'Chưa cung cấp' }}</p>
+        <div class="answer-box">
+            <strong>7. Lý do AZ Media nên chọn bạn thay vì ứng viên khác:</strong>
+            <p>{{ $survey['why_choose_you'] ?? 'Chưa cung cấp' }}</p>
         </div>
     @endif
 
     <!-- ==================== PHẦN 4 ==================== -->
-    <div class="section-header" style="margin-top: 14px;">PHẦN 4. TÌM HIỂU VỀ DOANH NGHIỆP AZ MEDIA</div>
+    <div class="section-header" style="margin-top: 14px; page-break-before: always;">PHẦN 4. TÌM HIỂU VỀ DOANH NGHIỆP AZ MEDIA</div>
 
     <!-- 4.1 Trắc nghiệm văn hóa -->
     <div class="subsection-header">4.1 Kết quả trắc nghiệm hiểu biết về AZ Media ({{ $quiz['correct'] ?? 5 }}/{{ $quiz['total'] ?? 5 }} câu đúng)</div>
@@ -405,10 +475,10 @@
                     <tr>
                         <td style="text-align: center; font-weight: bold;">{{ $idx + 1 }}</td>
                         <td>{{ $item['question_text'] }}</td>
-                        <td style="text-align: center; font-weight: bold; color: {{ $item['is_correct'] ? '#166534' : '#991b1b' }};">
+                        <td style="text-align: center; font-weight: bold;">
                             {{ $item['selected_option'] }}
                         </td>
-                        <td style="text-align: center; font-weight: bold; color: #166534;">
+                        <td style="text-align: center; font-weight: bold;">
                             {{ $item['correct_option'] }}
                         </td>
                         <td style="text-align: center;">
@@ -428,9 +498,19 @@
         <div class="answer-box">
             <strong>Các kênh ứng viên đã tiếp cận:</strong>
             @if(!empty($azSurvey['channels']))
+                @php
+                    $azChannelLabels = [
+                        'social_media' => 'Mạng xã hội AZ Media',
+                        'school' => 'Trường học & Thầy cô giáo',
+                        'friends' => 'Bạn bè & Cựu sinh viên',
+                        'job_fair' => 'Ngày hội việc làm / Workshop',
+                        'recruitment_sites' => 'Trang tin tuyển dụng',
+                        'google_website' => 'Tìm kiếm Google & Website',
+                    ];
+                @endphp
                 <div style="margin-top: 3px;">
                     @foreach($azSurvey['channels'] as $ch)
-                        <span class="badge badge-orange" style="margin-right: 4px;">✓ {{ $ch }}</span>
+                        <span class="badge badge-orange" style="margin-right: 4px;">✓ {{ $azChannelLabels[$ch] ?? $ch }}</span>
                     @endforeach
                 </div>
             @endif
@@ -441,8 +521,8 @@
 
         @if(!empty($azSurvey['impression']))
             <div class="subsection-header">4.3 Điều ấn tượng nhất & Mong muốn thực tập tại AZ Media</div>
-            <div class="answer-box" style="border-left-color: #ea580c; background-color: #fff7ed;">
-                <p style="white-space: pre-line; color: #1e293b; font-weight: 500;">{{ $azSurvey['impression'] }}</p>
+            <div class="answer-box">
+                <p style="white-space: pre-line;">{{ $azSurvey['impression'] }}</p>
             </div>
         @endif
     @endif
@@ -453,14 +533,14 @@
             <td>
                 <strong>Ứng viên thực hiện bài test</strong><br>
                 <span style="font-size: 8.5px; color: #64748b; font-style: italic;">(Ký và ghi rõ họ tên)</span>
-                <div style="height: 50px;"></div>
-                <strong style="color: #1b365d;">{{ $application->candidate->name }}</strong>
+                <div style="height: 30px;"></div>
+                <strong>{{ $application->candidate->name }}</strong>
             </td>
             <td>
                 <strong>Người duyệt hồ sơ / Mentor phụ trách</strong><br>
                 <span style="font-size: 8.5px; color: #64748b; font-style: italic;">(Ký và xác nhận kết quả)</span>
-                <div style="height: 50px;"></div>
-                <strong style="color: #1b365d;">Lê Đình Quang</strong><br>
+                <div style="height: 30px;"></div>
+                <strong>Lê Đình Quang</strong><br>
                 <span style="font-size: 9px; color: #64748b;">Tổng Giám Đốc / Mentor AZ Media</span>
             </td>
         </tr>

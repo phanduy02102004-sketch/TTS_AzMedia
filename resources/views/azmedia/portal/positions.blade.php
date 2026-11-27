@@ -151,12 +151,7 @@
                 <div>
                     <label class="block font-bold text-slate-700 mb-1">Phân loại bài test & chuyên môn: <span class="text-rose-500">*</span></label>
                     <select name="category" class="w-full rounded-xl border border-slate-300 py-2 px-3 bg-white focus:ring-2 focus:ring-brand-500">
-                        <option value="backend">Backend (PHP, Laravel, Node, DB)</option>
-                        <option value="frontend">Frontend (Vue, React, HTML/CSS)</option>
-                        <option value="tester">QA / Tester (Kiểm thử phần mềm)</option>
-                        <option value="uiux">UI/UX & Đồ họa truyền thông</option>
-                        <option value="marketing">Digital Marketing & Kênh Số</option>
-                        <option value="ai">AI Solutions & Ứng dụng tự động hóa</option>
+                        @include('azmedia.partials.specialty-options')
                         <option value="general">Chung (General)</option>
                     </select>
                 </div>
@@ -265,12 +260,7 @@
                 <div>
                     <label class="block font-bold text-slate-700 mb-1">Phân loại chuyên môn: <span class="text-rose-500">*</span></label>
                     <select name="category" id="edit_category" class="w-full rounded-xl border border-slate-300 py-2 px-3 bg-white focus:ring-2 focus:ring-brand-500">
-                        <option value="backend">Backend (PHP, Laravel, Node, DB)</option>
-                        <option value="frontend">Frontend (Vue, React, HTML/CSS)</option>
-                        <option value="tester">QA / Tester (Kiểm thử phần mềm)</option>
-                        <option value="uiux">UI/UX & Đồ họa truyền thông</option>
-                        <option value="marketing">Digital Marketing & Kênh Số</option>
-                        <option value="ai">AI Solutions & Ứng dụng tự động hóa</option>
+                        @include('azmedia.partials.specialty-options')
                         <option value="general">Chung (General)</option>
                     </select>
                 </div>

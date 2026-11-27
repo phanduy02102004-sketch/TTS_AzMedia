@@ -11,6 +11,16 @@ class InternshipPosition extends Model
 
     protected $guarded = [];
 
+    public function scopeForCategory($query, string $category)
+    {
+        $fields = config('internships.fields');
+        if (isset($fields[$category])) {
+            return $query->whereIn('category', array_keys($fields[$category]['specialties']));
+        }
+
+        return $query->where('category', $category);
+    }
+
     public function applications()
     {
         return $this->hasMany(Application::class, 'position_id');

@@ -109,7 +109,7 @@
         </div>
     @endif
 
-    <!-- Bảng Thu Hoạch Đánh Giá Tính Cách Toàn Diện (NLB – DISC – MBTI – Nhân Số Học) -->
+    <!-- Bảng Thu Hoạch Đánh Giá Tính Cách Toàn Diện (NLP – DISC – MBTI – Nhân Số Học) -->
     <div class="bg-white rounded-3xl border border-slate-200 shadow-md p-6 sm:p-8 space-y-5">
         <div class="flex items-center justify-between pb-4 border-b border-slate-100">
             <div class="flex items-center gap-3">
@@ -117,7 +117,7 @@
                     📊
                 </span>
                 <div>
-                    <h3 class="font-extrabold text-base text-slate-900">Báo Cáo Thu Hoạch NLB – DISC – MBTI</h3>
+                    <h3 class="font-extrabold text-base text-slate-900">Báo Cáo Thu Hoạch NLP – DISC – MBTI</h3>
                     <p class="text-xs text-slate-500">Tổng hợp 3 phương pháp đánh giá tính cách và phong cách làm việc của ứng viên</p>
                 </div>
             </div>
@@ -138,10 +138,10 @@
                 <tbody class="divide-y divide-slate-100 font-medium">
                     <tr class="hover:bg-slate-50 transition">
                         <td class="py-3 px-4 font-bold text-slate-900">
-                            <span class="inline-flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-orange-500"></span> NLB (Năng lực)</span>
+                            <span class="inline-flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-orange-500"></span> NLP (Tiếp nhận thông tin)</span>
                         </td>
                         <td class="py-3 px-4 font-bold text-orange-600">
-                            {{ $personality['nlb']['dominant_title'] ?? 'Thiên về Visual (Hình ảnh)' }}
+                            {{ ($personality['nlp'] ?? $personality['nlb'] ?? [])['dominant_title'] ?? 'Thiên về Visual (Hình ảnh)' }}
                         </td>
                         <td class="py-3 px-4 text-slate-600">
                             Tiếp nhận và xử lý công việc qua thị giác, mẫu thiết kế, giao diện và quan sát thực tế.

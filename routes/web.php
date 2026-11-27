@@ -101,6 +101,8 @@ Route::get('/intern/register', [InternAuthController::class, 'registerPage'])->n
 Route::post('/intern/register', [InternAuthController::class, 'processRegister'])->name('azmedia.intern.register.submit');
 Route::get('/intern/logout', [InternAuthController::class, 'logout'])->name('azmedia.intern.logout');
 Route::get('/intern/dashboard', [InternAuthController::class, 'dashboard'])->name('azmedia.intern.dashboard')->middleware('intern.auth');
+Route::get('/intern/profile', [InternAuthController::class, 'profile'])->name('azmedia.intern.profile')->middleware('intern.auth');
+Route::put('/intern/profile', [InternAuthController::class, 'updateProfile'])->name('azmedia.intern.profile.update')->middleware('intern.auth');
 
 // Phân hệ 2.5: Chuẩn Đầu Ra TTS AZ Media (Graduation / Exit Criteria & AZ SUPPORT)
 Route::get('/chuan-dau-ra', [InternGraduationController::class, 'index'])->name('azmedia.graduation.index');
@@ -127,6 +129,7 @@ Route::prefix('portal')->group(function () {
     Route::get('/candidate/{id}', [AZMediaATSController::class, 'candidateDetail'])->name('azmedia.portal.candidate.detail');
     Route::get('/candidate/{id}/cv', [AZMediaATSController::class, 'viewCV'])->name('azmedia.portal.candidate.cv');
     Route::get('/candidate/{id}/test-pdf', [AZMediaATSController::class, 'viewTestPDF'])->name('azmedia.portal.candidate.test.pdf');
+    Route::post('/candidate/{id}/reset-test', [AZMediaATSController::class, 'resetCandidateTest'])->name('azmedia.portal.candidate.reset-test');
     Route::post('/candidate/{id}/status', [AZMediaATSController::class, 'updateStatus'])->name('azmedia.portal.candidate.status');
     Route::post('/candidate/{id}/resend-email', [AZMediaATSController::class, 'resendEmail'])->name('azmedia.portal.candidate.resend.email');
     Route::post('/candidate/{id}/interview', [AZMediaATSController::class, 'scheduleInterview'])->name('azmedia.portal.candidate.interview');

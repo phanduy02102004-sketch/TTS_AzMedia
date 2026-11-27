@@ -102,11 +102,7 @@
                     <select name="position_category" class="w-full rounded-xl border border-slate-300 py-2 px-3 bg-white focus:ring-2 focus:ring-brand-500">
                         <option value="azmedia">AZ Media (Văn hóa & Đào tạo)</option>
                         <option value="general">Triết lý & Năng lực Chung</option>
-                        <option value="backend">Backend (PHP / Laravel)</option>
-                        <option value="frontend">Frontend (Vue / React)</option>
-                        <option value="tester">QA / Tester</option>
-                        <option value="uiux">UI/UX Design</option>
-                        <option value="marketing">Marketing & Media</option>
+                        @include('azmedia.partials.specialty-options')
                     </select>
                 </div>
                 <div>
@@ -187,11 +183,7 @@
                     <select name="position_category" id="edit_position_category" class="w-full rounded-xl border border-slate-300 py-2 px-3 bg-white focus:ring-2 focus:ring-brand-500">
                         <option value="azmedia">AZ Media (Văn hóa & Đào tạo)</option>
                         <option value="general">Triết lý & Năng lực Chung</option>
-                        <option value="backend">Backend (PHP / Laravel)</option>
-                        <option value="frontend">Frontend (Vue / React)</option>
-                        <option value="tester">QA / Tester</option>
-                        <option value="uiux">UI/UX Design</option>
-                        <option value="marketing">Marketing & Media</option>
+                        @include('azmedia.partials.specialty-options')
                     </select>
                 </div>
                 <div>

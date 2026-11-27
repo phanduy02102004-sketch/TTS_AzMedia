@@ -299,6 +299,12 @@ class InternGraduationController extends Controller
 
         $request->validate([
             'graduation_code' => 'required|string',
+            'survey_proof_link' => ['nullable', 'url', 'max:2048', 'regex:/^https?:\/\//i'],
+            'report_draft_link' => ['nullable', 'url', 'max:2048', 'regex:/^https?:\/\//i'],
+            'report_final_link' => ['nullable', 'url', 'max:2048', 'regex:/^https?:\/\//i'],
+            'word_report_link' => ['nullable', 'url', 'max:2048', 'regex:/^https?:\/\//i'],
+            'video_link' => ['nullable', 'url', 'max:2048', 'regex:/^https?:\/\//i'],
+            'review_proof_link' => ['nullable', 'url', 'max:2048', 'regex:/^https?:\/\//i'],
         ]);
 
         $graduation = InternGraduation::where('graduation_code', $request->graduation_code)->firstOrFail();
@@ -310,6 +316,8 @@ class InternGraduationController extends Controller
         $graduation->report_draft_submitted = $request->has('report_draft_submitted');
         $graduation->report_final_submitted = $request->has('report_final_submitted');
         $graduation->hard_copy_submitted = $request->has('hard_copy_submitted');
+        $graduation->report_draft_link = $request->report_draft_link ? trim($request->report_draft_link) : $graduation->report_draft_link;
+        $graduation->report_final_link = $request->report_final_link ? trim($request->report_final_link) : $graduation->report_final_link;
         $graduation->report_notes = $request->report_notes ? trim($request->report_notes) : $graduation->report_notes;
 
         $graduation->word_report_submitted = $request->has('word_report_submitted');

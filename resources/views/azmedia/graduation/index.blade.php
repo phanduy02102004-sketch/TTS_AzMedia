@@ -193,7 +193,7 @@
         <div id="az-support-portal" class="bg-white rounded-3xl p-6 sm:p-10 shadow-sm border border-slate-200 space-y-8">
             <div class="text-center max-w-xl mx-auto space-y-3">
                 <div class="inline-flex items-center justify-center p-3 rounded-2xl bg-orange-50 mb-2">
-                    <img src="{{ asset('uploads/az-homes-logo.png') }}" alt="AZ Media Logo" class="h-16 w-auto object-contain">
+                    <img src="{{ asset('uploads/az-media-full-logo.png') }}" alt="AZmedia Coaching & Marketing" class="h-16 w-48 object-contain">
                 </div>
                 <h2 class="text-2xl sm:text-3xl font-extrabold text-orange-600 tracking-tight">
                     AZ SUPPORT
@@ -677,6 +677,9 @@
                                 <a href="{{ $config['report_step1_form'] }}" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-xs font-bold text-brand-600 hover:bg-slate-50 shadow-sm">
                                     <i class="fa-solid fa-cloud-arrow-up"></i> Link nộp Form Bản Thảo
                                 </a>
+                                <input type="url" name="report_draft_link" value="{{ $graduation->report_draft_link ?? '' }}"
+                                       placeholder="Dán link Google Drive minh chứng B1..."
+                                       class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs font-mono focus:ring-2 focus:ring-brand-500 focus:outline-none">
                             </div>
 
                             <!-- Bước 2 -->
@@ -698,6 +701,9 @@
                                 <a href="{{ $config['report_step2_form'] }}" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-xs font-bold text-blue-600 hover:bg-slate-50 shadow-sm">
                                     <i class="fa-solid fa-cloud-arrow-up"></i> Link nộp Form Bản Sửa Cuối
                                 </a>
+                                <input type="url" name="report_final_link" value="{{ $graduation->report_final_link ?? '' }}"
+                                       placeholder="Dán link Google Drive minh chứng B2..."
+                                       class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs font-mono focus:ring-2 focus:ring-brand-500 focus:outline-none">
                             </div>
                         </div>
 
