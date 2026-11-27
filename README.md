@@ -21,6 +21,8 @@ docker compose exec app php artisan migrate --force
 
 Mở `http://localhost:8080`. Override gắn mã nguồn hiện tại vào container và bật debug; không dùng file override này trên production.
 
+Giao diện quản trị MySQL local nằm tại `http://localhost:8081` (phpMyAdmin). Đăng nhập với server `db`, username và password lấy từ `DB_USERNAME` / `DB_PASSWORD` trong `.env`. Cổng MySQL `3307` dành cho MySQL Workbench/HeidiSQL, không mở trực tiếp bằng trình duyệt. phpMyAdmin và cổng DB chỉ bind vào localhost trong override local.
+
 ### Triển khai VPS / CI/CD
 
 1. Cài Docker Engine và Docker Compose plugin trên VPS. Sao chép `.env.docker.example` thành `.env`, điền domain, `APP_KEY` được tạo an toàn, database name/user và mật khẩu mạnh riêng biệt; giữ `APP_DEBUG=false`. Không commit hoặc đưa `.env` vào image.
