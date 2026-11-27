@@ -421,6 +421,36 @@
         @endif
     @endif
 
+    @if(!empty($wheel['desired_dimensions']))
+        <div class="section-header">BÁNH XE CUỘC ĐỜI MONG MUỐN TRONG 10 NĂM TỚI</div>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th style="width: 12.5%;">Tài chính</th>
+                    <th style="width: 12.5%;">Phát triển</th>
+                    <th style="width: 12.5%;">Sức khỏe</th>
+                    <th style="width: 12.5%;">Gia đình</th>
+                    <th style="width: 12.5%;">Mối quan hệ</th>
+                    <th style="width: 12.5%;">Xã hội</th>
+                    <th style="width: 12.5%;">Tinh thần</th>
+                    <th style="width: 12.5%;">Sự nghiệp</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="text-align: center; font-weight: bold;">{{ $wheel['desired_dimensions']['finance']['score'] ?? 5 }}/10</td>
+                    <td style="text-align: center; font-weight: bold;">{{ $wheel['desired_dimensions']['personal_growth']['score'] ?? 5 }}/10</td>
+                    <td style="text-align: center; font-weight: bold;">{{ $wheel['desired_dimensions']['health']['score'] ?? 5 }}/10</td>
+                    <td style="text-align: center; font-weight: bold;">{{ $wheel['desired_dimensions']['family']['score'] ?? 5 }}/10</td>
+                    <td style="text-align: center; font-weight: bold;">{{ $wheel['desired_dimensions']['relationships']['score'] ?? 5 }}/10</td>
+                    <td style="text-align: center; font-weight: bold;">{{ $wheel['desired_dimensions']['social_life']['score'] ?? 5 }}/10</td>
+                    <td style="text-align: center; font-weight: bold;">{{ $wheel['desired_dimensions']['spirituality']['score'] ?? 5 }}/10</td>
+                    <td style="text-align: center; font-weight: bold;">{{ $wheel['desired_dimensions']['career']['score'] ?? 5 }}/10</td>
+                </tr>
+            </tbody>
+        </table>
+    @endif
+
     <!-- ==================== PHẦN 3 ==================== -->
     <div class="section-header">PHẦN 3. PHIẾU KHẢO SÁT HOÀI BÃO, ĐỘNG CƠ & TỰ ĐÁNH GIÁ BẢN THÂN</div>
     @if($survey)

@@ -8,8 +8,16 @@ use App\Models\Application;
 use App\Models\Candidate;
 use App\Models\TestQuestion;
 use App\Models\CandidateTest;
+use App\Models\CandidateTestQuizAnswer;
+use App\Models\CandidateTestNlpAnswer;
+use App\Models\CandidateTestPersonality;
+use App\Models\CandidateTestWheelDimension;
+use App\Models\CandidateTestSurvey;
+use App\Models\CandidateTestAzChannel;
+use App\Models\CandidateTestPersonalityAnswer;
 use App\Models\EmailTemplate;
 use App\Models\EmailLog;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use PDF;
@@ -354,8 +362,18 @@ class CandidatePortalController extends Controller
             ];
         }
 
+        $desiredWheelInput = $request->input('desired_wheel', []);
+        $desiredWheelScores = [];
+        foreach ($wheelLabels as $k => $label) {
+            $desiredWheelScores[$k] = [
+                'label' => $label,
+                'score' => (int)($desiredWheelInput[$k] ?? 5),
+            ];
+        }
+
         $wheelResult = [
             'dimensions' => $wheelScores,
+            'desired_dimensions' => $desiredWheelScores,
             'lesson' => (string) $request->input('wheel_lesson', ''),
         ];
 
@@ -396,18 +414,152 @@ class CandidatePortalController extends Controller
         ];
 
         // Lưu kết quả bài test vào CSDL
-        $candidateTest = CandidateTest::updateOrCreate(
-            ['application_id' => $application->id],
-            [
-                'total_questions' => $totalQuestions > 0 ? $totalQuestions : 10,
-                'correct_answers' => $correctCount,
-                'score' => $score,
-                'time_spent_seconds' => $timeSpent,
-                'passed' => $passed,
-                'answers_data' => $fullAnswersData,
-                'completed_at' => now(),
-            ]
-        );
+        $candidateTest = DB::transaction(function () use (
+            $application,
+            $totalQuestions,
+            $correctCount,
+            $score,
+            $timeSpent,
+            $passed,
+            $quizDetails,
+            $nlpInput,
+            $nlpScores,
+            $dominantKey,
+            $discChoice,
+            $discProfile,
+            $mbtiEnergy,
+            $mbtiDecision,
+            $mbtiCode,
+            $mbtiProfile,
+            $dob,
+            $lifePathSum,
+            $wheelScores,
+            $desiredWheelScores,
+            $wheelResult,
+            $surveyResult,
+            $azChannels,
+            $azChannelOther,
+            $azImpression
+        ) {
+            $candidateTest = CandidateTest::updateOrCreate(
+                ['application_id' => $application->id],
+                [
+                    'total_questions' => $totalQuestions > 0 ? $totalQuestions : 10,
+                    'correct_answers' => $correctCount,
+                    'score' => $score,
+                    'time_spent_seconds' => $timeSpent,
+                    'passed' => $passed,
+                    'answers_data' => null,
+                    'completed_at' => now(),
+                ]
+            );
+
+            $candidateTest->quizAnswers()->delete();
+            foreach ($quizDetails as $detail) {
+                CandidateTestQuizAnswer::create([
+                    'candidate_test_id' => $candidateTest->id,
+                    'question_id' => $detail['question_id'],
+                    'question_text' => $detail['question_text'],
+                    'selected_option' => $detail['selected_option'],
+                    'correct_option' => $detail['correct_option'],
+                    'is_correct' => $detail['is_correct'],
+                ]);
+            }
+
+            $candidateTest->nlpAnswers()->delete();
+            foreach ($nlpInput as $questionNumber => $ratings) {
+                foreach ($ratings as $code => $value) {
+                    if ($value === null || $value === '') {
+                        continue;
+                    }
+                    CandidateTestNlpAnswer::create([
+                        'candidate_test_id' => $candidateTest->id,
+                        'question_number' => (int) $questionNumber,
+                        'code' => $code,
+                        'score' => (int) $value,
+                    ]);
+                }
+            }
+
+            CandidateTestPersonality::updateOrCreate(
+                ['candidate_test_id' => $candidateTest->id],
+                [
+                    'nlp_dominant_code' => $dominantKey,
+                    'nlp_visual' => $nlpScores['V'],
+                    'nlp_auditory' => $nlpScores['A'],
+                    'nlp_kinesthetic' => $nlpScores['K'],
+                    'nlp_auditory_digital' => $nlpScores['Ad'],
+                    'disc_group' => $discChoice,
+                    'mbti_energy' => $mbtiEnergy,
+                    'mbti_decision' => $mbtiDecision,
+                    'mbti_code' => $mbtiCode,
+                    'numerology_dob' => $dob,
+                    'life_path_number' => $lifePathSum,
+                ]
+            );
+
+            $candidateTest->personalityAnswers()->delete();
+            foreach ($discProfile['answers'] as $key => $value) {
+                CandidateTestPersonalityAnswer::create([
+                    'candidate_test_id' => $candidateTest->id,
+                    'section' => 'disc',
+                    'item_key' => (string) $key,
+                    'answer' => (string) $value,
+                ]);
+            }
+            foreach ($mbtiProfile['answers'] as $key => $value) {
+                CandidateTestPersonalityAnswer::create([
+                    'candidate_test_id' => $candidateTest->id,
+                    'section' => 'mbti',
+                    'item_key' => (string) $key,
+                    'answer' => (string) $value,
+                ]);
+            }
+
+            $candidateTest->wheelDimensions()->delete();
+            foreach ($wheelScores as $key => $dimension) {
+                CandidateTestWheelDimension::create([
+                    'candidate_test_id' => $candidateTest->id,
+                    'dimension_key' => $key,
+                    'horizon' => 'current',
+                    'score' => $dimension['score'],
+                ]);
+            }
+            foreach ($desiredWheelScores as $key => $dimension) {
+                CandidateTestWheelDimension::create([
+                    'candidate_test_id' => $candidateTest->id,
+                    'dimension_key' => $key,
+                    'horizon' => 'desired',
+                    'score' => $dimension['score'],
+                ]);
+            }
+
+            CandidateTestSurvey::updateOrCreate(
+                ['candidate_test_id' => $candidateTest->id],
+                [
+                    'wheel_lesson' => $wheelResult['lesson'],
+                    'goal_short' => $surveyResult['goal_short'],
+                    'goal_long' => $surveyResult['goal_long'],
+                    'biggest_success' => $surveyResult['biggest_success'],
+                    'why_apply' => $surveyResult['why_apply'],
+                    'work_organization' => $surveyResult['work_organization'],
+                    'failure_lesson' => $surveyResult['failure_lesson'],
+                    'why_choose_you' => $surveyResult['why_choose_you'],
+                    'az_channel_other' => $azChannelOther,
+                    'az_impression' => $azImpression,
+                ]
+            );
+
+            $candidateTest->azChannels()->delete();
+            foreach ($azChannels as $channel) {
+                CandidateTestAzChannel::create([
+                    'candidate_test_id' => $candidateTest->id,
+                    'channel' => (string) $channel,
+                ]);
+            }
+
+            return $candidateTest;
+        });
 
         // Cập nhật trạng thái hồ sơ ứng viên
         $application->status = 'tested';
@@ -435,8 +587,7 @@ class CandidatePortalController extends Controller
                 ]);
             $pdf->save($pdfPath);
 
-            $fullAnswersData['pdf_file'] = "uploads/test_results/{$pdfFilename}";
-            $candidateTest->answers_data = $fullAnswersData;
+            $candidateTest->pdf_file_path = "uploads/test_results/{$pdfFilename}";
             $candidateTest->save();
         } catch (\Exception $e) {
             Log::error("[Candidate Test PDF] Lỗi tạo file PDF bài test {$application->application_code}: " . $e->getMessage());

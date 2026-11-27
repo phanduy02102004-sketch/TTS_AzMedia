@@ -32,11 +32,6 @@
         width: 100%;
     }
 
-    #candidate-test-shell > .max-w-4xl {
-        padding-left: clamp(20px, 3vw, 56px);
-        padding-right: clamp(20px, 3vw, 56px);
-    }
-
     #candidate-test-shell .sticky {
         top: 0;
         background: rgba(19, 34, 56, .97);
@@ -166,8 +161,6 @@
         #candidate-test-shell .max-w-4xl {
             padding-top: 20px;
             padding-bottom: 28px;
-            padding-left: 14px;
-            padding-right: 14px;
         }
 
         #candidate-test-shell .bg-white.rounded-3xl.p-6,
@@ -421,64 +414,37 @@
             @endforeach
 
             <div class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-7 shadow-sm">
-                <div class="flex items-center justify-between gap-3 mb-4">
-                    <div>
-                        <h3 class="font-black text-slate-900 text-sm sm:text-base">Kết quả NLP tạm tính</h3>
-                        <p class="text-xs text-slate-500">Điểm được cập nhật tự động theo câu trả lời</p>
-                    </div>
-                    <span id="nlp_answer_progress" class="text-xs font-bold text-slate-500">0 / 20 lựa chọn</span>
-                </div>
+                <h3 class="font-extrabold text-sm text-slate-900 mb-1">Tổng kết điểm đã chọn theo từng câu</h3>
+                <p class="text-xs text-slate-500 mb-3">Bảng được cập nhật ngay khi bạn chọn hoặc đổi điểm.</p>
                 <div class="overflow-x-auto rounded-xl border border-slate-200">
-                    <table class="w-full text-left text-xs border-collapse">
+                    <table class="w-full min-w-[640px] text-left text-xs border-collapse">
                         <thead class="bg-slate-50 text-slate-600">
                             <tr>
-                                <th class="py-2.5 px-4 font-bold">Phong cách</th>
-                                <th class="py-2.5 px-4 font-bold text-right">Tổng điểm</th>
+                                <th class="py-2.5 px-3 font-bold">Câu hỏi</th>
+                                <th class="py-2.5 px-3 text-center font-bold">Visual (Nhìn)</th>
+                                <th class="py-2.5 px-3 text-center font-bold">Auditory (Nghe)</th>
+                                <th class="py-2.5 px-3 text-center font-bold">Kinesthetic (Cảm xúc)</th>
+                                <th class="py-2.5 px-3 text-center font-bold">Auditory Digital (Logic)</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-100">
-                            <tr><td class="py-2.5 px-4 font-semibold text-slate-800">Visual (Nhìn)</td><td id="nlp_score_V" class="py-2.5 px-4 text-right font-bold text-orange-600">0</td></tr>
-                            <tr><td class="py-2.5 px-4 font-semibold text-slate-800">Auditory (Nghe)</td><td id="nlp_score_A" class="py-2.5 px-4 text-right font-bold text-blue-600">0</td></tr>
-                            <tr><td class="py-2.5 px-4 font-semibold text-slate-800">Kinesthetic (Cảm giác)</td><td id="nlp_score_K" class="py-2.5 px-4 text-right font-bold text-emerald-600">0</td></tr>
-                            <tr><td class="py-2.5 px-4 font-semibold text-slate-800">Auditory Digital (Logic)</td><td id="nlp_score_Ad" class="py-2.5 px-4 text-right font-bold text-violet-600">0</td></tr>
+                            @foreach(range(1, 5) as $questionNumber)
+                                <tr>
+                                    <td class="py-2.5 px-3 font-semibold text-slate-800">Câu {{ $questionNumber }}</td>
+                                    @foreach(['V', 'A', 'K', 'Ad'] as $code)
+                                        <td id="nlp_detail_{{ $questionNumber }}_{{ $code }}" class="py-2.5 px-3 text-center text-slate-500">—</td>
+                                    @endforeach
+                                </tr>
+                            @endforeach
+                            <tr class="bg-slate-50 font-extrabold text-slate-900">
+                                <td class="py-2.5 px-3">Tổng cộng</td>
+                                <td id="nlp_detail_total_V" class="py-2.5 px-3 text-center">0</td>
+                                <td id="nlp_detail_total_A" class="py-2.5 px-3 text-center">0</td>
+                                <td id="nlp_detail_total_K" class="py-2.5 px-3 text-center">0</td>
+                                <td id="nlp_detail_total_Ad" class="py-2.5 px-3 text-center">0</td>
+                            </tr>
                         </tbody>
                     </table>
-                </div>
-                <p id="nlp_dominant_result" class="mt-3 text-xs font-bold text-slate-700" aria-live="polite">Chọn điểm để xem phong cách nổi trội tạm tính.</p>
-
-                <div class="mt-5">
-                    <h4 class="font-extrabold text-sm text-slate-900 mb-1">Tổng kết điểm đã chọn theo từng câu</h4>
-                    <p class="text-xs text-slate-500 mb-3">Bảng được cập nhật ngay khi bạn chọn hoặc đổi điểm.</p>
-                    <div class="overflow-x-auto rounded-xl border border-slate-200">
-                        <table class="w-full min-w-[640px] text-left text-xs border-collapse">
-                            <thead class="bg-slate-50 text-slate-600">
-                                <tr>
-                                    <th class="py-2.5 px-3 font-bold">Câu hỏi</th>
-                                    <th class="py-2.5 px-3 text-center font-bold">Visual (Nhìn)</th>
-                                    <th class="py-2.5 px-3 text-center font-bold">Auditory (Nghe)</th>
-                                    <th class="py-2.5 px-3 text-center font-bold">Kinesthetic (Cảm xúc)</th>
-                                    <th class="py-2.5 px-3 text-center font-bold">Auditory Digital (Logic)</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-100">
-                                @foreach(range(1, 5) as $questionNumber)
-                                    <tr>
-                                        <td class="py-2.5 px-3 font-semibold text-slate-800">Câu {{ $questionNumber }}</td>
-                                        @foreach(['V', 'A', 'K', 'Ad'] as $code)
-                                            <td id="nlp_detail_{{ $questionNumber }}_{{ $code }}" class="py-2.5 px-3 text-center text-slate-500">—</td>
-                                        @endforeach
-                                    </tr>
-                                @endforeach
-                                <tr class="bg-slate-50 font-extrabold text-slate-900">
-                                    <td class="py-2.5 px-3">Tổng cộng</td>
-                                    <td id="nlp_detail_total_V" class="py-2.5 px-3 text-center">0</td>
-                                    <td id="nlp_detail_total_A" class="py-2.5 px-3 text-center">0</td>
-                                    <td id="nlp_detail_total_K" class="py-2.5 px-3 text-center">0</td>
-                                    <td id="nlp_detail_total_Ad" class="py-2.5 px-3 text-center">0</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
                 </div>
             </div>
 
@@ -682,7 +648,7 @@
                 <!-- 8 Sliders Cân bằng -->
                 <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm space-y-4">
                     <h3 class="font-extrabold text-sm text-slate-800 uppercase tracking-wider border-b border-slate-100 pb-2 flex items-center gap-2">
-                        <i class="fa-solid fa-sliders text-emerald-600"></i> Tự đánh giá 8 lĩnh vực (1–10 điểm)
+                        <i class="fa-solid fa-sliders text-emerald-600"></i> Bánh xe cuộc đời hiện tại
                     </h3>
 
                     @php
@@ -725,7 +691,7 @@
 
                 <div class="bg-white rounded-3xl border border-slate-200 p-5 sm:p-6 shadow-sm lg:sticky lg:top-28 self-start">
                     <h3 class="font-extrabold text-sm text-slate-800 mb-1 text-center">
-                        Bánh xe của bạn
+                        Bánh xe cuộc đời hiện tại của bạn
                     </h3>
                     <p class="text-xs text-slate-500 text-center mb-3">Mỗi múi tương ứng với một lĩnh vực</p>
                     <div class="w-full max-w-[500px] mx-auto aspect-square">
@@ -733,6 +699,53 @@
                     </div>
                     <p class="text-xs text-slate-600 text-center mt-3">
                         Điểm càng đồng đều, các lĩnh vực trong cuộc sống càng cân bằng.
+                    </p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start mt-6">
+                <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm space-y-4">
+                    <h3 class="font-extrabold text-sm text-slate-800 uppercase tracking-wider border-b border-slate-100 pb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-bullseye text-emerald-600"></i> Bánh xe cuộc đời mong muốn trong 10 năm tới
+                    </h3>
+
+                    @foreach($wheelItems as $key => $w)
+                        <div class="p-3 rounded-2xl bg-slate-50 border border-slate-100">
+                            <div class="flex justify-between items-center mb-1 text-xs font-bold text-slate-800">
+                                <span class="flex items-center gap-1.5">
+                                    <i class="fa-solid {{ $w['icon'] }} {{ $w['color'] }}"></i> {{ $w['title'] }}
+                                </span>
+                                <span id="desired_val_label_{{ $key }}" class="px-2.5 py-0.5 rounded-lg bg-emerald-100 text-emerald-800 font-extrabold text-xs">
+                                    5/10
+                                </span>
+                            </div>
+                            <input type="range" name="desired_wheel[{{ $key }}]" min="1" max="10" value="5"
+                                   oninput="updateDesiredWheelValue('{{ $key }}', this.value)"
+                                   class="slider-range w-full h-2 bg-slate-200 rounded-lg cursor-pointer accent-emerald-600">
+                        </div>
+                    @endforeach
+                </div>
+
+                <div class="bg-white rounded-3xl border border-slate-200 p-5 sm:p-6 shadow-sm lg:sticky lg:top-28 self-start">
+                    <h3 class="font-extrabold text-sm text-slate-800 mb-1 text-center">
+                        Bánh xe cuộc đời mong muốn trong 10 năm tới
+                    </h3>
+                    <p class="text-xs text-slate-500 text-center mb-3">Mức độ bạn hướng đến ở mỗi lĩnh vực</p>
+                    @php
+                        $desiredWheelChartItems = [];
+                        foreach ($wheelItems as $key => $item) {
+                            $desiredWheelChartItems[] = [
+                                'key' => $key,
+                                'short_label' => $item['short_label'],
+                                'score' => 5,
+                            ];
+                        }
+                    @endphp
+                    <div class="w-full max-w-[500px] mx-auto aspect-square">
+                        @include('azmedia.candidate.partials.wheel_chart', ['chartId' => 'desiredWheelChart', 'wheelChartItems' => $desiredWheelChartItems])
+                    </div>
+                    <p class="text-xs text-slate-600 text-center mt-3">
+                        Hãy chọn mức độ mong muốn cân đối với con đường phát triển của bạn.
                     </p>
                 </div>
             </div>
@@ -1083,7 +1096,6 @@
         const questions = new Map();
         const scores = { V: 0, A: 0, K: 0, Ad: 0 };
         const questionScores = {};
-        let answered = 0;
 
         selects.forEach(function(select) {
             const question = select.dataset.nlpQuestion;
@@ -1119,14 +1131,10 @@
                 if (!questionScores[question]) questionScores[question] = {};
                 scores[code] += Number(select.value);
                 questionScores[question][code] = select.value;
-                answered++;
             });
         });
 
         Object.keys(scores).forEach(function(code) {
-            const scoreCell = document.getElementById(`nlp_score_${code}`);
-            if (scoreCell) scoreCell.textContent = scores[code];
-
             const totalCell = document.getElementById(`nlp_detail_total_${code}`);
             if (totalCell) totalCell.textContent = scores[code];
         });
@@ -1140,21 +1148,6 @@
                         : '—';
                 }
             });
-        }
-
-        const progress = document.getElementById('nlp_answer_progress');
-        if (progress) progress.textContent = `${answered} / ${selects.length} lựa chọn`;
-
-        const dominant = document.getElementById('nlp_dominant_result');
-        if (dominant) {
-            const labels = { V: 'Visual (Nhìn)', A: 'Auditory (Nghe)', K: 'Kinesthetic (Cảm giác)', Ad: 'Auditory Digital (Logic)' };
-            const maxScore = Math.max(...Object.values(scores));
-            const leaders = Object.keys(scores).filter(function(code) { return scores[code] === maxScore; });
-            dominant.textContent = answered === 0
-                ? 'Chọn điểm để xem phong cách nổi trội tạm tính.'
-                : leaders.length > 1
-                    ? `Đang đồng hạng: ${leaders.map(function(code) { return labels[code]; }).join(', ')}`
-                    : `Đang thiên về: ${labels[leaders[0]]}`;
         }
     }
 
@@ -1205,7 +1198,7 @@
         const svg = document.getElementById('wheelChart');
         if (!svg) return;
 
-        const points = Array.from(document.querySelectorAll('input[name^="wheel["]')).map(function(input, index) {
+        Array.from(document.querySelectorAll('input[name^="wheel["]')).forEach(function(input, index) {
             const centerAngle = -67.5 + index * 45;
             const angle = centerAngle * Math.PI / 180;
             const radius = wheelRadius * Number(input.value) / 10;
@@ -1219,9 +1212,29 @@
             if (sector) {
                 sector.setAttribute('d', `M ${wheelCenter} ${wheelCenter} L ${startX.toFixed(2)} ${startY.toFixed(2)} A ${radius.toFixed(2)} ${radius.toFixed(2)} 0 0 1 ${endX.toFixed(2)} ${endY.toFixed(2)} Z`);
             }
-            const x = wheelCenter + Math.cos(angle) * radius;
-            const y = wheelCenter + Math.sin(angle) * radius;
-            return null;
+        });
+    }
+
+    function updateDesiredWheelValue(key, val) {
+        const label = document.getElementById(`desired_val_label_${key}`);
+        if (label) label.textContent = `${val}/10`;
+
+        const svg = document.getElementById('desiredWheelChart');
+        if (!svg) return;
+
+        Array.from(document.querySelectorAll('input[name^="desired_wheel["]')).forEach(function(input, index) {
+            const centerAngle = -67.5 + index * 45;
+            const radius = wheelRadius * Number(input.value) / 10;
+            const startAngle = (centerAngle - 22.5) * Math.PI / 180;
+            const endAngle = (centerAngle + 22.5) * Math.PI / 180;
+            const startX = wheelCenter + Math.cos(startAngle) * radius;
+            const startY = wheelCenter + Math.sin(startAngle) * radius;
+            const endX = wheelCenter + Math.cos(endAngle) * radius;
+            const endY = wheelCenter + Math.sin(endAngle) * radius;
+            const sector = document.getElementById(`desiredWheelChart_sector_${index}`);
+            if (sector) {
+                sector.setAttribute('d', `M ${wheelCenter} ${wheelCenter} L ${startX.toFixed(2)} ${startY.toFixed(2)} A ${radius.toFixed(2)} ${radius.toFixed(2)} 0 0 1 ${endX.toFixed(2)} ${endY.toFixed(2)} Z`);
+            }
         });
     }
 

@@ -54,6 +54,38 @@
                 <div class="text-[11px] text-emerald-700 font-bold mt-1">Sẵn sàng Phỏng vấn</div>
             </div>
         </div>
+
+        @if(!empty($wheel['desired_dimensions']))
+            @php
+                $desiredWheelChartItems = [];
+                foreach ($wheel['desired_dimensions'] as $key => $dimension) {
+                    $desiredWheelChartItems[] = [
+                        'key' => $key,
+                        'short_label' => $wheelShortLabels[$key] ?? $dimension['label'],
+                        'score' => $dimension['score'],
+                    ];
+                }
+            @endphp
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center mt-6 pt-6 border-t border-slate-100">
+                <div class="flex justify-center">
+                    <div class="w-full max-w-[440px] aspect-square">
+                        @include('azmedia.candidate.partials.wheel_chart', ['chartId' => 'desiredCompletedWheelChart', 'wheelChartItems' => $desiredWheelChartItems])
+                    </div>
+                </div>
+
+                <div class="space-y-2 text-sm" aria-label="Điểm mong muốn trong 10 năm tới">
+                    <h4 class="font-extrabold text-sm text-slate-800 mb-3">Bánh xe cuộc đời mong muốn trong 10 năm tới</h4>
+                    @foreach($wheel['desired_dimensions'] as $key => $dim)
+                        <div class="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 py-2.5 border-b border-slate-100 last:border-b-0">
+                            <span class="text-slate-700 font-medium">{{ $wheelShortLabels[$key] ?? $dim['label'] }}</span>
+                            <span class="min-w-[4rem] text-right tabular-nums font-extrabold text-emerald-600">
+                                {{ $dim['score'] }}<span class="text-slate-400 font-semibold">/10</span>
+                            </span>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        @endif
     </div>
 
     @if($nlp)
@@ -273,6 +305,7 @@
                 </div>
 
                 <div class="space-y-3">
+                    <h4 class="font-extrabold text-sm text-slate-800">Bánh xe cuộc đời hiện tại</h4>
                     <div class="space-y-2 text-sm" aria-label="Điểm số từng lĩnh vực">
                         @foreach($wheel['dimensions'] as $key => $dim)
                             <div class="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 py-2.5 border-b border-slate-100 last:border-b-0">
