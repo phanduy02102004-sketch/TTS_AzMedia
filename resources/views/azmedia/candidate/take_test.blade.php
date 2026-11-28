@@ -1240,7 +1240,7 @@
     }
 
     window.addEventListener('pagehide', function() {
-        if (!draftDirty || autosavePromise) return;
+        if (!draftDirty && !autosavePromise) return;
 
         const form = document.getElementById('test_form');
         const token = form.querySelector('input[name="_token"]').value;
